@@ -4,6 +4,8 @@ public class Item {
 
     private int pic;
 
+
+
     public Item(int pic) {
         this.pic = pic;
     }

@@ -3,6 +3,7 @@ package ru.senya.pixateka;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 
 import android.os.Bundle;
@@ -30,8 +31,15 @@ public class MainActivity extends AppCompatActivity {
         items.add(new Item(R.drawable.example1));
         items.add(new Item(R.drawable.example2));
         items.add(new Item(R.drawable.example3));
+        items.add(new Item(R.drawable.example3));
+        items.add(new Item(R.drawable.example3));
+        items.add(new Item(R.drawable.example1));
+        items.add(new Item(R.drawable.example3));
+        items.add(new Item(R.drawable.example3));
+        items.add(new Item(R.drawable.example1));
+        items.add(new Item(R.drawable.example3));
 
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setAdapter(new MyAdapter(getApplicationContext(), items));
+        list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        list.setAdapter(new MyAdapter(items));
     }
 }
