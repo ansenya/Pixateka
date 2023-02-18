@@ -1,9 +1,10 @@
-package ru.senya.pixateka;
+package ru.senya.pixateka.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,10 +13,12 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
+import ru.senya.pixateka.subjects.Item;
+import ru.senya.pixateka.R;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private List<Item> Items;
-
     public MyAdapter(List<Item> items) {
         Items = items;
     }

@@ -1,4 +1,4 @@
-package ru.senya.pixateka;
+package ru.senya.pixateka.subjects;
 
 public class Item {
 
