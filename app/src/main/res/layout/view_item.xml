@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:padding="2dp">
 
     <com.makeramen.roundedimageview.RoundedImageView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -14,17 +15,15 @@
         android:layout_marginTop="-1dp"
         android:adjustViewBounds="true"
         android:src="@drawable/example1"
-        app:riv_corner_radius="1dp">
-
-    </com.makeramen.roundedimageview.RoundedImageView>
-
+        app:riv_corner_radius="1dp"/>
     <TextView
+        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/pic"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="-3dp"
-        android:text="подпись"
+        tools:text="подпись"
         android:textSize="15sp" />
 
     <TextView
