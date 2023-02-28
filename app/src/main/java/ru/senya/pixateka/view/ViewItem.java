@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 
 import ru.senya.pixateka.databinding.ViewItemBinding;
 
+
 public class ViewItem extends RelativeLayout {
 
     ViewItemBinding binding;

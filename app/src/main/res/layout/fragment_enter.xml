@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+
+    <ru.senya.pixateka.view.InputField
+        android:layout_marginTop="10dp"
+        android:id="@+id/input_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="Email address"
+        app:hint="mail@mail.com"
+        app:hint_color="@color/hint_color"
+
+        android:inputType="textEmailAddress"/>
+    <ru.senya.pixateka.view.InputField
+        android:id="@+id/input_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:hint_color="@color/hint_color"
+
+        app:title="Password"
+        app:hint="123456"
+        android:inputType="textPassword"/>
+    <TextView
+        android:id="@+id/switcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Вы тут не впервые? Давайте войдем!"/>
+    <TextView
+        android:id="@+id/wrong"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/red"
+        android:text="Что-то неверно!"/>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+
+
+
+
+
+</LinearLayout>
+

@@ -40,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        initImages();
         initRecycler();
-        initClickListener();
         initFragments();
     }
 
@@ -60,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView list = binding.list;
         list.setLayoutManager(new StaggeredGridLayoutManager(COLUMNS, StaggeredGridLayoutManager.VERTICAL));
         list.setAdapter(adapter);
+        initImages();
+        initClickListener();
     }
 
     public void initClickListener() {
