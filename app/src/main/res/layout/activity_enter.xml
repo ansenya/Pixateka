@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
@@ -7,6 +7,7 @@
 >
 
     <TextView
+        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -16,6 +17,7 @@
         android:textSize="19sp" />
 
     <FrameLayout
+        android:layout_centerInParent="true"
         android:paddingRight="20dp"
         android:paddingLeft="20dp"
         android:id="@+id/registration"
@@ -24,4 +26,4 @@
 
 
 
-</LinearLayout>
+</RelativeLayout>

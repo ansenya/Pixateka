@@ -33,7 +33,7 @@ public class FragmentEnter extends Fragment {
                 binding.wrong.setVisibility(View.VISIBLE);
             }
         });
-        binding.switcher.setOnClickListener(view ->
+        binding.registration.setOnClickListener(view ->
                 startActivity(new Intent
                         (binding.getRoot().getContext(), RegistrationActivity.class))
         );

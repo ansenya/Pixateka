@@ -17,8 +17,6 @@ import ru.senya.pixateka.R;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-
-
     private List<Item> Items;
     public MyAdapter(List<Item> items) {
         Items = items;

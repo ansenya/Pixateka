@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <TextView
@@ -16,6 +17,7 @@
         android:text="Pixateka!"
         android:textSize="20sp" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
@@ -23,13 +25,14 @@
         android:layout_below="@+id/a" />
 
     <FrameLayout
-
         android:visibility="gone"
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <Button
+        android:textColor="@color/white"
+        android:backgroundTint="@color/button"
         android:id="@+id/refresh_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -11,4 +11,7 @@
     <color name="hint_color">#65000000</color>
     <color name="main_color">#1B000000</color>
     <color name="red">#FF0000</color>
+    <color name="blue">#0d6efd</color>
+    <color name="text_color">#212529</color>
+    <color name="button">#212529</color>
 </resources>

@@ -44,6 +44,9 @@ public class InputField extends LinearLayout {
             binding.input.setInputType(inputType);
             binding.input.setHint(attributes.getString(R.styleable.InputField_hint));
             binding.input.setHintTextColor(attributes.getColor(R.styleable.InputField_hint_color, 1));
+            try {
+                binding.pic.setImageResource(attributes.getResourceId(R.styleable.InputField_src, 1));
+            } catch (Exception e){}
         } finally {
             attributes.recycle();
         }

@@ -14,6 +14,7 @@ import ru.senya.pixateka.activities.EnterActivity;
 import ru.senya.pixateka.activities.MainActivity;
 import ru.senya.pixateka.databinding.FragmentRegistratrationBinding;
 
+
 public class FragmentRegistraion extends Fragment {
 
     FragmentRegistratrationBinding binding;
@@ -25,6 +26,11 @@ public class FragmentRegistraion extends Fragment {
         binding.wrong.setVisibility(View.GONE);
         binding.button.setOnClickListener(view -> {
             if (checker()){
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+
+                }
                 startActivity(new Intent(binding.getRoot().getContext(), MainActivity.class));
             }
             else {
@@ -42,7 +48,7 @@ public class FragmentRegistraion extends Fragment {
     private boolean checker(){
         if (binding.inputEmail.getInputText().toString().equals("mail@mail.com") &&
                 binding.inputPassword.getInputText().toString().equals("123456") &&
-                    binding.inputRepeatPassword.getInputText().toString().equals("123456")){
+                binding.inputRepeatPassword.getInputText().toString().equals("123456")){
             return true;
         }
         return false;

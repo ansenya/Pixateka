@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <declare-styleable name="InputField">
         <attr name="title" format="string"/>
         <attr name="android:inputType"/>
         <attr name="hint" format="string"/>
         <attr name="hint_color" format="color"/>
+        <attr name="src" format="reference"/>
     </declare-styleable>
+
     <declare-styleable name="ActionButton">
         <attr name="android:text" format="string"/>
         <attr name="android:textAllCaps"/>
     </declare-styleable>
+
+    <declare-styleable name="viewFullscreen">
+        <attr name="srcPic" format="string"/>
+        <attr name="text" format="string"/>
+    </declare-styleable>
+
 </resources>

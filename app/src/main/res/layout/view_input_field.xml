@@ -1,27 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
-        android:inputType="text"
-        android:layout_marginTop="4dp"
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:inputType="text"
+        android:text="Email address"
         android:textColor="@color/hint_color"
-        android:textSize="15sp"
-        android:text="Email address" />
+        android:textSize="15sp" />
 
     <EditText
-        android:inputType="textPassword"
-        android:layout_marginTop="4dp"
+        android:layout_below="@+id/title"
         android:id="@+id/input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/black"
+        android:inputType="textPassword"
+        android:shadowColor="@color/black"
         android:textColor="@color/black"
         android:textSize="18sp" />
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/pic"
+        android:layout_marginRight="12dp"
+        android:layout_width="20sp"
+        android:layout_height="20sp"
+        android:layout_below="@+id/input"
+        android:layout_alignTop="@+id/input"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="9sp"
+        tools:src="@drawable/pfp" />
+
+</RelativeLayout>

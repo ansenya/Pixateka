@@ -5,20 +5,25 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import ru.senya.pixateka.databinding.ViewItemBinding;
 
 
 public class ViewItem extends RelativeLayout {
 
-    ViewItemBinding binding;
+    ViewItemBinding viewItemBinding;
 
-    public ViewItem(Context context) {
-        super(context);
+    public ViewItem(Context context, AttributeSet attrs) {
+        super(context, attrs);
         initView();
     }
 
+
     private void initView() {
-        binding = ViewItemBinding.inflate(LayoutInflater.from(getContext()), this, true);
+        viewItemBinding = ViewItemBinding.inflate(LayoutInflater.from(getContext()),
+                this, true);
     }
+
+
 }

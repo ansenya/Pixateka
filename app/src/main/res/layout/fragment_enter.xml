@@ -3,49 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
 
     <ru.senya.pixateka.view.InputField
-        android:layout_marginTop="10dp"
         android:id="@+id/input_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="Email address"
-        app:hint="mail@mail.com"
+        android:layout_marginTop="10dp"
+        android:inputType="textEmailAddress"
+        app:src="@drawable/pfp"
+        app:hint="Адрес электронной почты"
         app:hint_color="@color/hint_color"
+        app:title="Email address" />
 
-        android:inputType="textEmailAddress"/>
     <ru.senya.pixateka.view.InputField
         android:id="@+id/input_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        app:hint="Пароль"
         app:hint_color="@color/hint_color"
+        app:src="@drawable/password"
+        app:title="Password" />
 
-        app:title="Password"
-        app:hint="123456"
-        android:inputType="textPassword"/>
-    <TextView
-        android:id="@+id/switcher"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Вы тут не впервые? Давайте войдем!"/>
     <TextView
         android:id="@+id/wrong"
-        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Что-то неверно!"
         android:textColor="@color/red"
-        android:text="Что-то неверно!"/>
+        android:visibility="gone" />
+
     <Button
+        android:backgroundTint="@color/button"
         android:id="@+id/button"
         android:layout_width="match_parent"
-        android:layout_height="60dp" />
+        android:layout_height="60dp"
+        android:text="Войти"
+        android:textColor="@color/white" />
 
+    <TextView
+        android:id="@+id/restore_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Восстановить пароль" />
 
-
-
+    <TextView
+        android:id="@+id/registration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Регистрация" />
 
 
 </LinearLayout>

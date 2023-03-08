@@ -1,57 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fullscreen_pic"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/white"
-    android:gravity="center_horizontal">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ru.senya.pixateka.view.viewFullscreen
+        android:id="@+id/fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="2dp">
+        app:srcPic="@drawable/a1"
+        app:text="text" />
 
-        <com.makeramen.roundedimageview.RoundedImageView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/pic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:layout_marginTop="-1dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/example1"
-            app:riv_corner_radius="1dp"/>
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/pic"
-            android:layout_marginLeft="4dp"
-            android:layout_marginTop="-3dp"
-            tools:text="подпись"
-            android:textSize="15sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/pic"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="-16dp"
-            android:layout_marginRight="4dp"
-            android:text="..."
-            android:textSize="25sp" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="уйцуйцу"/>
-
-
-
-</LinearLayout>
+</RelativeLayout>
