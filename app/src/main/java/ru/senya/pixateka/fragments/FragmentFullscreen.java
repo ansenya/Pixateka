@@ -16,16 +16,16 @@ import androidx.fragment.app.FragmentTransaction;
 
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.FragmentFullscreenBinding;
-import ru.senya.pixateka.interfaces.MyInterface;
 import ru.senya.pixateka.view.InputField;
 import ru.senya.pixateka.view.ViewItem;
 
-public class FragmentFullscreen extends Fragment implements MyInterface {
+public class FragmentFullscreen extends Fragment  {
 
     FragmentFullscreenBinding binding;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentFullscreenBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 

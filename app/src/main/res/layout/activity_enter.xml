@@ -1,29 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
->
+    android:orientation="vertical">
 
     <TextView
-        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:text="Вход"
         android:textColor="@color/black"
         android:textSize="19sp" />
 
-    <FrameLayout
-        android:layout_centerInParent="true"
-        android:paddingRight="20dp"
-        android:paddingLeft="20dp"
-        android:id="@+id/registration"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+
+        <ru.senya.pixateka.view.InputField
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:inputType="textEmailAddress"
+            app:hint="Адрес электронной почты"
+            app:hint_color="@color/hint_color"
+            app:src="@drawable/pfp"
+            app:title="Email address" />
+
+        <ru.senya.pixateka.view.InputField
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            app:hint="Пароль"
+            app:hint_color="@color/hint_color"
+            app:src="@drawable/password"
+            app:title="Password" />
+
+
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:backgroundTint="@color/button"
+            android:text="Войти"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/restore_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Восстановить пароль" />
+
+        <TextView
+            android:id="@+id/registration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Регистрация" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/wrong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_layout"
+        android:layout_centerHorizontal="true"
+        android:text="Что-то неверно!"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 
 </RelativeLayout>

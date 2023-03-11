@@ -10,35 +10,27 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import ru.senya.pixateka.databinding.ActivityRegistrationBinding;
-import ru.senya.pixateka.fragments.FragmentEnter;
-import ru.senya.pixateka.fragments.FragmentRegistraion;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     ActivityRegistrationBinding binding;
-    int k = 0;
-    Fragment fragmentRegistraion = new FragmentRegistraion();
-    Fragment fragmentEnter = new FragmentEnter();
-
-    FragmentManager fragmentManager = getSupportFragmentManager();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        initFragments();
-        initListener();
+        init();
     }
 
-    private void initFragments() {
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(binding.registration.getId(), fragmentRegistraion);
-        fragmentTransaction.commit();
-    }
 
-    private void initListener() {
+    private void init() {
+        binding.button.setOnClickListener(view ->{
+            if (true){
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+            }
+        });
     }
 
 }

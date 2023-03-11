@@ -15,10 +15,10 @@ import java.util.List;
 import ru.senya.pixateka.subjects.Item;
 import ru.senya.pixateka.R;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
-    private List<Item> Items;
-    public MyAdapter(List<Item> items) {
+    private final List<Item> Items;
+    public RecyclerViewAdapter(List<Item> items) {
         Items = items;
     }
 

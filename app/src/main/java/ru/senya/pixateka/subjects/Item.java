@@ -3,7 +3,7 @@ package ru.senya.pixateka.subjects;
 public class Item {
 
     private int pic;
-    private String name;
+    private final String name;
 
 
     public Item(int pic, String name) {
