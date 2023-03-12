@@ -49,7 +49,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             textView = itemView.findViewById(R.id.text);
         }
         void setImageView(Item item) {
-            ImageView.setImageResource(item.getPic());
+            try{
+                ImageView.setImageResource(item.getPic());
+                ImageView.setImageURI(item.getUri());
+            } catch (Exception e){
+
+            }
+
+
         }
         void setTextView(String s){
             textView.setText(s);

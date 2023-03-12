@@ -1,9 +1,13 @@
 package ru.senya.pixateka.subjects;
 
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+
 public class Item {
 
     private int pic;
-    private final String name;
+    private Uri uri;
+    private String name;
 
 
     public Item(int pic, String name) {
@@ -11,8 +15,17 @@ public class Item {
         this.name = name;
     }
 
+    public Item(Uri uri, String name) {
+        this.name = name;
+        this.uri = uri;
+    }
+
     public int getPic() {
         return pic;
+    }
+
+    public Uri getUri() {
+        return uri;
     }
 
     public String getName() {
