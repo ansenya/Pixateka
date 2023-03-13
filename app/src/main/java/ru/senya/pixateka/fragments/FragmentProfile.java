@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -45,7 +46,6 @@ public class FragmentProfile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         initRecycler();
-
         if (start == 0){
             a = examples[random.nextInt(148)];
             b = examples[random.nextInt(148)];
@@ -74,7 +74,6 @@ public class FragmentProfile extends Fragment {
                         if (items.get(position).getPic() == 0){
                             binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
                         } else binding.fragment.update(items.get(position).getPic(), items.get(position).getName());
-
                     }
 
                     @Override
@@ -105,7 +104,6 @@ public class FragmentProfile extends Fragment {
     }
     public void back() {
         binding.fragment.goUp();
-        binding.fragment.setVisibility(INVISIBLE);
         binding.fragment.setVisibility(GONE);
         binding.relativeLayout.setVisibility(VISIBLE);
     }

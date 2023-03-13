@@ -64,8 +64,8 @@ public class FragmentAdd extends Fragment {
             try {
                 InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
                 Drawable drawable = Drawable.createFromStream(inputStream, uri.toString());
-                itemsProfile.add(0,new Item(uri, "123") );
-                itemsMain.add(new Item(uri, "123"));
+                itemsProfile.add(0,new Item(uri, binding.name.getInputText().toString()) );
+                itemsMain.add(0, new Item(uri, binding.name.getInputText().toString()));
                 Log.e("MyTag",drawable.hashCode()+"");
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);

@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.ActivityMainBinding;
@@ -20,6 +21,7 @@ import ru.senya.pixateka.fragments.FragmentAdd;
 import ru.senya.pixateka.fragments.FragmentMain;
 import ru.senya.pixateka.fragments.FragmentNotifications;
 import ru.senya.pixateka.fragments.FragmentProfile;
+import ru.senya.pixateka.fragments.FragmentSearch;
 import ru.senya.pixateka.subjects.Item;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,6 +33,10 @@ public class MainActivity extends AppCompatActivity {
     FragmentMain fragmentMain = new FragmentMain(itemsMain);
     FragmentNotifications fragmentNotifications = new FragmentNotifications();
     FragmentAdd fragmentAdd = new FragmentAdd(itemsMain, itemsProfile);
+    FragmentSearch fragmentSearch = new FragmentSearch(itemsMain);
+    int[] examples = new int[149];
+    String[] examplesTXT = new String[149];
+    Random random = new Random();
 
 
     @Override
@@ -38,9 +44,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        itemsMain.add(new Item(R.drawable.a1, "123"));
-        itemsMain.add(new Item(R.drawable.a100, "123"));
-        itemsMain.add(new Item(R.drawable.a123, "123"));
+        initMain();
         setFragment(fragmentProfile);
         setFragment(fragmentMain);
         binding.navView.setOnNavigationItemSelectedListener(item -> {
@@ -57,16 +61,28 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     setFragment(fragmentProfile);
                     return true;
+                case R.id.search:
+                    setFragment(fragmentSearch);
+                    return true;
             }
             return false;
         });
     }
 
+    private void initMain() {
+        for (int i = 0; i < 148; i++) {
+            examples[i] = R.drawable.a1 + i;
+            examplesTXT[i] = 1 + i + "";
+            itemsMain.add(new Item(examples[i], examplesTXT[i]));
+        }
+
+    }
+
     @Override
     public void onBackPressed() {
         if (fragmentMain.visible() || fragmentProfile.visible()) {
-            fragmentMain.back();
             fragmentProfile.back();
+            fragmentMain.back();
         } else finish();
     }
 

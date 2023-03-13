@@ -7,10 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ScrollView;
 
+import androidx.core.widget.NestedScrollView;
+
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.ViewFullscreenBinding;
 
-public class viewFullscreen extends ScrollView  {
+public class viewFullscreen extends NestedScrollView {
 
     ViewFullscreenBinding binding;
 
@@ -18,7 +20,6 @@ public class viewFullscreen extends ScrollView  {
 
     public viewFullscreen(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setBottomEdgeEffectColor(getResources().getColor(R.color.blue));
         binding = ViewFullscreenBinding.inflate(LayoutInflater.from(getContext()), this, true);
     }
 
@@ -36,11 +37,6 @@ public class viewFullscreen extends ScrollView  {
         return super.fullScroll(direction);
     }
 
-
-    @Override
-    public void setBottomEdgeEffectColor(int color) {
-        super.setBottomEdgeEffectColor(color);
-    }
 
     public void update(int imageResource, String text){
         binding.pic.setImageResource(imageResource);

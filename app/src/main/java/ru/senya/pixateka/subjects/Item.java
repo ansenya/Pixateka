@@ -12,12 +12,19 @@ public class Item {
 
     public Item(int pic, String name) {
         this.pic = pic;
-        this.name = name;
+        if (name.isEmpty()){
+            this.name = "no text";
+            return;
+        } else this.name = name;
     }
 
     public Item(Uri uri, String name) {
-        this.name = name;
         this.uri = uri;
+        if (name.isEmpty()){
+            this.name = "no text";
+            return;
+        } else this.name = name;
+
     }
 
     public int getPic() {

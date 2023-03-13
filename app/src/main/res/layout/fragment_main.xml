@@ -8,8 +8,7 @@
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/a"
@@ -25,6 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/a" />
+
+    <Button
+        android:id="@+id/refresh_button"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="2dp"
+        android:backgroundTint="@color/button"
+        android:text="Refresh"
+        android:textColor="@color/white" />
 
 
 </RelativeLayout>

@@ -17,7 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import ru.senya.pixateka.adapters.RecyclerTouchListener;
 import ru.senya.pixateka.adapters.RecyclerViewAdapter;
@@ -30,6 +33,8 @@ public class FragmentMain extends Fragment {
     RecyclerView list;
     List<Item> items;
     RecyclerViewAdapter adapter;
+   List<Item> newList = new ArrayList<Item>();
+    Random random = new Random();
 
     public FragmentMain(List<Item> items) {
         this.items = items;
@@ -71,7 +76,9 @@ public class FragmentMain extends Fragment {
                         binding.fragment.setVisibility(VISIBLE);
                         binding.mainRecyclerView.setVisibility(GONE);
                         binding.a.setVisibility(GONE);
-                        binding.fragment.update(items.get(position).getPic(), items.get(position).getName());
+                        if (items.get(position).getPic() == 0){
+                            binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
+                        } else binding.fragment.update(items.get(position).getPic(), items.get(position).getName());
                     }
 
                     @Override
@@ -79,11 +86,10 @@ public class FragmentMain extends Fragment {
 
                     }
                 }));
-
-    }
-
-    public void changed(){
-        adapter.notifyDataSetChanged();
+        binding.refreshButton.setOnClickListener(view ->{
+            Collections.shuffle(items);
+            list.getAdapter().notifyDataSetChanged();
+        });
     }
 
 
