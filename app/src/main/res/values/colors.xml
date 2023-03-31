@@ -13,5 +13,7 @@
     <color name="red">#FF0000</color>
     <color name="blue">#0d6efd</color>
     <color name="text_color">#212529</color>
+    <color name="text_color2">#A4212529</color>
     <color name="button">#212529</color>
+    <color name="orange">#FF5722</color>
 </resources>

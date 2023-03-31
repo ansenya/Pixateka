@@ -49,7 +49,7 @@ public class viewFullscreen extends NestedScrollView {
         binding.getRoot().setVisibility(VISIBLE);
     }
     public void goUp(){
-        fullScroll(View.FOCUS_UP);
+        scrollTo(0, 0);
     }
 
 }

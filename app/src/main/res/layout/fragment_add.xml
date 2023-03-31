@@ -81,7 +81,7 @@
         android:layout_height="60dp"
         android:layout_marginBottom="3dp"
         android:backgroundTint="@color/button"
-        android:text="Фото выбрано"
+        android:text="Загрузить фото"
         android:textColor="@color/white" />
 
 </LinearLayout>

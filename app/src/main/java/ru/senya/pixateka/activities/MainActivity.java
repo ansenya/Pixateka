@@ -1,15 +1,13 @@
 package ru.senya.pixateka.activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,72 +20,107 @@ import ru.senya.pixateka.fragments.FragmentMain;
 import ru.senya.pixateka.fragments.FragmentNotifications;
 import ru.senya.pixateka.fragments.FragmentProfile;
 import ru.senya.pixateka.fragments.FragmentSearch;
+import ru.senya.pixateka.App;
+import ru.senya.pixateka.room.ItemDAO;
+import ru.senya.pixateka.room.ItemEntity;
 import ru.senya.pixateka.subjects.Item;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    List<Item> itemsMain = new ArrayList<Item>();
-    List<Item> itemsProfile = new ArrayList<Item>();
-    FragmentProfile fragmentProfile = new FragmentProfile(itemsProfile);
-    FragmentMain fragmentMain = new FragmentMain(itemsMain);
+    List<ItemEntity> data = new ArrayList<>();
+    FragmentProfile fragmentProfile = new FragmentProfile(data);
+    FragmentMain fragmentMain = new FragmentMain(data);
     FragmentNotifications fragmentNotifications = new FragmentNotifications();
-    FragmentAdd fragmentAdd = new FragmentAdd(itemsMain, itemsProfile);
-    FragmentSearch fragmentSearch = new FragmentSearch(itemsMain);
+    FragmentAdd fragmentAdd = new FragmentAdd(data);
+    FragmentSearch fragmentSearch = new FragmentSearch(data);
     int[] examples = new int[149];
     String[] examplesTXT = new String[149];
-    Random random = new Random();
+    ItemDAO itemDAO;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
+        new Thread(() -> {
+            data.addAll(App.getDatabase().itemDAO().getAll());
+        }).start();
         setContentView(binding.getRoot());
-        initMain();
-        setFragment(fragmentProfile);
-        setFragment(fragmentMain);
-        binding.navView.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    setFragment(fragmentMain);
-                    return true;
-                case R.id.navigation_notifications:
-                    setFragment(fragmentNotifications);
-                    return true;
-                case R.id.navigation_add:
-                    setFragment(fragmentAdd);
-                    return true;
-                case R.id.navigation_profile:
-                    setFragment(fragmentProfile);
-                    return true;
-                case R.id.search:
-                    setFragment(fragmentSearch);
-                    return true;
-            }
-            return false;
-        });
+        setFragments();
     }
 
     private void initMain() {
         for (int i = 0; i < 148; i++) {
             examples[i] = R.drawable.a1 + i;
             examplesTXT[i] = 1 + i + "";
-            itemsMain.add(new Item(examples[i], examplesTXT[i]));
         }
+    }
 
+    private void initMain2() {
+        new Thread(() -> {
+            for (int i = 0; i < examples.length; i++) {
+                ItemEntity item = new ItemEntity(examples[i], examplesTXT[i]);
+                itemDAO.save(item);
+            }
+        }).start();
     }
 
     @Override
     public void onBackPressed() {
-        if (fragmentMain.visible() || fragmentProfile.visible()) {
-            fragmentProfile.back();
-            fragmentMain.back();
-        } else finish();
+        if (binding.navigationMain.getVisibility()==View.VISIBLE) fragmentMain.back();
+        else if (binding.navigationProfile.getVisibility()==View.VISIBLE) fragmentProfile.back();
+        else if (binding.navigationSearch.getVisibility()==View.VISIBLE) fragmentSearch.back();
     }
 
-    private void setFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction().replace(binding.shit.getId(), fragment).commit();
+    private void setFragment() {
+        binding.navigationMain.setVisibility(View.GONE);
+        binding.navigationProfile.setVisibility(View.GONE);
+        binding.navigationNotifications.setVisibility(View.GONE);
+        binding.navigationAdd.setVisibility(View.GONE);
+        binding.navigationSearch.setVisibility(View.GONE);
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    private void setFragments() {
+        binding.navView.setOnItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    setFragment();
+                    binding.navigationMain.setVisibility(View.VISIBLE);
+                    fragmentMain.myNotify();
+                    return true;
+                case R.id.navigation_notifications:
+                    setFragment();
+                    binding.navigationNotifications.setVisibility(View.VISIBLE);
+                    return true;
+                case R.id.navigation_add:
+                    setFragment();
+                    binding.navigationAdd.setVisibility(View.VISIBLE);
+                    fragmentAdd.reload();
+                    return true;
+                case R.id.navigation_profile:
+                    setFragment();
+                    binding.navigationProfile.setVisibility(View.VISIBLE);
+                    fragmentProfile.myNotify();
+                    return true;
+                case R.id.search:
+                    setFragment();
+                    binding.navigationSearch.setVisibility(View.VISIBLE);
+                    return true;
+            }
+            return false;
+        });
+        getSupportFragmentManager().beginTransaction().
+                replace(binding.navigationMain.getId(), fragmentMain).
+                replace(binding.navigationAdd.getId(), fragmentAdd).
+                replace(binding.navigationSearch.getId(), fragmentSearch).
+                replace(binding.navigationNotifications.getId(), fragmentNotifications).
+                replace(binding.navigationProfile.getId(), fragmentProfile)
+                .commit();
+        setFragment();
+        binding.navigationMain.setVisibility(View.VISIBLE);
+
     }
 
 }

@@ -6,12 +6,14 @@
         <item name="colorPrimaryVariant">@color/main_color</item>
         <item name="colorOnPrimary">@color/main_color</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/purple_500</item>
+        <item name="colorSecondary">@color/red</item>
         <item name="colorSecondaryVariant">@color/red</item>
         <item name="colorOnSecondary">@color/black</item>
     </style>
 
     <style name="Splash" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground"> @drawable/a16 </item>
+        <item name="android:windowBackground"> @color/orange </item>
     </style>
+
+
 </resources>

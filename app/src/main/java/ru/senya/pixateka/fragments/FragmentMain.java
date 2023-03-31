@@ -4,11 +4,9 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,28 +15,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
+import ru.senya.pixateka.App;
 import ru.senya.pixateka.adapters.RecyclerTouchListener;
-import ru.senya.pixateka.adapters.RecyclerViewAdapter;
+import ru.senya.pixateka.adapters.RecyclerViewAdapterRoom;
 import ru.senya.pixateka.databinding.FragmentMainBinding;
-import ru.senya.pixateka.subjects.Item;
+import ru.senya.pixateka.room.ItemEntity;
 
 public class FragmentMain extends Fragment {
 
     FragmentMainBinding binding;
     RecyclerView list;
-    List<Item> items;
-    RecyclerViewAdapter adapter;
-   List<Item> newList = new ArrayList<Item>();
-    Random random = new Random();
+    List<ItemEntity> items = new ArrayList<>();
+    RecyclerViewAdapterRoom adapter;
 
-    public FragmentMain(List<Item> items) {
+
+    public FragmentMain(List<ItemEntity> items) {
         this.items = items;
-        adapter = new RecyclerViewAdapter(this.items);
+        adapter = new RecyclerViewAdapterRoom(items);
     }
 
     @Nullable
@@ -57,6 +53,7 @@ public class FragmentMain extends Fragment {
 
     public void back() {
         binding.fragment.goUp();
+        binding.refreshButton.setVisibility(VISIBLE);
         binding.fragment.setVisibility(GONE);
         binding.mainRecyclerView.setVisibility(VISIBLE);
         binding.a.setVisibility(VISIBLE);
@@ -65,7 +62,7 @@ public class FragmentMain extends Fragment {
     private void initRecycler() {
         list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         list.setAdapter(adapter);
-        listener();
+        //listener();
     }
 
     private void listener() {
@@ -76,9 +73,13 @@ public class FragmentMain extends Fragment {
                         binding.fragment.setVisibility(VISIBLE);
                         binding.mainRecyclerView.setVisibility(GONE);
                         binding.a.setVisibility(GONE);
-                        if (items.get(position).getPic() == 0){
+                        binding.refreshButton.setVisibility(GONE);
+                        if (items.get(position).getPic() == 0) {
                             binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
-                        } else binding.fragment.update(items.get(position).getPic(), items.get(position).getName());
+                        } else
+                            binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
+
+
                     }
 
                     @Override
@@ -86,11 +87,15 @@ public class FragmentMain extends Fragment {
 
                     }
                 }));
-        binding.refreshButton.setOnClickListener(view ->{
+        binding.refreshButton.setOnClickListener(view -> {
             Collections.shuffle(items);
             list.getAdapter().notifyDataSetChanged();
+            binding.mainRecyclerView.smoothScrollToPosition(0);
         });
     }
 
+    public void myNotify() {
+        adapter.notifyDataSetChanged();
+    }
 
 }

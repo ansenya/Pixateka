@@ -59,6 +59,7 @@
             app:title="Repeat password" />
 
         <CheckBox
+            android:id="@+id/checkbox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Принимаю условия пользовательского соглашения"
