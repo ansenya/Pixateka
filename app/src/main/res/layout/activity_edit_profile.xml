@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:ignore="ContentDescription">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="7dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="156dp"
+            android:layout_height="156dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="17dp"
+            android:elevation="12dp"
+            app:cardCornerRadius="80dp">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@color/white" />
+
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/pfp_frame"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:elevation="12dp"
+            app:cardCornerRadius="80dp">
+
+            <ImageView
+                android:id="@+id/pfp_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/pfp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/button_edit"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignEnd="@id/pfp_frame"
+            android:layout_alignBottom="@id/pfp_frame"
+            android:layout_marginEnd="-20dp"
+            android:layout_marginBottom="-20dp"
+            android:backgroundTint="@color/yellow" />
+
+        <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pfp_frame"
+            android:orientation="vertical">
+
+            <ru.senya.pixateka.view.InputField
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:inputType="text"
+                app:hint="Name"
+                app:hint_color="@color/hint_color"
+                app:title="Email address" />
+
+            <ru.senya.pixateka.view.InputField
+                android:id="@+id/surname"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:inputType="text"
+                app:hint="Surname"
+                app:hint_color="@color/hint_color"
+                app:title="Email address" />
+
+            <ru.senya.pixateka.view.InputField
+                android:id="@+id/geo"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:inputType="text"
+                app:hint="Geo"
+                app:hint_color="@color/hint_color"
+                app:title="Geo" />
+
+            <ru.senya.pixateka.view.InputField
+                android:id="@+id/about"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:inputType="text"
+                app:hint="About"
+                app:hint_color="@color/hint_color"
+                app:title="About" />
+
+            <ru.senya.pixateka.view.InputField
+                android:id="@+id/birthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:inputType="text"
+                app:hint="About"
+                app:hint_color="@color/hint_color"
+                app:title="Birthday" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_below="@+id/linear"
+            android:layout_margin="4dp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:backgroundTint="@color/button"
+            android:text="Сохранить"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+
+</ScrollView>

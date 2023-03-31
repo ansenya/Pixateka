@@ -62,7 +62,7 @@ public class FragmentMain extends Fragment {
     private void initRecycler() {
         list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         list.setAdapter(adapter);
-        //listener();
+        listener();
     }
 
     private void listener() {
@@ -75,9 +75,9 @@ public class FragmentMain extends Fragment {
                         binding.a.setVisibility(GONE);
                         binding.refreshButton.setVisibility(GONE);
                         if (items.get(position).getPic() == 0) {
-                            //binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
+                            binding.fragment.update(items.get(position).getPath(), items.get(position).getName());
                         } else {
-                            //binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
+                            binding.fragment.update(items.get(position).getPic(), items.get(position).getName());
                         }
 
                     }

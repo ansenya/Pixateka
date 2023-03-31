@@ -25,6 +25,6 @@ public interface ItemDAO {
     void delete();
 
     @Query("SELECT * FROM ItemEntity WHERE name =:s")
-    ItemEntity search(String s);
+    ItemEntity[] search(String s);
 
 }

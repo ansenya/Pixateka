@@ -1,6 +1,7 @@
 package ru.senya.pixateka.view;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -43,8 +44,8 @@ public class viewFullscreen extends NestedScrollView {
         binding.text.setText(text);
         binding.getRoot().setVisibility(VISIBLE);
     }
-    public void update(Uri uri, String text){
-        binding.pic.setImageURI(uri);
+    public void update(String path, String text){
+        binding.pic.setImageBitmap(BitmapFactory.decodeFile(path));
         binding.text.setText(text);
         binding.getRoot().setVisibility(VISIBLE);
     }

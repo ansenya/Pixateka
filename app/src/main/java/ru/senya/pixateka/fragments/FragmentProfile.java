@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
@@ -36,7 +38,7 @@ import ru.senya.pixateka.subjects.Item;
 
 public class FragmentProfile extends Fragment {
 
-//    FragmentProfileBinding binding;
+    //    FragmentProfileBinding binding;
     NewFragmentProfileBinding binding;
     private int start = 0;
     List<ItemEntity> items;
@@ -56,19 +58,34 @@ public class FragmentProfile extends Fragment {
     }
 
 
-
     private void initRecycler() {
         new Thread(() -> {
             try {
                 binding.back.setImageResource(App.getDatabase().userDAO().getId(1).back);
                 binding.pfpImg.setImageResource(App.getDatabase().userDAO().getId(1).pfp);
-            } catch (Exception e){}
+            } catch (Exception e) {
+            }
         }).start();
-        binding.buttonEditProfile.setOnClickListener(view ->{
+        binding.buttonEditProfile.setOnClickListener(view -> {
             startActivity(new Intent(getContext(), EditActivity.class));
         });
         binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.recyclerList.setAdapter(adapter);
+        binding.recyclerList.addOnItemTouchListener(new RecyclerTouchListener(getContext(), binding.recyclerList,
+                new RecyclerTouchListener.ClickListener() {
+
+                    @Override
+                    public void onClick(View view, int position) {
+                        binding.fragment.setVisibility(VISIBLE);
+                        binding.fragment.update(items.get(position).getPath(), items.get(position).getName());
+                        binding.relative.setVisibility(GONE);
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+
+                    }
+                }));
     }
 
     @Override
@@ -77,26 +94,29 @@ public class FragmentProfile extends Fragment {
     }
 
 
-
     public boolean visible() {
+        if (binding.fragment.getVisibility()==VISIBLE){
+            return true;
+        }
         return false;
     }
 
-    public void myNotify(){
+    public void myNotify() {
         new Thread(() -> {
-            List<UserEntity> list ;
+            List<UserEntity> list;
             try {
                 list = App.getDatabase().userDAO().getAll();
-                binding.back.setImageResource(list.get(list.size()-1).back);
-                binding.pfpImg.setImageResource(list.get(list.size()-1).pfp);
-            } catch (Exception e){}
+                binding.back.setImageResource(list.get(list.size() - 1).back);
+                binding.pfpImg.setImageResource(list.get(list.size() - 1).pfp);
+            } catch (Exception e) {
+            }
         }).start();
         adapter.notifyDataSetChanged();
     }
 
     public void back() {
-//        binding.fragment.goUp();
-//        binding.fragment.setVisibility(GONE);
-       // binding.relativeLayout.setVisibility(VISIBLE);
+        binding.fragment.goUp();
+        binding.fragment.setVisibility(GONE);
+        binding.relative.setVisibility(VISIBLE);
     }
 }

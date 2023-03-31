@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,6 +59,15 @@ public class MainActivity extends AppCompatActivity {
                     new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE},
                     1);
         }
+        setSupportActionBar(binding.mainToolbar);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     private void initMain() {
@@ -84,11 +94,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setFragment() {
-        binding.navigationMain.setVisibility(View.GONE);
-        binding.navigationProfile.setVisibility(View.GONE);
-        binding.navigationNotifications.setVisibility(View.GONE);
-        binding.navigationAdd.setVisibility(View.GONE);
-        binding.navigationSearch.setVisibility(View.GONE);
+        binding.navigationMain.setVisibility(View.INVISIBLE);
+        binding.navigationProfile.setVisibility(View.INVISIBLE);
+        binding.navigationNotifications.setVisibility(View.INVISIBLE);
+        binding.navigationAdd.setVisibility(View.INVISIBLE);
+        binding.navigationSearch.setVisibility(View.INVISIBLE);
     }
 
     @SuppressLint("NonConstantResourceId")
