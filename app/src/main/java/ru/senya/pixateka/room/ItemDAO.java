@@ -4,6 +4,9 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 import java.util.List;
+
+import ru.senya.pixateka.subjects.Item;
+
 @Dao
 public interface ItemDAO {
 
@@ -20,4 +23,8 @@ public interface ItemDAO {
     void deleteByUserId(long id);
     @Query("DELETE FROM ItemEntity")
     void delete();
+
+    @Query("SELECT * FROM ItemEntity WHERE name =:s")
+    ItemEntity search(String s);
+
 }

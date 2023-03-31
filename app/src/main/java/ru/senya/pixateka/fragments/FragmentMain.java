@@ -75,10 +75,10 @@ public class FragmentMain extends Fragment {
                         binding.a.setVisibility(GONE);
                         binding.refreshButton.setVisibility(GONE);
                         if (items.get(position).getPic() == 0) {
-                            binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
-                        } else
-                            binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
-
+                            //binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
+                        } else {
+                            //binding.fragment.update(items.get(position).getUri(), items.get(position).getName());
+                        }
 
                     }
 

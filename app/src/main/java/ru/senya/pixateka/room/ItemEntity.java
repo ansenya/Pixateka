@@ -20,12 +20,18 @@ public class ItemEntity {
     public int id;
     public int pic;
 
-//    @TypeConverter({Converter.class})
-//    public Uri uri;
+    public String path;
+    public String category;
+    public String tags;
     private String name;
 
+    public String getCategory() {
+        return category;
+    }
 
-
+    public String getTags() {
+        return tags;
+    }
 
     public ItemEntity(int pic, String name) {
         this.pic = pic;
@@ -36,12 +42,12 @@ public class ItemEntity {
     }
 
     @Ignore
-    public ItemEntity(Uri uri, String name) {
-//        this.uri = uri;
-//        if (name.isEmpty()){
-//            this.name = "no text";
-//            return;
-//        } else this.name = name;
+    public ItemEntity(String path, String name) {
+        this.path = path;
+        if (name.isEmpty()){
+            this.name = "no text";
+            return;
+        } else this.name = name;
 
     }
 
@@ -53,27 +59,14 @@ public class ItemEntity {
         return pic;
     }
 
-    public Uri getUri() {
-//        return uri;
-        return null;
+    public String getPath() {
+        return path;
     }
 
     public String getName() {
         return name;
     }
 
-    public class Converter{
-
-        @TypeConverter
-        public String fromUri(Uri uri){
-            return uri.toString();
-        }
-
-        @TypeConverter
-        public Uri toUri(String s){
-            return Uri.parse(s);
-        }
-    }
 
 
 }

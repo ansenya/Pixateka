@@ -3,9 +3,12 @@ package ru.senya.pixateka.fragments;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.loader.content.CursorLoader;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -36,7 +40,7 @@ import ru.senya.pixateka.subjects.Item;
 public class FragmentAdd extends Fragment {
     FragmentAddBinding binding;
     int id = 148;
-    Uri uri;
+    String path;
     Bitmap bitmap;
 
     List<ItemEntity> itemsMain = new ArrayList<ItemEntity>();
@@ -59,10 +63,10 @@ public class FragmentAdd extends Fragment {
         {
             Toast.makeText(getContext(), "фото загружено", Toast.LENGTH_SHORT).show();
             new Thread(() -> {
-                App.getDatabase().itemDAO().save(new ItemEntity(uri, "123"));
-                itemsMain.add(new ItemEntity(uri, "123"));
-                Log.e("MyTag2", uri+"");
+                App.getDatabase().itemDAO().save(new ItemEntity(path, ""));
             }).start();
+            binding.selectedPhoto.setImageBitmap(BitmapFactory.decodeFile(path));
+            itemsMain.add(new ItemEntity(path, ""));
         });
         return binding.getRoot();
     }
@@ -71,23 +75,37 @@ public class FragmentAdd extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            uri = data.getData();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getActivity().getContentResolver(), uri);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            path = getRealPathFromURI_API11to18(getContext(), data.getData());
+
 //            try {
 //                InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
 //            } catch (FileNotFoundException e) {
 //                throw new RuntimeException(e);
 //            }
-            binding.selectedPhoto.setImageURI(uri);
+
         }
     }
 
     public void reload(){
         binding.button2.setVisibility(View.GONE);
         binding.button.setVisibility(View.VISIBLE);
+    }
+
+    public static String getRealPathFromURI_API11to18(Context context, Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        String result = null;
+
+        CursorLoader cursorLoader = new CursorLoader(
+                context,
+                contentUri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        if (cursor != null) {
+            int column_index =
+                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            result = cursor.getString(column_index);
+        }
+        return result;
     }
 }

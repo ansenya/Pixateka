@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import java.util.Random;
 
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
+import ru.senya.pixateka.activities.EditActivity;
 import ru.senya.pixateka.adapters.RecyclerTouchListener;
 import ru.senya.pixateka.adapters.RecyclerViewAdapter;
 import ru.senya.pixateka.adapters.RecyclerViewAdapterRoom;
@@ -63,11 +65,17 @@ public class FragmentProfile extends Fragment {
             } catch (Exception e){}
         }).start();
         binding.buttonEditProfile.setOnClickListener(view ->{
-            Toast.makeText(getContext(), "edit", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getContext(), EditActivity.class));
         });
         binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.recyclerList.setAdapter(adapter);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
 
 
     public boolean visible() {
@@ -75,6 +83,14 @@ public class FragmentProfile extends Fragment {
     }
 
     public void myNotify(){
+        new Thread(() -> {
+            List<UserEntity> list ;
+            try {
+                list = App.getDatabase().userDAO().getAll();
+                binding.back.setImageResource(list.get(list.size()-1).back);
+                binding.pfpImg.setImageResource(list.get(list.size()-1).pfp);
+            } catch (Exception e){}
+        }).start();
         adapter.notifyDataSetChanged();
     }
 
