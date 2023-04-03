@@ -39,62 +39,58 @@ import ru.senya.pixateka.subjects.Item;
 
 public class FragmentAdd extends Fragment {
     FragmentAddBinding binding;
-    int id = 148;
     String path;
-    Bitmap bitmap;
-
-    List<ItemEntity> itemsMain = new ArrayList<ItemEntity>();
-    List<ItemEntity> itemsProfile = new ArrayList<>();
+    List<ItemEntity> itemsMain;
 
     public FragmentAdd(List<ItemEntity> itemsMain) {
-       this.itemsMain = itemsMain;
+        this.itemsMain = itemsMain;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentAddBinding.inflate(LayoutInflater.from(getContext()), container, false);
-        binding.button.setOnClickListener(view -> {
-            startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).addFlags(FLAG_GRANT_READ_URI_PERMISSION), 3);
-            binding.button2.setVisibility(View.VISIBLE);
-            binding.button.setVisibility(View.GONE);
-        });
-        binding.button2.setOnClickListener(view ->
-        {
-            Toast.makeText(getContext(), "фото загружено", Toast.LENGTH_SHORT).show();
-            new Thread(() -> {
-                App.getDatabase().itemDAO().save(new ItemEntity(path, ""));
-            }).start();
-            binding.selectedPhoto.setImageBitmap(BitmapFactory.decodeFile(path));
-            itemsMain.add(new ItemEntity(path, ""));
-        });
+        initListeners();
         return binding.getRoot();
+    }
+
+    private void initListeners() {
+        new Thread(() -> {
+            binding.button.setOnClickListener(view -> {
+                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).addFlags(FLAG_GRANT_READ_URI_PERMISSION), 3);
+                binding.button2.setVisibility(View.VISIBLE);
+                binding.button.setVisibility(View.GONE);
+            });
+            binding.button2.setOnClickListener(view -> {
+                Toast.makeText(getContext(), "фото загружено", Toast.LENGTH_SHORT).show();
+                ItemEntity entity = new ItemEntity(path, binding.name.getInputText(), binding.category.getInputText(), binding.tags.getInputText());
+                new Thread(() -> {
+                    binding.category.getInputText();
+                    binding.tags.getInputText();
+                    App.getDatabase().itemDAO().save(entity);
+                }).start();
+                itemsMain.add(entity);
+            });
+        }).start();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null) {
-            path = getRealPathFromURI_API11to18(getContext(), data.getData());
-
-//            try {
-//                InputStream inputStream = getActivity().getContentResolver().openInputStream(uri);
-//            } catch (FileNotFoundException e) {
-//                throw new RuntimeException(e);
-//            }
-
+            path = getRealPath(getContext(), data.getData());
+            binding.selectedPhoto.setImageBitmap(BitmapFactory.decodeFile(path));
         }
     }
 
-    public void reload(){
+    public void reload() {
         binding.button2.setVisibility(View.GONE);
         binding.button.setVisibility(View.VISIBLE);
     }
 
-    public static String getRealPathFromURI_API11to18(Context context, Uri contentUri) {
+    private static String getRealPath(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         String result = null;
-
         CursorLoader cursorLoader = new CursorLoader(
                 context,
                 contentUri, proj, null, null, null);

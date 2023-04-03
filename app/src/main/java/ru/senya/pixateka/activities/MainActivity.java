@@ -21,6 +21,7 @@ import java.util.Random;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.ActivityMainBinding;
 import ru.senya.pixateka.fragments.FragmentAdd;
+import ru.senya.pixateka.fragments.FragmentEditProfile;
 import ru.senya.pixateka.fragments.FragmentMain;
 import ru.senya.pixateka.fragments.FragmentNotifications;
 import ru.senya.pixateka.fragments.FragmentProfile;
@@ -28,17 +29,20 @@ import ru.senya.pixateka.fragments.FragmentSearch;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.room.ItemDAO;
 import ru.senya.pixateka.room.ItemEntity;
+import ru.senya.pixateka.room.UserItemEntity;
 import ru.senya.pixateka.subjects.Item;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     List<ItemEntity> data = new ArrayList<>();
+    List<UserItemEntity> dataProfile = new ArrayList<>();
     FragmentProfile fragmentProfile = new FragmentProfile(data);
     FragmentMain fragmentMain = new FragmentMain(data);
     FragmentNotifications fragmentNotifications = new FragmentNotifications();
     FragmentAdd fragmentAdd = new FragmentAdd(data);
     FragmentSearch fragmentSearch = new FragmentSearch(data);
+    FragmentEditProfile fragmentEditProfile = new FragmentEditProfile();
     int[] examples = new int[149];
     String[] examplesTXT = new String[149];
     ItemDAO itemDAO;
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new Thread(() -> {
             data.addAll(App.getDatabase().itemDAO().getAll());
+            dataProfile.addAll(App.getDatabase().userEntityDAO().getAll());
         }).start();
         setContentView(binding.getRoot());
         setFragments();
@@ -59,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
                     new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE},
                     1);
         }
-        setSupportActionBar(binding.mainToolbar);
     }
 
 
@@ -91,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
         if (binding.navigationMain.getVisibility()==View.VISIBLE) fragmentMain.back();
         else if (binding.navigationProfile.getVisibility()==View.VISIBLE) fragmentProfile.back();
         else if (binding.navigationSearch.getVisibility()==View.VISIBLE) fragmentSearch.back();
+        else if (fragmentProfile.isEditVisible()){
+            fragmentProfile.back();
+        }
     }
 
     private void setFragment() {

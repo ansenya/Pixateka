@@ -19,7 +19,6 @@ public class ItemEntity {
     @PrimaryKey(autoGenerate = true)
     public int id;
     public int pic;
-
     public String path;
     public String category;
     public String tags;
@@ -42,13 +41,14 @@ public class ItemEntity {
     }
 
     @Ignore
-    public ItemEntity(String path, String name) {
+    public ItemEntity(String path, String name, String category, String tags) {
         this.path = path;
+        this.category = category;
+        this.tags=tags;
         if (name.isEmpty()){
             this.name = "no text";
             return;
         } else this.name = name;
-
     }
 
 

@@ -3,6 +3,8 @@ package ru.senya.pixateka.room;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.senya.pixateka.subjects.Item;
@@ -25,6 +27,6 @@ public interface ItemDAO {
     void delete();
 
     @Query("SELECT * FROM ItemEntity WHERE name =:s")
-    ItemEntity[] search(String s);
+    List<ItemEntity> search(String s);
 
 }

@@ -33,13 +33,13 @@ public class StartActivity extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = preferences.edit();
         new Thread(() -> {
-//            App.getDatabase().userDAO().save(new UserEntity(R.drawable.a21, R.drawable.a20,
-//                    "User",
-//                    "",
-//                    "",
-//                    "",
-//                    ""
-//                    ));
+            App.getDatabase().userDAO().save(new UserEntity(R.drawable.a21, R.drawable.a20,
+                    "User",
+                    "",
+                    "",
+                    "",
+                    ""
+                    ));
 //            App.getDatabase().itemDAO().save(new ItemEntity(R.drawable.a82, "123"));
 //            App.getDatabase().itemDAO().delete();
 //            App.getDatabase().userDAO().delete();

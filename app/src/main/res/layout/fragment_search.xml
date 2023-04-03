@@ -10,6 +10,7 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
+
     <RelativeLayout
         android:id="@+id/relative_layout"
         android:layout_width="wrap_content"
@@ -50,6 +51,24 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/button" />
+
+        <RelativeLayout
+            android:id="@+id/nothing"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/button"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:autoSizeTextType="uniform"
+                android:textAlignment="center"
+                android:textColor="@color/text_color"
+                android:text="Nothing was found :(" />
+        </RelativeLayout>
     </RelativeLayout>
 
 

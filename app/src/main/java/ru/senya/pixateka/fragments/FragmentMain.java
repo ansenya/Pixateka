@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import ru.senya.pixateka.App;
+import ru.senya.pixateka.R;
 import ru.senya.pixateka.adapters.RecyclerTouchListener;
 import ru.senya.pixateka.adapters.RecyclerViewAdapterRoom;
 import ru.senya.pixateka.databinding.FragmentMainBinding;
@@ -33,8 +35,10 @@ public class FragmentMain extends Fragment {
 
 
     public FragmentMain(List<ItemEntity> items) {
-        this.items = items;
-        adapter = new RecyclerViewAdapterRoom(items);
+        new Thread(()->{
+            this.items = items;
+            adapter = new RecyclerViewAdapterRoom(items);
+        }).start();
     }
 
     @Nullable

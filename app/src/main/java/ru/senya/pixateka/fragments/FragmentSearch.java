@@ -4,6 +4,8 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +34,9 @@ public class FragmentSearch extends Fragment {
 
     FragmentSearchBinding binding;
 
-    List<ItemEntity> items = new ArrayList<>();
+    List<ItemEntity> items;
     List<ItemEntity> itemsSearch = new ArrayList<>();
+    Handler handler;
 
     public FragmentSearch(List<ItemEntity> items) {
         this.items = items;
@@ -43,26 +46,33 @@ public class FragmentSearch extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSearchBinding.inflate(LayoutInflater.from(getContext()), container, false);
+        initListeners();
+        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.list.setAdapter(new RecyclerViewAdapterRoom(itemsSearch));
+        return binding.getRoot();
+    }
+
+    public boolean visible() {
+        if (binding.fragment.getVisibility() == VISIBLE) return true;
+        return false;
+    }
+
+    private void initListeners() {
         binding.button.setOnClickListener(view -> {
-            itemsSearch.clear();
             String text = binding.search.getText().toString();
-//            new Thread(() ->{
-//                Log.e("MyTag3", text+"\n" +itemsSearch.toString());
-//               itemsSearch.add(App.getDatabase().itemDAO().search(text));
-//               binding.list.getAdapter().notifyDataSetChanged();
-//            }).start();
-            binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-            binding.list.setAdapter(new RecyclerViewAdapterRoom(itemsSearch));
-            for (ItemEntity item : items) {
-                if (item.getName().equals(text)) {
-                    itemsSearch.add(item);
-                    if (itemsSearch.size() > 1) {
-                        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-                    } else
-                        binding.list.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+            itemsSearch.clear();
+            for (ItemEntity i : items) {
+                if (i.getName().equals(text)) {
+                    itemsSearch.add(i);
                 }
+            }
+            if (itemsSearch.size() == 0) {
+                binding.nothing.setVisibility(VISIBLE);
+            } else {
+                binding.nothing.setVisibility(GONE);
                 binding.list.getAdapter().notifyDataSetChanged();
             }
+
         });
         binding.list.addOnItemTouchListener(new RecyclerTouchListener(getContext(), binding.list,
                 new RecyclerTouchListener.ClickListener() {
@@ -81,18 +91,16 @@ public class FragmentSearch extends Fragment {
 
                     }
                 }));
-        return binding.getRoot();
-    }
-
-    public boolean visible() {
-        if (binding.fragment.getVisibility() == VISIBLE) return true;
-        return false;
     }
 
     public void back() {
         binding.fragment.goUp();
         binding.fragment.setVisibility(GONE);
         binding.relativeLayout.setVisibility(VISIBLE);
+    }
+
+    private void init() {
+        binding.list.getAdapter().notifyDataSetChanged();
     }
 
 

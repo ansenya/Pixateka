@@ -7,6 +7,7 @@ import static android.view.View.VISIBLE;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +35,7 @@ import ru.senya.pixateka.databinding.FragmentProfileBinding;
 import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
 import ru.senya.pixateka.room.ItemEntity;
 import ru.senya.pixateka.room.UserEntity;
+import ru.senya.pixateka.room.UserItemEntity;
 import ru.senya.pixateka.subjects.Item;
 
 public class FragmentProfile extends Fragment {
@@ -42,11 +44,14 @@ public class FragmentProfile extends Fragment {
     NewFragmentProfileBinding binding;
     private int start = 0;
     List<ItemEntity> items;
+    List<UserEntity> list;
     RecyclerViewAdapterRoom adapter;
 
     public FragmentProfile(List<ItemEntity> items) {
-        this.items = items;
-        adapter = new RecyclerViewAdapterRoom(this.items);
+        new Thread(()->{
+            this.items = items;
+            adapter = new RecyclerViewAdapterRoom(items);
+        }).start();
     }
 
     @Nullable
@@ -54,6 +59,14 @@ public class FragmentProfile extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = NewFragmentProfileBinding.inflate(inflater, container, false);
         initRecycler();
+        binding.buttonEditProfile.setOnClickListener(v -> {
+            getChildFragmentManager().
+                    beginTransaction().
+                    replace(binding.fragmentEdit.getId(), new FragmentEditProfile()).commit();
+
+            binding.fragmentEdit.setVisibility(VISIBLE);
+            binding.relativeLayout.setVisibility(GONE);
+        });
         return binding.getRoot();
     }
 
@@ -101,9 +114,15 @@ public class FragmentProfile extends Fragment {
         return false;
     }
 
+    public boolean isEditVisible(){
+        if (binding.fragmentEdit.getVisibility()==VISIBLE){
+            return true;
+        }
+        return false;
+    }
+
     public void myNotify() {
         new Thread(() -> {
-            List<UserEntity> list;
             try {
                 list = App.getDatabase().userDAO().getAll();
                 binding.back.setImageResource(list.get(list.size() - 1).back);
@@ -115,8 +134,14 @@ public class FragmentProfile extends Fragment {
     }
 
     public void back() {
-        binding.fragment.goUp();
-        binding.fragment.setVisibility(GONE);
-        binding.relative.setVisibility(VISIBLE);
+        if (binding.fragmentEdit.getVisibility() == VISIBLE){
+            binding.fragmentEdit.setVisibility(GONE);
+            binding.relativeLayout.setVisibility(VISIBLE);
+        } else {
+            binding.fragment.goUp();
+            binding.fragment.setVisibility(GONE);
+            binding.relative.setVisibility(VISIBLE);
+        }
+
     }
 }
