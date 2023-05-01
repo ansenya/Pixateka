@@ -14,12 +14,14 @@
 
 
     <ru.senya.pixateka.view.viewFullscreen
+
         android:id="@+id/fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone" />
 
     <Toolbar
+        android:subtitleTextColor="@color/white"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"

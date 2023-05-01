@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,6 +28,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageMetadata;
@@ -46,6 +48,7 @@ import ru.senya.pixateka.adapters.RecyclerTouchListener;
 import ru.senya.pixateka.adapters.RecyclerViewAdapterRoom;
 import ru.senya.pixateka.databinding.FragmentMainBinding;
 import ru.senya.pixateka.room.ItemEntity;
+import ru.senya.pixateka.view.viewFullscreen;
 
 public class FragmentMain extends Fragment {
 
@@ -57,10 +60,7 @@ public class FragmentMain extends Fragment {
 
 
     public FragmentMain(List<ItemEntity> items, Context context) {
-        new Thread(() -> {
-            this.items = items;
-            adapter = new RecyclerViewAdapterRoom(items, context);
-        }).start();
+        this.items = items;
     }
 
     @Nullable
@@ -68,6 +68,15 @@ public class FragmentMain extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentMainBinding.inflate(LayoutInflater.from(getContext()), container, false);
         list = binding.mainRecyclerView;
+        adapter = new RecyclerViewAdapterRoom(getActivity(),
+                items,
+                getContext(),
+                onClickListener,
+                binding.fragment,
+                binding.mainRecyclerView,
+                binding.mainToolbar,
+                binding.fab,
+                binding.toolbar);
         initRecycler();
         toolbar = binding.mainToolbar;
         upToolbar();
@@ -75,11 +84,13 @@ public class FragmentMain extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
         return binding.getRoot();
     }
 
 
     private void upToolbar() {
+        toolbar.setTitleTextColor(getResources().getColor(R.color.text_color2));
         toolbar.setTitle(R.string.app_name);
         toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_color, getContext().getTheme()));
         toolbar.inflateMenu(R.menu.menu);
@@ -107,23 +118,23 @@ public class FragmentMain extends Fragment {
     }
 
     private void listener() {
-        list.addOnItemTouchListener(new RecyclerTouchListener(getContext(), list,
-                new RecyclerTouchListener.ClickListener() {
-                    @Override
-                    public void onClick(View view, int position) {
-                        binding.fragment.setVisibility(VISIBLE);
-                        binding.mainRecyclerView.setVisibility(GONE);
-                        binding.mainToolbar.setVisibility(View.INVISIBLE);
-                        binding.toolbar.setVisibility(VISIBLE);
-                        binding.fab.setVisibility(GONE);
-                        binding.fragment.update(items.get(position));
-                    }
-
-                    @Override
-                    public void onLongClick(View view, int position) {
-
-                    }
-                }));
+//        list.addOnItemTouchListener(new RecyclerTouchListener(getContext(), list,
+//                new RecyclerTouchListener.ClickListener() {
+//                    @Override
+//                    public void onClick(View view, int position) {
+//                        binding.fragment.setVisibility(VISIBLE);
+//                        binding.mainRecyclerView.setVisibility(GONE);
+//                        binding.mainToolbar.setVisibility(View.INVISIBLE);
+//                        binding.toolbar.setVisibility(VISIBLE);
+//                        binding.fab.setVisibility(GONE);
+//                        binding.fragment.update(items.get(position));
+//                    }
+//
+//                    @Override
+//                    public void onLongClick(View view, int position) {
+//
+//                    }
+//                }));
 
         binding.arrowBack.setOnClickListener(v -> {
             back();
@@ -199,5 +210,34 @@ public class FragmentMain extends Fragment {
     public void myNotify(int i) {
         adapter.notifyItemChanged(i);
     }
+
+    View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            binding.fragment.setVisibility(VISIBLE);
+            binding.mainRecyclerView.setVisibility(GONE);
+            binding.mainToolbar.setVisibility(View.INVISIBLE);
+            binding.toolbar.setVisibility(VISIBLE);
+            binding.fab.setVisibility(GONE);
+        }
+    };
+
+//            list.addOnItemTouchListener(new RecyclerTouchListener(getContext(), list,
+//                new RecyclerTouchListener.ClickListener() {
+//        @Override
+//        public void onClick(View view, int position) {
+//            binding.fragment.setVisibility(VISIBLE);
+//            binding.mainRecyclerView.setVisibility(GONE);
+//            binding.mainToolbar.setVisibility(View.INVISIBLE);
+//            binding.toolbar.setVisibility(VISIBLE);
+//            binding.fab.setVisibility(GONE);
+//            binding.fragment.update(items.get(position));
+//        }
+//
+//        @Override
+//        public void onLongClick(View view, int position) {
+//
+//        }
+//    }));
 
 }

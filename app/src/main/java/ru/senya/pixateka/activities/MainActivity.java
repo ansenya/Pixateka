@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     FragmentProfile fragmentProfile = new FragmentProfile(null, null);
     FragmentMain fragmentMain;
     FragmentNotifications fragmentNotifications = new FragmentNotifications();
-    FragmentAdd fragmentAdd = new FragmentAdd(data);
     FragmentSearch fragmentSearch = new FragmentSearch(data);
 
 
@@ -130,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
         binding.navigationMain.setVisibility(View.INVISIBLE);
         binding.navigationProfile.setVisibility(View.INVISIBLE);
         binding.navigationNotifications.setVisibility(View.INVISIBLE);
-        binding.navigationAdd.setVisibility(View.INVISIBLE);
         binding.navigationSearch.setVisibility(View.INVISIBLE);
     }
 
@@ -147,11 +145,6 @@ public class MainActivity extends AppCompatActivity {
                     setFragment();
                     binding.navigationNotifications.setVisibility(View.VISIBLE);
                     return true;
-                case R.id.navigation_add:
-                    setFragment();
-                    binding.navigationAdd.setVisibility(View.VISIBLE);
-                    fragmentAdd.reload();
-                    return true;
                 case R.id.navigation_profile:
                     setFragment();
                     binding.navigationProfile.setVisibility(View.VISIBLE);
@@ -166,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
         });
         getSupportFragmentManager().beginTransaction().
                 replace(binding.navigationMain.getId(), fragmentMain).
-                replace(binding.navigationAdd.getId(), fragmentAdd).
                 replace(binding.navigationSearch.getId(), fragmentSearch).
                 replace(binding.navigationNotifications.getId(), fragmentNotifications).
                 replace(binding.navigationProfile.getId(), fragmentProfile)

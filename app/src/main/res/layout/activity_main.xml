@@ -23,17 +23,9 @@
         android:layout_above="@+id/nav_view"
         android:layout_below="@+id/bar" />
 
-    <FrameLayout
-        android:id="@+id/navigation_add"
-
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/nav_view"
-        android:layout_below="@+id/bar" />
 
     <FrameLayout
         android:id="@+id/navigation_notifications"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/nav_view"

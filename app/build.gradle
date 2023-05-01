@@ -43,6 +43,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-database-ktx:20.2.0'
     implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
+    implementation 'com.google.firebase:firebase-dynamic-links:21.0.1'
     annotationProcessor 'androidx.room:room-compiler:2.5.1'
 
     implementation 'androidx.cardview:cardview:1.0.0'
