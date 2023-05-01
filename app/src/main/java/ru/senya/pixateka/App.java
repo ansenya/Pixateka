@@ -22,8 +22,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         instance = this;
-        database = Room.databaseBuilder(this, Database.class, "database2")
-                .build();
+        database = Room.databaseBuilder(this, Database.class, "database2").build();
         super.onCreate();
     }
 }

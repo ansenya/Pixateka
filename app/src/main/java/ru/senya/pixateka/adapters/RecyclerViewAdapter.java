@@ -1,5 +1,7 @@
 package ru.senya.pixateka.adapters;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,16 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import ru.senya.pixateka.subjects.Item;
 import ru.senya.pixateka.R;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
+public class    RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     private final List<Item> Items;
+    private Context context;
     public RecyclerViewAdapter(List<Item> items) {
         Items = items;
     }
@@ -25,12 +30,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
         return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setImageView(Items.get(position));
+        holder.setImageView(Items.get(position), context );
         holder.setTextView(Items.get(position).getName());
     }
 
@@ -48,10 +54,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             ImageView = itemView.findViewById(R.id.pic);
             textView = itemView.findViewById(R.id.text);
         }
-        void setImageView(Item item) {
+        void setImageView(Item item, Context context) {
             try{
-                ImageView.setImageResource(item.getPic());
-                ImageView.setImageURI(item.getUri());
+
             } catch (Exception e){
 
             }

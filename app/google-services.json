@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "38949057631",
+    "project_id": "pixateka",
+    "storage_bucket": "pixateka.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38949057631:android:383ab0073af64757e697ea",
+        "android_client_info": {
+          "package_name": "ru.senya.pixateka"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "38949057631-oo2urn5ci1187stv29mqc6dqrlmlr0m2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDg7FvMKufQEBEENw_XXkXUZxM6Rf2IBkY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "38949057631-oo2urn5ci1187stv29mqc6dqrlmlr0m2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

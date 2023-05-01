@@ -35,25 +35,36 @@
         android:paddingRight="10dp">
 
         <ru.senya.pixateka.view.InputField
-            android:inputType="text"
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
             app:title="Название" />
 
         <ru.senya.pixateka.view.InputField
-            android:inputType="text"
             android:id="@+id/category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
             app:title="Категория" />
 
         <ru.senya.pixateka.view.InputField
-            android:inputType="text"
             android:id="@+id/tags"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
             app:title="Тэги" />
+        <!--            <androidx.appcompat.widget.SearchView-->
+        <!--                android:id="@+id/input"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="35dp"-->
+        <!--                android:background="@drawable/rectangle_1"-->
+        <!--                android:inputType="text"-->
+        <!--                android:queryHint="Поищем-ка"-->
+        <!--                android:paddingLeft="10dp"-->
+        <!--                app:iconifiedByDefault="true"-->
+        <!--                android:textColor="@color/black"-->
+        <!--                android:textSize="16sp" />-->
 
     </LinearLayout>
 
@@ -67,21 +78,22 @@
 
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_select_photo"
         android:layout_width="220dp"
         android:layout_height="60dp"
         android:layout_marginBottom="3dp"
         android:backgroundTint="@color/button"
         android:text="Нажать кнопку"
         android:textColor="@color/white" />
+
     <Button
-        android:visibility="gone"
         android:id="@+id/button2"
         android:layout_width="220dp"
         android:layout_height="60dp"
         android:layout_marginBottom="3dp"
         android:backgroundTint="@color/button"
         android:text="Загрузить фото"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:visibility="gone" />
 
 </LinearLayout>

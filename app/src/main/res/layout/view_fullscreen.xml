@@ -13,9 +13,11 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
+
 
             <com.makeramen.roundedimageview.RoundedImageView xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -27,6 +29,7 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/example1"
                 app:riv_corner_radius="1dp" />
+
 
             <TextView
                 android:id="@+id/text"
@@ -48,7 +51,6 @@
                 android:text="..."
                 android:textSize="25sp" />
 
-
         </RelativeLayout>
 
         <androidx.cardview.widget.CardView
@@ -61,16 +63,13 @@
             app:cardCornerRadius="40dp">
 
             <ImageView
-                android:id="@+id/imageView1"
+                android:id="@+id/back"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/pfp" />
         </androidx.cardview.widget.CardView>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="1000dp" />
 
     </LinearLayout>
 

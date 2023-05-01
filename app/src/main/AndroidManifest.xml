@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
 
     <application
@@ -46,7 +47,7 @@
         </activity>
 
         <activity
-            android:name=".activities.EnterActivity"
+            android:name=".activities.LoginActivity"
             android:exported="false"
             android:theme="@style/Theme.Pixateka">
             <meta-data
@@ -54,10 +55,10 @@
                 android:value="" />
         </activity>
 
-        <activity
-            android:name=".activities.EditActivity"
+        <activity android:name=".activities.AddActivity"
             android:exported="false"
-            android:theme="@style/Theme.Pixateka" />
+            android:theme="@style/Theme.Pixateka"/>
+
 
     </application>
 

@@ -5,15 +5,11 @@ import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,24 +20,22 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.loader.content.CursorLoader;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.senya.pixateka.App;
-import ru.senya.pixateka.R;
-import ru.senya.pixateka.activities.MainActivity;
 import ru.senya.pixateka.databinding.FragmentAddBinding;
 import ru.senya.pixateka.room.ItemEntity;
-import ru.senya.pixateka.subjects.Item;
 
 public class FragmentAdd extends Fragment {
+
+    Uri uri;
     FragmentAddBinding binding;
     String path;
     List<ItemEntity> itemsMain;
-
+    ItemEntity item;
+    int PICK_IMAGE_REQUEST = 1;
     public FragmentAdd(List<ItemEntity> itemsMain) {
         this.itemsMain = itemsMain;
     }
@@ -55,38 +49,37 @@ public class FragmentAdd extends Fragment {
     }
 
     private void initListeners() {
-        new Thread(() -> {
-            binding.button.setOnClickListener(view -> {
-                startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).addFlags(FLAG_GRANT_READ_URI_PERMISSION), 3);
-                binding.button2.setVisibility(View.VISIBLE);
-                binding.button.setVisibility(View.GONE);
-            });
-            binding.button2.setOnClickListener(view -> {
-                Toast.makeText(getContext(), "фото загружено", Toast.LENGTH_SHORT).show();
-                ItemEntity entity = new ItemEntity(path, binding.name.getInputText(), binding.category.getInputText(), binding.tags.getInputText());
-                new Thread(() -> {
-                    binding.category.getInputText();
-                    binding.tags.getInputText();
-                    App.getDatabase().itemDAO().save(entity);
-                }).start();
-                itemsMain.add(entity);
-            });
-        }).start();
+        binding.buttonSelectPhoto.setOnClickListener(view->{
+            startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 3);
+            binding.buttonSelectPhoto.setVisibility(View.GONE);
+            binding.button2.setVisibility(View.VISIBLE);
+        });
+//        binding.button2.setOnClickListener(view->{
+//            new Thread(()->{
+//                item = new ItemEntity(path, binding.name.getInputText(),
+//                        binding.category.getInputText(),
+//                        binding.tags.getInputText());
+//
+//                App.getDatabase().itemDAO().save(item);
+//                itemsMain.add(item);
+//            }).start();
+//
+//            Toast.makeText(getContext(), "Photo Uploaded", Toast.LENGTH_SHORT).show();
+//            reload();
+//        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null) {
-            path = getRealPath(getContext(), data.getData());
-            binding.selectedPhoto.setImageBitmap(BitmapFactory.decodeFile(path));
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data!=null){
+            uri = data.getData();
+            path = getRealPath(getContext(), uri);
+            Picasso.with(getContext()).load(uri).into(binding.selectedPhoto);
         }
     }
 
-    public void reload() {
-        binding.button2.setVisibility(View.GONE);
-        binding.button.setVisibility(View.VISIBLE);
-    }
+
 
     private static String getRealPath(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
@@ -103,5 +96,11 @@ public class FragmentAdd extends Fragment {
             result = cursor.getString(column_index);
         }
         return result;
+    }
+
+    public void reload(){
+        binding.button2.setVisibility(View.GONE);
+        binding.buttonSelectPhoto.setVisibility(View.VISIBLE);
+        binding.selectedPhoto.setImageBitmap(null);
     }
 }

@@ -28,18 +28,20 @@ import ru.senya.pixateka.adapters.RecyclerViewAdapter;
 import ru.senya.pixateka.adapters.RecyclerViewAdapterRoom;
 import ru.senya.pixateka.databinding.FragmentSearchBinding;
 import ru.senya.pixateka.room.ItemEntity;
-import ru.senya.pixateka.subjects.Item;
+
 
 public class FragmentSearch extends Fragment {
 
     FragmentSearchBinding binding;
 
     List<ItemEntity> items;
+
     List<ItemEntity> itemsSearch = new ArrayList<>();
     Handler handler;
 
     public FragmentSearch(List<ItemEntity> items) {
         this.items = items;
+
     }
 
     @Nullable
@@ -48,7 +50,7 @@ public class FragmentSearch extends Fragment {
         binding = FragmentSearchBinding.inflate(LayoutInflater.from(getContext()), container, false);
         initListeners();
         binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        binding.list.setAdapter(new RecyclerViewAdapterRoom(itemsSearch));
+        //binding.list.setAdapter(new RecyclerViewAdapterRoom(itemsSearch, context));
         return binding.getRoot();
     }
 
@@ -62,9 +64,9 @@ public class FragmentSearch extends Fragment {
             String text = binding.search.getText().toString();
             itemsSearch.clear();
             for (ItemEntity i : items) {
-                if (i.getName().equals(text)) {
-                    itemsSearch.add(i);
-                }
+//                if (i.getName().equals(text)) {
+//                    itemsSearch.add(i);
+//                }
             }
             if (itemsSearch.size() == 0) {
                 binding.nothing.setVisibility(VISIBLE);
@@ -78,12 +80,12 @@ public class FragmentSearch extends Fragment {
                 new RecyclerTouchListener.ClickListener() {
                     @Override
                     public void onClick(View view, int position) {
-                        if (itemsSearch.get(position).getPic() == 0) {
-                            binding.fragment.update(itemsSearch.get(position).getPath(), itemsSearch.get(position).getName());
-                        } else
-                            binding.fragment.update(itemsSearch.get(position).getPic(), itemsSearch.get(position).getName());
-                        binding.fragment.setVisibility(View.VISIBLE);
-                        binding.relativeLayout.setVisibility(GONE);
+//                        if (itemsSearch.get(position).getPic() == 0) {
+//                            binding.fragment.update(itemsSearch.get(position).getPath(), itemsSearch.get(position).getName());
+//                        } else
+//                            binding.fragment.update(itemsSearch.get(position).getPic(), itemsSearch.get(position).getName());
+//                        binding.fragment.setVisibility(View.VISIBLE);
+//                        binding.relativeLayout.setVisibility(GONE);
                     }
 
                     @Override

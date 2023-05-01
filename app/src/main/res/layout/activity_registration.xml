@@ -74,7 +74,7 @@
             app:hint_color="@color/hint_color"
             app:title="Nickname" /> -->
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_enter"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/button"

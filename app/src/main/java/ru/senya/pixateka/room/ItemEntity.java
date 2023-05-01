@@ -18,45 +18,31 @@ public class ItemEntity {
 
     @PrimaryKey(autoGenerate = true)
     public int id;
-    public int pic;
+    public String uid;
     public String path;
-    public String category;
+    public String name;
+    public String description;
+    public String email;
     public String tags;
-    private String name;
 
-    public String getCategory() {
-        return category;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public ItemEntity(int pic, String name) {
-        this.pic = pic;
-        if (name.isEmpty()){
-            this.name = "no text";
-            return;
-        } else this.name = name;
-    }
-
-    @Ignore
-    public ItemEntity(String path, String name, String category, String tags) {
+    public ItemEntity(String uid, String path, String name, String description, String email, String tags) {
+        this.uid = uid;
         this.path = path;
-        this.category = category;
-        this.tags=tags;
-        if (name.isEmpty()){
+        this.description = description;
+        this.email = email;
+        this.tags = tags;
+        if (name.isEmpty()) {
             this.name = "no text";
             return;
         } else this.name = name;
     }
-
 
     public int getId() {
         return id;
     }
-    public int getPic() {
-        return pic;
+
+    public String getUid() {
+        return uid;
     }
 
     public String getPath() {
@@ -67,6 +53,15 @@ public class ItemEntity {
         return name;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public String getTags() {
+        return tags;
+    }
 
+    public String getEmail() {
+        return email;
+    }
 }

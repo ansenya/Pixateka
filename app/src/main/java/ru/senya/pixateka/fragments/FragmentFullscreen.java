@@ -28,8 +28,5 @@ public class FragmentFullscreen extends Fragment  {
         return binding.getRoot();
     }
 
-    public void setResources(int imageResource, String text) {
-        binding.fragment.update(imageResource, text);
-    }
 
 }

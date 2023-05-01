@@ -3,49 +3,47 @@ package ru.senya.pixateka.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicReference;
 
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.ActivityMainBinding;
 import ru.senya.pixateka.fragments.FragmentAdd;
-import ru.senya.pixateka.fragments.FragmentEditProfile;
 import ru.senya.pixateka.fragments.FragmentMain;
 import ru.senya.pixateka.fragments.FragmentNotifications;
 import ru.senya.pixateka.fragments.FragmentProfile;
 import ru.senya.pixateka.fragments.FragmentSearch;
 import ru.senya.pixateka.App;
-import ru.senya.pixateka.room.ItemDAO;
 import ru.senya.pixateka.room.ItemEntity;
-import ru.senya.pixateka.room.UserItemEntity;
-import ru.senya.pixateka.subjects.Item;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
     List<ItemEntity> data = new ArrayList<>();
-    List<UserItemEntity> dataProfile = new ArrayList<>();
-    FragmentProfile fragmentProfile = new FragmentProfile(data);
-    FragmentMain fragmentMain = new FragmentMain(data);
+
+    FragmentProfile fragmentProfile = new FragmentProfile(null, null);
+    FragmentMain fragmentMain;
     FragmentNotifications fragmentNotifications = new FragmentNotifications();
     FragmentAdd fragmentAdd = new FragmentAdd(data);
     FragmentSearch fragmentSearch = new FragmentSearch(data);
-    FragmentEditProfile fragmentEditProfile = new FragmentEditProfile();
-    int[] examples = new int[149];
-    String[] examplesTXT = new String[149];
-    ItemDAO itemDAO;
 
 
     @Override
@@ -54,48 +52,76 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         new Thread(() -> {
             data.addAll(App.getDatabase().itemDAO().getAll());
-            dataProfile.addAll(App.getDatabase().userEntityDAO().getAll());
         }).start();
         setContentView(binding.getRoot());
+        fragmentMain = new FragmentMain(data, getApplicationContext());
         setFragments();
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
+
+        StorageReference list = FirebaseStorage.getInstance().getReference().child("images");
+        list.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+            @Override
+            public void onSuccess(ListResult listResult) {
+                for (StorageReference file : listResult.getItems()) {
+                    file.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            new Thread(() -> {
+                                file.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                                            @Override
+                                            public void onSuccess(StorageMetadata storageMetadata) {
+                                                String description = storageMetadata.getCustomMetadata("description");
+                                                if (description == null) description = "";
+
+                                                ItemEntity item = new ItemEntity(
+                                                        storageMetadata.getCustomMetadata("userUid"),
+                                                        uri.toString(),
+                                                        storageMetadata.getCustomMetadata("name"),
+                                                        description,
+                                                        storageMetadata.getCustomMetadata("userEmail"),
+                                                        "");
+
+                                                new Thread(() -> {
+                                                    App.getDatabase().itemDAO().save(item);
+                                                    runOnUiThread(() -> {
+                                                        data.add(item);
+                                                        fragmentMain.myNotify(data.size() - 1);
+                                                    });
+                                                }).start();
+
+                                            }
+                                        }).
+
+                                        addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.e("Metadata", e.toString());
+                                            }
+                                        });
+
+                            }).start();
+                        }
+                    });
+                }
+            }
+        });
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
-                    new String[] {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE},
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.MANAGE_EXTERNAL_STORAGE},
                     1);
         }
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    private void initMain() {
-        for (int i = 0; i < 148; i++) {
-            examples[i] = R.drawable.a1 + i;
-            examplesTXT[i] = 1 + i + "";
-        }
-    }
-
-    private void initMain2() {
-        new Thread(() -> {
-            for (int i = 0; i < examples.length; i++) {
-                ItemEntity item = new ItemEntity(examples[i], examplesTXT[i]);
-                itemDAO.save(item);
-            }
-        }).start();
-    }
-
-    @Override
     public void onBackPressed() {
-        if (binding.navigationMain.getVisibility()==View.VISIBLE) fragmentMain.back();
-        else if (binding.navigationProfile.getVisibility()==View.VISIBLE) fragmentProfile.back();
-        else if (binding.navigationSearch.getVisibility()==View.VISIBLE) fragmentSearch.back();
-        else if (fragmentProfile.isEditVisible()){
+        if (binding.navigationMain.getVisibility() == View.VISIBLE) fragmentMain.back();
+        else if (binding.navigationProfile.getVisibility() == View.VISIBLE)
+            fragmentProfile.back();
+        else if (binding.navigationSearch.getVisibility() == View.VISIBLE)
+            fragmentSearch.back();
+        else if (fragmentProfile.isEditVisible()) {
             fragmentProfile.back();
         }
     }

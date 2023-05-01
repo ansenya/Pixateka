@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/selected_photo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="30dp"
+        android:adjustViewBounds="true"
+        app:riv_corner_radius="5dp"
+        tools:src="@drawable/example1" />
+
+    <LinearLayout
+        android:id="@+id/linear_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selected_photo"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <TextView
+            android:visibility="invisible"
+            android:id="@+id/wrongName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="@color/red"
+            android:textSize="16sp"
+            android:text="Имя не должно быть пустое" />
+
+        <ru.senya.pixateka.view.InputField
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            app:title="Название" />
+
+
+        <ru.senya.pixateka.view.InputField
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            app:title="Описание" />
+
+
+        <ru.senya.pixateka.view.InputField
+            android:id="@+id/tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            app:title="Тэги" />
+
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="220dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:backgroundTint="@color/button"
+        android:text="Загрузить фото"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

@@ -8,23 +8,13 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/asd"
+        android:id="@+id/text_enter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:text="Вход"
-        android:textColor="@color/black"
-        android:textSize="19sp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/asd"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="@string/help"
         android:textColor="@color/black"
         android:textSize="19sp" />
 
@@ -63,21 +53,14 @@
 
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_enter"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:backgroundTint="@color/button"
             android:text="Войти"
             android:textColor="@color/white" />
-
         <TextView
-            android:id="@+id/restore_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Восстановить пароль" />
-
-        <TextView
-            android:id="@+id/registration"
+            android:id="@+id/button_registration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Регистрация" />
@@ -85,7 +68,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/wrong"
+        android:id="@+id/wrong_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/linear_layout"

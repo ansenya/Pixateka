@@ -1,5 +1,6 @@
 package ru.senya.pixateka.adapters;
 
+import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.net.URI;
@@ -22,15 +24,16 @@ import java.util.List;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.room.ItemEntity;
-import ru.senya.pixateka.room.UserItemEntity;
-import ru.senya.pixateka.subjects.Item;
+
 
 public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAdapterRoom.MyViewHolder> {
 
     private final List<ItemEntity> Items;
+    private Context context;
 
-    public RecyclerViewAdapterRoom(List<ItemEntity> items) {
+    public RecyclerViewAdapterRoom(List<ItemEntity> items, Context context) {
         Items = items;
+        this.context = context;
     }
 
     @NonNull
@@ -41,9 +44,9 @@ public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAd
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        holder.setImageView(Items.get(position));
-        holder.setTextView(Items.get(position).getName());
-        holder.ImageView.setOnLongClickListener(view -> {
+        holder.setImageView(Items.get(position), context);
+        holder.setTextView(Items.get(position));
+        holder.imageView.setOnLongClickListener(view -> {
             Items.remove(Items.get(position));
             this.notifyDataSetChanged();
             return true;
@@ -57,15 +60,17 @@ public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAd
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        RoundedImageView ImageView;
+        RoundedImageView imageView;
         TextView textView;
         TextView textView2;
+        TextView textView3;
 
         MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            ImageView = itemView.findViewById(R.id.pic);
+            imageView = itemView.findViewById(R.id.pic);
             textView = itemView.findViewById(R.id.text);
             textView2 = itemView.findViewById(R.id.sets);
+            textView3 = itemView.findViewById(R.id.description);
 
             textView2.setOnClickListener(view -> {
                 Toast.makeText(itemView.getContext(), "sets", Toast.LENGTH_SHORT).show();
@@ -73,20 +78,16 @@ public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAd
 
         }
 
-        void setImageView(ItemEntity item) {
-            if (item.getPic() == 0) {
-                try {
-                    ImageView.setImageBitmap(BitmapFactory.decodeFile(item.getPath()));
-                } catch (Exception e) {
-                    Log.e("MyTag3", e.getLocalizedMessage());
-                }
-
-            } else
-                ImageView.setImageResource(item.getPic());
+        void setImageView(ItemEntity item, Context context) {
+                Glide.
+                        with(imageView.getContext()).
+                        load(item.getPath()).
+                        into(imageView);
         }
 
-        void setTextView(String s) {
-            textView.setText(s);
+        void setTextView(ItemEntity item) {
+            textView.setText(item.getName());
+            textView3.setText("by " + item.getEmail());
         }
     }
 }
