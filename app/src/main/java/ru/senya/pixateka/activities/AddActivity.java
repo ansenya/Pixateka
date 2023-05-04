@@ -2,12 +2,12 @@ package ru.senya.pixateka.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
@@ -21,20 +21,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.sql.Date;
-import java.sql.Time;
-
-import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.ActivityAddBinding;
-import ru.senya.pixateka.room.ItemEntity;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -51,10 +43,12 @@ public class AddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 3);
 
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+
 
         Log.e("MyTag", storageRef.toString());
 
@@ -86,35 +80,44 @@ public class AddActivity extends AppCompatActivity {
                         setCustomMetadata("description", binding.description.getInputText()).
                         setCustomMetadata("time", java.time.LocalTime.now().toString()).
                         build();
+                binding.progressCircular.setProgressTintList(ColorStateList.valueOf(getResources().getColor(R.color.v1)));
+                binding.progressCircular.setVisibility(View.VISIBLE);
 
 
-                uploadRef.putFile(uri).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e("MyTag", e.toString());
-                        Toast.makeText(AddActivity.this, "no", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        uploadRef.updateMetadata(storageMetadata).addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-                            @Override
-                            public void onSuccess(StorageMetadata storageMetadata) {
-                                Log.e("MyTag", storageMetadata.getBucket());
-                                Toast.makeText(AddActivity.this, "meta yes", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
+                uploadRef.putFile(uri).
+                        addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Log.e("MyTag", e.toString());
-                                Toast.makeText(AddActivity.this, "meta No", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddActivity.this, "upload failed", Toast.LENGTH_SHORT).show();
+                                binding.progressCircular.setVisibility(View.INVISIBLE);
+                            }
+                        }).
+                        addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                                uploadRef.updateMetadata(storageMetadata).
+                                        addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                                            @Override
+                                            public void onSuccess(StorageMetadata storageMetadata) {
+                                                Log.e("MyTag", storageMetadata.getBucket());
+                                                Toast.makeText(AddActivity.this, "upload successful", Toast.LENGTH_SHORT).show();
+                                                binding.progressCircular.setVisibility(View.INVISIBLE);
+                                                onBackPressed();
+                                            }
+                                        }).
+                                        addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.e("MyTag", e.toString());
+                                                Toast.makeText(AddActivity.this, "upload unsuccessful", Toast.LENGTH_SHORT).show();
+                                                binding.progressCircular.setVisibility(View.INVISIBLE);
+                                            }
+                                        });
                             }
                         });
-                    }
-                });
 
-
-                onBackPressed();
             }
         });
     }

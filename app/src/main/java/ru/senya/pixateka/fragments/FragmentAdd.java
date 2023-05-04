@@ -1,19 +1,16 @@
 package ru.senya.pixateka.fragments;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +21,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import ru.senya.pixateka.App;
 import ru.senya.pixateka.databinding.FragmentAddBinding;
 import ru.senya.pixateka.room.ItemEntity;
 

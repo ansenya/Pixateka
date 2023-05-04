@@ -8,4 +8,5 @@
     <string name="title_activity_wow">ActivityWow</string>
     <string name="title_activity_second">SecondActivity</string>
     <string name="help">Почта: mail@mail.com\nПароль: 123456</string>
+    <string name="TextUploadPhoto">Загрузить фото</string>
 </resources>

@@ -110,15 +110,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="1dp"
-                        android:text="Geo"
-                        android:textAlignment="center"
-                        android:textColor="@color/text_color2"
-                        android:textSize="18sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="1dp"
                         android:text="Birthday"
                         android:textAlignment="center"
                         android:textColor="@color/text_color2"
@@ -128,10 +119,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="1dp"
-                        android:text="About"
                         android:textAlignment="center"
                         android:textColor="@color/text_color2"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        tools:text="About" />
                 </LinearLayout>
 
                 <Button

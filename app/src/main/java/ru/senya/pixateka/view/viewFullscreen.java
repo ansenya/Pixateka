@@ -1,25 +1,13 @@
 package ru.senya.pixateka.view;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ScrollView;
-import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.core.widget.NestedScrollView;
 
 import com.bumptech.glide.Glide;
 
-import ru.senya.pixateka.App;
-import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.ViewFullscreenBinding;
 import ru.senya.pixateka.room.ItemEntity;
 

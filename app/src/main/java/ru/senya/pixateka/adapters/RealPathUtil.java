@@ -2,7 +2,6 @@ package ru.senya.pixateka.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.DocumentsContract;

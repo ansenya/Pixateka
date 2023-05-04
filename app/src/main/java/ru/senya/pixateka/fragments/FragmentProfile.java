@@ -1,34 +1,16 @@
 package ru.senya.pixateka.fragments;
 
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import ru.senya.pixateka.App;
-import ru.senya.pixateka.R;
-import ru.senya.pixateka.adapters.RecyclerTouchListener;
 
 import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
 

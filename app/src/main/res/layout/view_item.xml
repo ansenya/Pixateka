@@ -4,10 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:animateLayoutChanges="true"
     android:padding="2dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/pic"
+        android:id="@+id/main_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="2dp"
@@ -16,14 +17,14 @@
         android:layout_marginBottom="2dp"
         android:adjustViewBounds="true"
         android:padding="1dp"
-        android:src="@drawable/example1"
+        android:src="@color/v1"
         app:riv_corner_radius="1dp" />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/image_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pic"
+        android:layout_below="@+id/main_image"
         android:layout_marginLeft="4dp"
         android:layout_marginTop="-3dp"
         android:textSize="15sp"
@@ -31,12 +32,13 @@
 
     <TextView
         android:id="@+id/sets"
+        android:padding="3dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pic"
-        android:layout_alignParentRight="true"
+        android:layout_below="@+id/main_image"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="-16dp"
-        android:layout_marginRight="4dp"
+        android:layout_marginEnd="4dp"
         android:text="..."
         android:textSize="25sp" />
 
@@ -48,6 +50,6 @@
         android:layout_marginLeft="4dp"
         android:layout_marginTop="-3dp"
         android:textSize="15sp"
-        tools:text="email" />
+        tools:text="description" />
 
 </RelativeLayout>

@@ -1,16 +1,7 @@
 package ru.senya.pixateka.room;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
-import androidx.room.TypeConverter;
-import androidx.room.TypeConverters;
-import androidx.room.migration.Migration;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 
 @Entity
@@ -31,7 +22,7 @@ public class ItemEntity {
         this.description = description;
         this.email = email;
         this.tags = tags;
-        if (name.isEmpty()) {
+        if (name==null || name.isEmpty()) {
             this.name = "no text";
             return;
         } else this.name = name;

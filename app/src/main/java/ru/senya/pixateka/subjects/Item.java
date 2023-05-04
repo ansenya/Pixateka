@@ -1,6 +1,5 @@
 package ru.senya.pixateka.subjects;
 
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 public class Item {

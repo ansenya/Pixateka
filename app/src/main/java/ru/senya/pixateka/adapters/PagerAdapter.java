@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import ru.senya.pixateka.R;
 import ru.senya.pixateka.fragments.FragmentFullscreen;
 
 public class PagerAdapter extends FragmentStatePagerAdapter {

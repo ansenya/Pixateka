@@ -1,4 +1,8 @@
 buildscript {
+        ext.retrofit_version = "2.9.0"
+        ext.jetpack_version = "2.4.1"
+        ext.volley_version = "1.2.1"
+        ext.kakao_version = "3.0.6"
     dependencies {
         classpath 'com.google.gms:google-services:4.3.10'
     }
