@@ -8,6 +8,7 @@ import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -91,24 +92,28 @@ public class AddActivity extends AppCompatActivity {
                 }).start();
             } else {
 
-                File file = new File(uri.getPath());
+                File file = new File(getRealPath(getApplicationContext(), uri));
 
-                RequestBody authorBody = RequestBody.create(MediaType.parse("text/plain"), "your-username");
+
+                RequestBody authorBody = RequestBody.create(MediaType.parse("text/plain"), "admin");
                 RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), "your-image-name");
                 RequestBody descriptionBody = RequestBody.create(MediaType.parse("text/plain"), "your-image-description");
                 MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
 
-                Call<ModelResponse> call = service.uploadImage(new Model("admin", file, "asd", "asd"));
-                call.enqueue(new Callback<ModelResponse>() {
+                Call<ResponseBody> call = service.uploadImage(authorBody, imagePart, nameBody, descriptionBody);
+                call.enqueue(new Callback<ResponseBody>() {
                     @Override
-                    public void onResponse(Call<ModelResponse> call, Response<ModelResponse> response) {
-                        Log.e("MyTag", response.raw().toString());
-                        Toast.makeText(AddActivity.this, "gg wp", Toast.LENGTH_SHORT).show();
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        try {
+                            Log.e("MyTag", response.errorBody().string());
+                        } catch (Exception e) {
+
+                        }
                     }
 
                     @Override
-                    public void onFailure(Call<ModelResponse> call, Throwable t) {
-                        Toast.makeText(AddActivity.this, "ыыыыыыы", Toast.LENGTH_SHORT).show();
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Log.e("MyTag", call.toString(), t);
                     }
                 });
 
@@ -218,4 +223,6 @@ public class AddActivity extends AppCompatActivity {
         }
         return result;
     }
+
+
 }

@@ -45,7 +45,8 @@ public class viewFullscreen extends NestedScrollView {
         super(context, attrs);
         this.context = context;
         binding = ViewFullscreenBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        binding.sets.setOnClickListener(v -> {
+        
+        binding.included.sets.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
             popupMenu.inflate(R.menu.menu);
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -83,7 +84,7 @@ public class viewFullscreen extends NestedScrollView {
             });
             popupMenu.show();
         });
-        binding.pic.setOnClickListener(v -> {
+        binding.included.imageName.setOnClickListener(v -> {
 
         });
     }
@@ -108,8 +109,8 @@ public class viewFullscreen extends NestedScrollView {
                 load(item.getPath()).
                 placeholder(R.color.white).
                 useAnimationPool(true).
-                into(binding.pic);
-        binding.text.setText(item.getName());
+                into(binding.included.mainImage);
+        binding.included.imageName.setText(item.getName());
     }
 
     public void goUp() {

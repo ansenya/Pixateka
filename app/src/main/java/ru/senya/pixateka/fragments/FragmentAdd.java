@@ -77,7 +77,7 @@ public class FragmentAdd extends Fragment {
 
 
 
-    private static String getRealPath(Context context, Uri contentUri) {
+    private String getRealPath(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         String result = null;
         CursorLoader cursorLoader = new CursorLoader(

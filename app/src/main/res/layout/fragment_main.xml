@@ -10,7 +10,16 @@
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:title="@string/app_name" />
+        android:background="@color/toolbar_color"
+        android:title="@string/app_name"
+        android:titleTextColor="@color/text_color2">
+
+        <SearchView
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right" />
+    </Toolbar>
 
 
     <ru.senya.pixateka.view.viewFullscreen
@@ -27,7 +36,7 @@
         android:background="@color/toolbar_color"
         android:subtitleTextColor="@color/white"
         android:visibility="gone"
-        app:title="Photo"/>
+        app:title="Photo" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer"
@@ -38,7 +47,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/main_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:paddingHorizontal="2dp" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 

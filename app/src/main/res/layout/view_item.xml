@@ -4,52 +4,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="2dp">
+    android:paddingHorizontal="4dp"
+    android:paddingVertical="3dp">
 
     <com.makeramen.roundedimageview.RoundedImageView
-        android:background="#F6F6F6"
         android:id="@+id/main_image"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="2dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginBottom="2dp"
         android:adjustViewBounds="true"
-        android:padding="1dp"
+        android:background="#F6F6F6"
         android:src="@color/v1"
         app:riv_corner_radius="1dp" />
 
-    <TextView
-        android:id="@+id/image_name"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_image"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="-3dp"
-        android:textSize="15sp"
-        tools:text="подпись" />
+        android:layout_below="@+id/main_image">
 
-    <TextView
-        android:id="@+id/sets"
-        android:padding="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/main_image"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="-16dp"
-        android:layout_marginEnd="4dp"
-        android:text="..."
-        android:textSize="25sp" />
+        <TextView
+            android:layout_centerVertical="true"
+            android:id="@+id/image_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            tools:text="подпись" />
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:id="@+id/sets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:padding="2dp"
+            android:src="@drawable/baseline_more_horiz_24" />
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sets"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="-3dp"
         android:textSize="15sp"
+        android:visibility="gone"
         tools:text="description" />
+
 
 </RelativeLayout>

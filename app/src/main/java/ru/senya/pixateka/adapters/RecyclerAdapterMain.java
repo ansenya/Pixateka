@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -152,7 +154,8 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
         int[] colors = {R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5};
         Random random = new Random();
         RoundedImageView mainImage;
-        TextView imageName, imageDescription, sets;
+        TextView imageName, imageDescription;
+        ImageView sets;
 
 
         MyViewHolder(@NonNull View itemView) {

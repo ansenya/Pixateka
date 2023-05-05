@@ -109,10 +109,7 @@ public class FragmentMain extends Fragment {
 
 
     private void upToolbar() {
-        toolbar.setTitleTextColor(getResources().getColor(R.color.text_color2));
-        toolbar.setTitle(R.string.app_name);
-        toolbar.setBackgroundColor(getResources().getColor(R.color.toolbar_color, getContext().getTheme()));
-        toolbar.inflateMenu(R.menu.menu);
+
     }
 
     public void back() {
@@ -310,5 +307,4 @@ public class FragmentMain extends Fragment {
             }
         }
     };
-
 }
