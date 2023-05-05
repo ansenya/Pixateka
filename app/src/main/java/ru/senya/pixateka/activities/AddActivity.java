@@ -1,5 +1,7 @@
 package ru.senya.pixateka.activities;
 
+import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -25,7 +27,27 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Multipart;
+import retrofit2.http.Url;
 import ru.senya.pixateka.R;
+import ru.senya.pixateka.database.retrofit.itemApi.Item;
+import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
+import ru.senya.pixateka.database.retrofit.itemApi.Model;
+import ru.senya.pixateka.database.retrofit.itemApi.ModelResponse;
 import ru.senya.pixateka.databinding.ActivityAddBinding;
 
 public class AddActivity extends AppCompatActivity {
@@ -35,6 +57,8 @@ public class AddActivity extends AppCompatActivity {
     StorageReference storageRef;
     StorageMetadata storageMetadata;
     Uri uri;
+    Retrofit retrofit;
+    ItemInterface service;
 
     String path;
 
@@ -49,9 +73,50 @@ public class AddActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
+        retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        service = retrofit.create(ItemInterface.class);
+        binding.button.setOnClickListener(v -> {
+            if (binding.name.getInputText().isEmpty()) {
+                binding.wrongName.setVisibility(View.VISIBLE);
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(2500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    runOnUiThread(() -> {
+                        binding.wrongName.setVisibility(View.INVISIBLE);
+                    });
 
-        Log.e("MyTag", storageRef.toString());
+                }).start();
+            } else {
 
+                File file = new File(uri.getPath());
+
+                RequestBody authorBody = RequestBody.create(MediaType.parse("text/plain"), "your-username");
+                RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), "your-image-name");
+                RequestBody descriptionBody = RequestBody.create(MediaType.parse("text/plain"), "your-image-description");
+                MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+
+                Call<ModelResponse> call = service.uploadImage(new Model("admin", file, "asd", "asd"));
+                call.enqueue(new Callback<ModelResponse>() {
+                    @Override
+                    public void onResponse(Call<ModelResponse> call, Response<ModelResponse> response) {
+                        Log.e("MyTag", response.raw().toString());
+                        Toast.makeText(AddActivity.this, "gg wp", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ModelResponse> call, Throwable t) {
+                        Toast.makeText(AddActivity.this, "ыыыыыыы", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void f() {
         binding.button.setOnClickListener(v -> {
             if (binding.name.getInputText().isEmpty()) {
                 binding.wrongName.setVisibility(View.VISIBLE);
@@ -120,6 +185,7 @@ public class AddActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     @Override
@@ -152,5 +218,4 @@ public class AddActivity extends AppCompatActivity {
         }
         return result;
     }
-
 }

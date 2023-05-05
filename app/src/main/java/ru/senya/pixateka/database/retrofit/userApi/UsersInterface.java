@@ -1,4 +1,4 @@
-package ru.senya.pixateka.retrofit;
+package ru.senya.pixateka.database.retrofit.userApi;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import retrofit2.http.GET;
 
 public interface UsersInterface {
 
-    @GET("api/users/?format=json")
+    @GET("users/?format=json")
     Call<List<User>> getUsers();
 
 }

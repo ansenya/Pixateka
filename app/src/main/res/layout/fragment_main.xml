@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:animateLayoutChanges="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,34 +9,27 @@
     <Toolbar
         android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:title="@string/app_name" />
 
 
     <ru.senya.pixateka.view.viewFullscreen
-
         android:id="@+id/fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:visibility="gone" />
 
-    <Toolbar
-        android:subtitleTextColor="@color/white"
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:padding="20dp"
-            android:id="@+id/arrow_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_arrow_back_24" />
-    </Toolbar>
+        android:layout_height="52dp"
+        android:background="@color/toolbar_color"
+        android:subtitleTextColor="@color/white"
+        android:visibility="gone"
+        app:title="Photo"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:animateLayoutChanges="true"
         android:id="@+id/swipeContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -3,7 +3,8 @@ package ru.senya.pixateka.fragments;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import android.annotation.SuppressLint;
+import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,6 +20,7 @@ import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -32,50 +34,75 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.activities.AddActivity;
-import ru.senya.pixateka.adapters.RecyclerViewAdapterRoom;
+import ru.senya.pixateka.adapters.RecyclerAdapterMain;
+import ru.senya.pixateka.database.retrofit.itemApi.Item;
+import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
 import ru.senya.pixateka.databinding.FragmentMainBinding;
-import ru.senya.pixateka.room.ItemEntity;
+import ru.senya.pixateka.database.room.ItemEntity;
 
 public class FragmentMain extends Fragment {
 
     public FragmentMainBinding binding;
     RecyclerView list;
-    List<ItemEntity> items = new ArrayList<>();
-    RecyclerViewAdapterRoom adapter;
+    List<ItemEntity> data = new ArrayList<>();
+    RecyclerAdapterMain adapter;
     Toolbar toolbar;
+    Retrofit retrofit;
+    ItemInterface service;
 
 
     public FragmentMain(List<ItemEntity> items, Context context) {
-        this.items = items;
+        this.data = items;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentMainBinding.inflate(LayoutInflater.from(getContext()), container, false);
+
+        retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        service = retrofit.create(ItemInterface.class);
+
         list = binding.mainRecyclerView;
-        adapter = new RecyclerViewAdapterRoom(getActivity(),
-                items,
+        adapter = new RecyclerAdapterMain(getActivity(),
+                data,
                 getContext(),
                 onClickListener,
                 binding.fragment,
                 binding.mainRecyclerView,
                 binding.mainToolbar,
                 binding.fab,
-                binding.toolbar);
+                binding.toolbar,
+                binding.swipeContainer);
         initRecycler();
+
+
+
+        binding.toolbar.setTitle("Photo");
+        binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white, requireContext().getTheme()));
+        binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(binding.toolbar);
+        binding.toolbar.setNavigationOnClickListener(v -> {
+            back();
+        });
+
         toolbar = binding.mainToolbar;
         upToolbar();
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
 
         return binding.getRoot();
     }
@@ -95,6 +122,7 @@ public class FragmentMain extends Fragment {
         binding.toolbar.setVisibility(GONE);
         binding.mainRecyclerView.setVisibility(VISIBLE);
         binding.fab.setVisibility(VISIBLE);
+        binding.swipeContainer.setVisibility(VISIBLE);
     }
 
     private void initRecycler() {
@@ -104,9 +132,6 @@ public class FragmentMain extends Fragment {
     }
 
     private void listener() {
-        binding.arrowBack.setOnClickListener(v -> {
-            back();
-        });
         binding.fab.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), AddActivity.class));
         });
@@ -159,12 +184,11 @@ public class FragmentMain extends Fragment {
                                     if (listResult.getItems().size() == 0) {
                                         new Thread(() -> {
                                             App.getDatabase().itemDAO().delete();
-                                            items.clear();
+                                            data.clear();
                                         }).start();
 
                                         binding.swipeContainer.setRefreshing(false);
-                                    }
-                                    else {
+                                    } else {
                                         for (StorageReference storageReference : listResult.getItems()) {
                                             storageReference.getDownloadUrl().
                                                     addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -176,7 +200,7 @@ public class FragmentMain extends Fragment {
                                                                     binding.swipeContainer.setRefreshing(false);
                                                                     boolean contains = false;
 
-                                                                    ItemEntity item = new ItemEntity(
+                                                                    ItemEntity item = new ItemEntity(1,
                                                                             storageMetadata.getCustomMetadata("userUid"),
                                                                             uri.toString(),
                                                                             storageMetadata.getCustomMetadata("name"),
@@ -193,9 +217,9 @@ public class FragmentMain extends Fragment {
                                                                         new Thread(() -> {
                                                                             App.getDatabase().itemDAO().save(item);
                                                                         }).start();
-                                                                        items.add(item);
+                                                                        data.add(item);
                                                                         getActivity().runOnUiThread(() -> {
-                                                                            adapter.notifyItemChanged(items.size() - 1);
+                                                                            adapter.notifyItemChanged(data.size() - 1);
                                                                         });
                                                                     }
                                                                     binding.swipeContainer.setRefreshing(false);
@@ -225,7 +249,49 @@ public class FragmentMain extends Fragment {
                                     Log.e("MyTag", e.toString());
                                 }
                             });
-                }).start();
+                });
+
+                Call<ArrayList<Item>> call = service.getAllPhotos();
+
+                call.enqueue(new Callback<ArrayList<Item>>() {
+                    @Override
+                    public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
+                        if (response.body() != null && response.body().size() > 0) {
+
+                            new Thread(() -> {
+                                ArrayList<Item> items = response.body();
+                                for (Item item : items) {
+                                    boolean contains = false;
+
+                                    for (ItemEntity itemEntity : data) {
+                                        if (item.id == itemEntity.id) {
+                                            contains = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!contains) {
+                                        ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
+                                        data.add(entity);
+                                        getActivity().runOnUiThread(()->{
+                                            myNotify(data.size() - 1);
+                                        });
+                                        App.getDatabase().itemDAO().save(entity);
+                                    }
+
+                                }
+                                getActivity().runOnUiThread(() -> {
+                                    binding.swipeContainer.setRefreshing(false);
+                                });
+                            }).start();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
+                        Toast.makeText(getContext(), "smth bad happened", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 Toast.makeText(getContext(), "you don't have internet connection", Toast.LENGTH_SHORT).show();
                 binding.swipeContainer.setRefreshing(false);

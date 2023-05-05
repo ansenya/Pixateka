@@ -19,7 +19,7 @@ import java.util.List;
 
 import ru.senya.pixateka.adapters.RecyclerTouchListener;
 import ru.senya.pixateka.databinding.FragmentSearchBinding;
-import ru.senya.pixateka.room.ItemEntity;
+import ru.senya.pixateka.database.room.ItemEntity;
 
 
 public class FragmentSearch extends Fragment {
@@ -42,7 +42,7 @@ public class FragmentSearch extends Fragment {
         binding = FragmentSearchBinding.inflate(LayoutInflater.from(getContext()), container, false);
         initListeners();
         binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        //binding.list.setAdapter(new RecyclerViewAdapterRoom(itemsSearch, context));
+        //binding.list.setAdapter(new RecyclerAdapterMain(itemsSearch, context));
         return binding.getRoot();
     }
 

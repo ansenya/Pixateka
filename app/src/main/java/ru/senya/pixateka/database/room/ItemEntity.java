@@ -1,4 +1,4 @@
-package ru.senya.pixateka.room;
+package ru.senya.pixateka.database.room;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class ItemEntity {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     public int id;
     public String uid;
     public String path;
@@ -16,7 +16,8 @@ public class ItemEntity {
     public String email;
     public String tags;
 
-    public ItemEntity(String uid, String path, String name, String description, String email, String tags) {
+    public ItemEntity(int id, String uid, String path, String name, String description, String email, String tags) {
+        this.id = id;
         this.uid = uid;
         this.path = path;
         this.description = description;

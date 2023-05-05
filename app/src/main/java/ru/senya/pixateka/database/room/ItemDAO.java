@@ -1,4 +1,4 @@
-package ru.senya.pixateka.room;
+package ru.senya.pixateka.database.room;
 
 import androidx.room.Dao;
 import androidx.room.Insert;

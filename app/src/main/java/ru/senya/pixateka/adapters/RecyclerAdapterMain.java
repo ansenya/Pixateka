@@ -24,40 +24,44 @@ import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.room.ItemEntity;
+import ru.senya.pixateka.database.room.ItemEntity;
 
 
-public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAdapterRoom.MyViewHolder> {
+public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMain.MyViewHolder> {
 
     private final List<ItemEntity> Items;
     private final Context context;
 
     ru.senya.pixateka.view.viewFullscreen viewFullscreen;
     RecyclerView recyclerView;
-    Toolbar mainToolbar, toolbar;
+    Toolbar mainToolbar;
+    androidx.appcompat.widget.Toolbar toolbar;
     FloatingActionButton floatingActionButton;
     FragmentActivity activity;
+    SwipeRefreshLayout swipeRefreshLayout;
 
-    public RecyclerViewAdapterRoom(FragmentActivity activity,
-                                   List<ItemEntity> items,
-                                   Context context,
-                                   View.OnClickListener onClickListener,
-                                   ru.senya.pixateka.view.viewFullscreen viewFullscreen,
-                                   RecyclerView recyclerView,
-                                   Toolbar toolbar,
-                                   FloatingActionButton floatingActionButton,
-                                   Toolbar toolbar2) {
+    public RecyclerAdapterMain(FragmentActivity activity,
+                               List<ItemEntity> items,
+                               Context context,
+                               View.OnClickListener onClickListener,
+                               ru.senya.pixateka.view.viewFullscreen viewFullscreen,
+                               RecyclerView recyclerView,
+                               Toolbar toolbar,
+                               FloatingActionButton floatingActionButton,
+                               androidx.appcompat.widget.Toolbar toolbar2,
+                               SwipeRefreshLayout swipeRefreshLayout) {
+        this.swipeRefreshLayout = swipeRefreshLayout;
         this.activity = activity;
         Items = items;
         this.context = context;
@@ -128,7 +132,8 @@ public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAd
             mainToolbar.setVisibility(View.INVISIBLE);
             toolbar.setVisibility(VISIBLE);
             floatingActionButton.setVisibility(GONE);
-            viewFullscreen.update(Items.get(position));
+            swipeRefreshLayout.setVisibility(GONE);
+            viewFullscreen.update(Items.get(position), activity);
         });
         holder.mainImage.setOnLongClickListener(v -> {
             Log.e("MyTag", Items.get(position).getPath()+ '\n'+Items.get(position).getName());
@@ -148,7 +153,6 @@ public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAd
         Random random = new Random();
         RoundedImageView mainImage;
         TextView imageName, imageDescription, sets;
-        Drawable drawable = new BitmapDrawable();
 
 
         MyViewHolder(@NonNull View itemView) {
@@ -159,10 +163,10 @@ public class RecyclerViewAdapterRoom extends RecyclerView.Adapter<RecyclerViewAd
             sets = itemView.findViewById(R.id.sets);
         }
 
-        void setImageView(ItemEntity item, Context context, FragmentActivity activity, RecyclerViewAdapterRoom adapter, int p) {
+        void setImageView(ItemEntity item, Context context, FragmentActivity activity, RecyclerAdapterMain adapter, int p) {
             Glide.
                     with(context).
-                    load(item.getPath()).dontAnimate().
+                    load(item.getPath()).
                     placeholder(colors[random.nextInt(colors.length)]).
                     into(mainImage);
         }

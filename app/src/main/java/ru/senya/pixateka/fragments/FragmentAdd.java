@@ -22,7 +22,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ru.senya.pixateka.databinding.FragmentAddBinding;
-import ru.senya.pixateka.room.ItemEntity;
+import ru.senya.pixateka.database.room.ItemEntity;
 
 public class FragmentAdd extends Fragment {
 

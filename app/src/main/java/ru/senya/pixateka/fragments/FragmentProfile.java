@@ -11,16 +11,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import java.util.ArrayList;
+
+import ru.senya.pixateka.adapters.RecyclerAdapterMain;
+import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
 
 
 public class FragmentProfile extends Fragment {
 
     NewFragmentProfileBinding binding;
+    ArrayList<ItemEntity> data;
 
 
-    public FragmentProfile(Object o, Object a) {
+    public FragmentProfile(ArrayList<ItemEntity> data) {
+        this.data = data;
     }
 
     @Nullable
@@ -41,24 +48,8 @@ public class FragmentProfile extends Fragment {
 
 
     private void initRecycler() {
-
-//        binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-//        binding.recyclerList.setAdapter(adapter);
-//        binding.recyclerList.addOnItemTouchListener(new RecyclerTouchListener(getContext(), binding.recyclerList,
-//                new RecyclerTouchListener.ClickListener() {
-//
-//                    @Override
-//                    public void onClick(View view, int position) {
-//                        binding.fragment.setVisibility(VISIBLE);
-//                        //binding.fragment.update(items.get(position).path, items.get(position).name);
-//                        binding.relative.setVisibility(GONE);
-//                    }
-//
-//                    @Override
-//                    public void onLongClick(View view, int position) {
-//
-//                    }
-//                }));
+        binding.recyclerList.setAdapter(new RecyclerAdapterMain(getActivity(), data, getContext(), null, binding.fragment, binding.recyclerList, null, null, null, null));
+        binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     }
 
     public boolean visible() {

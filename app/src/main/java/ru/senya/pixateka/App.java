@@ -4,7 +4,7 @@ import android.app.Application;
 
 import androidx.room.Room;
 
-import ru.senya.pixateka.room.Database;
+import ru.senya.pixateka.database.room.Database;
 
 
 public class App extends Application {
