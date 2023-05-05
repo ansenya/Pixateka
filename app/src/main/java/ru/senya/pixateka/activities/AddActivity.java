@@ -96,8 +96,8 @@ public class AddActivity extends AppCompatActivity {
 
 
                 RequestBody authorBody = RequestBody.create(MediaType.parse("text/plain"), "admin");
-                RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), "your-image-name");
-                RequestBody descriptionBody = RequestBody.create(MediaType.parse("text/plain"), "your-image-description");
+                RequestBody nameBody = RequestBody.create(MediaType.parse("text/plain"), binding.name.getInputText());
+                RequestBody descriptionBody = RequestBody.create(MediaType.parse("text/plain"), binding.description.getInputText());
                 MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
 
                 Call<ResponseBody> call = service.uploadImage(authorBody, imagePart, nameBody, descriptionBody);
