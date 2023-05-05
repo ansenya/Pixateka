@@ -76,6 +76,4 @@ dependencies {
     implementation "com.android.volley:volley:$volley_version"
 
 
-    implementation 'com.github.stfalcon-studio:StfalconImageViewer:v1.0.1'
-
 }

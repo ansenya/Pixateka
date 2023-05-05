@@ -31,10 +31,6 @@ public class StartActivity extends AppCompatActivity {
 //        finish();
 
 
-        new Thread(()->{
-            App.getDatabase().itemDAO().delete();
-        }).start();
-
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);

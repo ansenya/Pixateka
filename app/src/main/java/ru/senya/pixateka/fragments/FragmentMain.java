@@ -72,7 +72,7 @@ public class FragmentMain extends Fragment {
 
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         service = retrofit.create(ItemInterface.class);
-
+        onRefreshListener.onRefresh();
         list = binding.mainRecyclerView;
         adapter = new RecyclerAdapterMain(getActivity(),
                 data,
@@ -259,18 +259,20 @@ public class FragmentMain extends Fragment {
                         if (response.body() != null && response.body().size() > 0) {
 
                             new Thread(() -> {
+
                                 ArrayList<Item> items = response.body();
                                 for (Item item : items) {
+
                                     boolean contains = false;
 
                                     for (ItemEntity itemEntity : data) {
-                                        if (item.id == itemEntity.id) {
+                                        if (item.id==itemEntity.id){
                                             contains = true;
                                             break;
                                         }
                                     }
 
-                                    if (!contains) {
+                                    if (!contains){
                                         ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
                                         data.add(entity);
                                         getActivity().runOnUiThread(()->{
@@ -278,6 +280,15 @@ public class FragmentMain extends Fragment {
                                         });
                                         App.getDatabase().itemDAO().save(entity);
                                     }
+//
+//                                    if (!contains) {
+//                                        ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
+//                                        data.add(entity);
+//                                        getActivity().runOnUiThread(()->{
+//                                            myNotify(data.size() - 1);
+//                                        });
+//                                        App.getDatabase().itemDAO().save(entity);
+//                                    }
 
                                 }
                                 getActivity().runOnUiThread(() -> {
@@ -289,6 +300,7 @@ public class FragmentMain extends Fragment {
 
                     @Override
                     public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
+                        binding.swipeContainer.setRefreshing(false);
                         Toast.makeText(getContext(), "smth bad happened", Toast.LENGTH_SHORT).show();
                     }
                 });

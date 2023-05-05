@@ -25,6 +25,7 @@ import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.databinding.ViewFullscreenBinding;
@@ -36,6 +37,8 @@ public class viewFullscreen extends NestedScrollView {
     Context context;
     ItemEntity itemEntity;
     private FragmentActivity activity;
+    int[] colors = {R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5};
+    Random random = new Random();
 
 
     public viewFullscreen(Context context, AttributeSet attrs) {
@@ -103,6 +106,8 @@ public class viewFullscreen extends NestedScrollView {
         Glide.
                 with(context).
                 load(item.getPath()).
+                placeholder(R.color.white).
+                useAnimationPool(true).
                 into(binding.pic);
         binding.text.setText(item.getName());
     }
