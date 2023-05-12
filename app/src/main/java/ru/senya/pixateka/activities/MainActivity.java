@@ -94,22 +94,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void profileData() {
-        Call<ArrayList<Item>> call = service.getPhotosByUserId(App.getMainUser().id);
-        call.enqueue(new Callback<ArrayList<Item>>() {
-            @Override
-            public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
-                Toast.makeText(MainActivity.this, "pp good", Toast.LENGTH_SHORT).show();
-                for (Item item : response.body()) {
-                    profileData.add(new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags));
-                }
-                fragmentProfile.myNotify();
-            }
-
-            @Override
-            public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "pp bad", Toast.LENGTH_SHORT).show();
-            }
-        });
+        new Thread(()->{
+            profileData.addAll(App.getDatabase().itemDAO().getAllProfile(App.getMainUser().id));
+        }).start();
     }
 
 

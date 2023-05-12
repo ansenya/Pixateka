@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
@@ -16,12 +17,14 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.tabs.TabLayout;
 
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Stack;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,18 +33,22 @@ import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.adapters.RecyclerAdapterSecondary;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
-import ru.senya.pixateka.databinding.ViewFullscreenBinding;
 import ru.senya.pixateka.database.room.ItemEntity;
+import ru.senya.pixateka.databinding.ViewFullscreenBinding;
 
 public class viewFullscreen extends NestedScrollView {
 
-    ViewFullscreenBinding binding;
+    public ViewFullscreenBinding binding;
     Context context;
     ItemEntity itemEntity;
     private FragmentActivity activity;
     int[] colors = {R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5};
     Random random = new Random();
+    viewFullscreen viewFullscreen;
     LinkedList<ItemEntity> data = new LinkedList<>();
+    LinkedList<ItemEntity> likeData = new LinkedList<>();
+
+    Stack<ItemEntity> previous = new Stack<>();
 
     public viewFullscreen(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -85,29 +92,38 @@ public class viewFullscreen extends NestedScrollView {
             });
             popupMenu.show();
         });
-//        binding.included.mainImage.setOnClickListener(v -> {
-//            binding.mainFragment.setVisibility(GONE);
-//            binding.container.setVisibility(VISIBLE);
-//            binding.scalableImage.setImage(ImageSource.resource(colors[random.nextInt(colors.length)]));
-//            Glide.
-//                    with(context).
-//                    asBitmap().
-//                    load(itemEntity.getPath()).
-//                    placeholder(colors[random.nextInt(colors.length)]).
-//                    into(new CustomTarget<Bitmap>() {
-//                        @Override
-//                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-//                            binding.scalableImage.setImage(ImageSource.bitmap(resource));
-//                        }
-//
-//                        @Override
-//                        public void onLoadCleared(@Nullable Drawable placeholder) {
-//
-//                        }
-//                    });
-//        });
-        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.tabs.addTab(binding.tabs.newTab().setText("Фотографии пользователя"));
+        binding.tabs.addTab(binding.tabs.newTab().setText("Похожие фотографии"));
+        viewFullscreen = this;
+        binding.tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getText().toString().equals("Фотографии пользователя")) {
+                    binding.list.setVisibility(VISIBLE);
+                    binding.list2.setVisibility(INVISIBLE);
+                    binding.nothingWasFound.setVisibility(INVISIBLE);
+                } else if (tab.getText().toString().equals("Похожие фотографии")) {
+                    binding.list2.setVisibility(VISIBLE);
+                    binding.list.setVisibility(INVISIBLE);
+                    if (likeData.size() == 0) {
+                        binding.nothingWasFound.setVisibility(VISIBLE);
+                    }
 
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.list2.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
     }
 
     @Override
@@ -121,12 +137,18 @@ public class viewFullscreen extends NestedScrollView {
         return super.fullScroll(direction);
     }
 
-
-    public void update(ItemEntity item, FragmentActivity activity) {
+    private void privateUpdate(ItemEntity item, FragmentActivity activity) {
+        binding.nothingWasFound.setVisibility(INVISIBLE);
         goUp();
         if (binding.list.getAdapter() == null) {
             binding.list.setAdapter(new RecyclerAdapterSecondary(data, getContext(), activity, this));
         }
+        if (binding.list2.getAdapter() == null) {
+            binding.list2.setAdapter(new RecyclerAdapterSecondary(likeData, getContext(), activity, this));
+        }
+        binding.list.getAdapter().notifyDataSetChanged();
+        binding.list2.getAdapter().notifyDataSetChanged();
+        likeData.clear();
         data.clear();
         this.itemEntity = item;
         this.activity = activity;
@@ -160,10 +182,39 @@ public class viewFullscreen extends NestedScrollView {
                 }
             });
         }).start();
+        new Thread(() -> {
+            likeData.addAll(App.getDatabase().itemDAO().searchByTags(item.tags, item.id + ""));
+            activity.runOnUiThread(() -> {
+                if (likeData.size() == 0 && binding.list2.getVisibility() == VISIBLE) {
+                    binding.nothingWasFound.setVisibility(VISIBLE);
+                } else {
+                    binding.list2.getAdapter().notifyDataSetChanged();
+                }
+            });
+        }).start();
+    }
+
+    public void update(ItemEntity item, FragmentActivity activity) {
+        previous.add(item);
+        Log.e("MyTag", previous.toString());
+        privateUpdate(item, activity);
     }
 
     public void goUp() {
         scrollTo(0, 0);
+    }
+
+    public boolean pop() {
+        if (previous.size() < 2) {
+            previous.clear();
+            return true;
+        } else {
+            previous.pop();
+            privateUpdate(previous.peek(), activity);
+            binding.tabs.selectTab(binding.tabs.getTabAt(0));
+            Log.e("MyTag", previous.toString());
+        }
+        return false;
     }
 
 }

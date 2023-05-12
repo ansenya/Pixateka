@@ -97,13 +97,14 @@ public class FragmentMain extends Fragment {
     }
 
     public void back() {
-        binding.fragment.goUp();
-        binding.fragment.setVisibility(GONE);
-        binding.mainToolbar.setVisibility(VISIBLE);
-        binding.toolbar.setVisibility(GONE);
-        binding.mainRecyclerView.setVisibility(VISIBLE);
-        binding.fab.setVisibility(VISIBLE);
-        binding.swipeContainer.setVisibility(VISIBLE);
+        if (binding.fragment.pop()) {
+            binding.fragment.setVisibility(GONE);
+            binding.mainToolbar.setVisibility(VISIBLE);
+            binding.toolbar.setVisibility(GONE);
+            binding.mainRecyclerView.setVisibility(VISIBLE);
+            binding.fab.setVisibility(VISIBLE);
+            binding.swipeContainer.setVisibility(VISIBLE);
+        }
     }
 
     private void initRecycler() {
@@ -175,7 +176,7 @@ public class FragmentMain extends Fragment {
 
                                             try {
                                                 App.getDatabase().itemDAO().save(entity);
-                                            } catch (SQLiteConstraintException e){
+                                            } catch (SQLiteConstraintException e) {
 
                                             }
 

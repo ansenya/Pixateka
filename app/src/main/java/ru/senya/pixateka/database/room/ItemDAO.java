@@ -11,6 +11,8 @@ public interface ItemDAO {
 
     @Query("SELECT * FROM ItemEntity")
     List<ItemEntity> getAll();
+    @Query("SELECT * FROM ItemEntity WHERE id=:id")
+    List<ItemEntity> getAllProfile(int id);
 
     @Insert
     void save(ItemEntity item);
@@ -23,7 +25,7 @@ public interface ItemDAO {
     @Query("DELETE FROM ItemEntity")
     void delete();
 
-    @Query("SELECT * FROM ItemEntity WHERE name =:s")
-    List<ItemEntity> search(String s);
+    @Query("SELECT * FROM ItemEntity WHERE tags =:tags AND tags!='' AND id!=:id")
+    List<ItemEntity> searchByTags(String tags, String id);
 
 }
