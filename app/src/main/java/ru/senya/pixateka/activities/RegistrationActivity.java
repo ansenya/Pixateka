@@ -36,7 +36,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     MultipartBody.Part avatar = null;
     File file;
-    Boolean clicked = false;
+    Boolean clicked = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void init() {
         binding.buttonEnter2.setOnClickListener(view -> {
             if (clicked) {
-                clicked = true;
+                clicked = false;
                 String errorString = "";
                 if (binding.inputLogin.getInputText().isEmpty()) {
                     errorString += "Логин не может быть пустой\n";
@@ -76,14 +76,11 @@ public class RegistrationActivity extends AppCompatActivity {
                     RequestBody first_name = RequestBody.create(MediaType.parse("text/plain"), binding.inputFirstName.getInputText());
                     RequestBody last_name = RequestBody.create(MediaType.parse("text/plain"), "last_name");
                     RequestBody country = RequestBody.create(MediaType.parse("text/plain"), binding.inputCountry.getInputText());
-
-
                     App.getUserService().register(username, avatar, password, email, first_name, last_name, country).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
                             if (response.isSuccessful() && response.body() != null) {
                                 App.setMainUser(response.body());
-                                Log.e("MyTag", response.headers().get("csrftoken"));
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
                             } else {
                                 try {
@@ -116,11 +113,12 @@ public class RegistrationActivity extends AppCompatActivity {
                         });
                     }).start();
                 }
-                clicked = false;
+                clicked = true;
             }
 
 
-        });binding.buttonBack.setOnClickListener(v ->{
+        });
+        binding.buttonBack.setOnClickListener(v ->{
             Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
             onBackPressed();
         });
