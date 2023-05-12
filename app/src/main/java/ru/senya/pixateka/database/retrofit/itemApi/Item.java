@@ -7,4 +7,5 @@ public class Item {
     public String image;
     public String description;
     public int id;
+    public String color;
 }

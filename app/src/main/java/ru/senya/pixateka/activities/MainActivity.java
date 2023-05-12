@@ -9,21 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageMetadata;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,12 +25,13 @@ import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
+import ru.senya.pixateka.database.retrofit.userApi.User;
+import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ActivityMainBinding;
 import ru.senya.pixateka.fragments.FragmentMain;
 import ru.senya.pixateka.fragments.FragmentNotifications;
 import ru.senya.pixateka.fragments.FragmentProfile;
 import ru.senya.pixateka.fragments.FragmentSearch;
-import ru.senya.pixateka.database.room.ItemEntity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,14 +41,16 @@ public class MainActivity extends AppCompatActivity {
     FragmentProfile fragmentProfile;
     FragmentMain fragmentMain;
     FragmentNotifications fragmentNotifications = new FragmentNotifications();
-    FragmentSearch fragmentSearch = new FragmentSearch(mainData);
+    FragmentSearch fragmentSearch;
     Retrofit retrofit;
     ItemInterface service;
+    User mainUser;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        mainUser = App.getMainUser();
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
@@ -64,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
         profileData();
         checkPermission();
         fragmentMain = new FragmentMain(mainData, getApplicationContext());
-        fragmentProfile = new FragmentProfile(profileData);
+        fragmentProfile = new FragmentProfile(profileData, mainUser);
+        fragmentSearch = new FragmentSearch(mainData);
+
         setFragments();
     }
 
@@ -96,13 +93,13 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void profileData(){
-        Call<ArrayList<Item>> call = service.getPhotosByUserId("admin");
+    private void profileData() {
+        Call<ArrayList<Item>> call = service.getPhotosByUserId(App.getMainUser().id);
         call.enqueue(new Callback<ArrayList<Item>>() {
             @Override
             public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
                 Toast.makeText(MainActivity.this, "pp good", Toast.LENGTH_SHORT).show();
-                for (Item item: response.body()){
+                for (Item item : response.body()) {
                     profileData.add(new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags));
                 }
                 fragmentProfile.myNotify();
@@ -117,12 +114,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    1);
+        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
+            Toast.makeText(this, "Need Permission to access storage for Downloading Image", Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -153,6 +151,8 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.search:
                     setFragment();
+                    if (binding.navigationSearch.getVisibility() == View.VISIBLE)
+                        fragmentSearch.back();
                     binding.navigationSearch.setVisibility(View.VISIBLE);
                     return true;
             }

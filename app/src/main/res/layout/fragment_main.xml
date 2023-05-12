@@ -13,12 +13,6 @@
         android:background="@color/toolbar_color"
         android:title="@string/app_name"
         android:titleTextColor="@color/text_color2">
-
-        <SearchView
-            android:id="@+id/search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right" />
     </Toolbar>
 
 

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black">
+    android:layout_height="match_parent">
+
 
     <LinearLayout
+        android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
@@ -15,26 +16,88 @@
 
         <include
             android:id="@+id/included"
-            layout="@layout/view_item"/>
+            layout="@layout/view_item" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/view2"
-            android:layout_width="55dp"
-            android:layout_height="55dp"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="left"
-            android:elevation="12dp"
-            app:cardCornerRadius="40dp">
 
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingEnd="4dp"
+            tools:ignore="RtlSymmetry">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/pfp"
+                android:layout_width="57dp"
+                android:layout_height="57dp"
+                android:layout_gravity="start"
+                android:layout_marginHorizontal="4dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/pfp" />
-        </androidx.cardview.widget.CardView>
+                android:src="@drawable/pfp"
+                app:riv_corner_radius="80dp" />
+
+            <TextView
+                android:id="@+id/main_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:paddingHorizontal="4dp"
+                android:text="desc"
+                android:textAlignment="textStart"
+                android:textColor="#4E4E4E"
+                android:textSize="14.3sp" />
+
+
+        </LinearLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="7dp"
+            android:background="#85000000" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="4dp"
+            android:text="@string/OtherPictures"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:id="@+id/container"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Space
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+            android:layout_weight="1"
+            android:id="@+id/scalable_image"
+            android:background="@color/black"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <Space
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
 
     </LinearLayout>
 
 
-</androidx.core.widget.NestedScrollView>
+</RelativeLayout>

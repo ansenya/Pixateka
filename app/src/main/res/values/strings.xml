@@ -9,4 +9,6 @@
     <string name="title_activity_second">SecondActivity</string>
     <string name="help">Почта: mail@mail.com\nПароль: 123456</string>
     <string name="TextUploadPhoto">Загрузить фото</string>
+    <string name="OtherPictures">Остальные фотографии этого пользователя</string>
+    <string name="search">Поиск</string>
 </resources>

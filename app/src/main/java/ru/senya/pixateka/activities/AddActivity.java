@@ -44,6 +44,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Multipart;
 import retrofit2.http.Url;
+import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
@@ -91,6 +92,7 @@ public class AddActivity extends AppCompatActivity {
 
                 }).start();
             } else {
+                binding.progressCircular.setVisibility(View.VISIBLE);
 
                 File file = new File(getRealPath(getApplicationContext(), uri));
 
@@ -100,14 +102,13 @@ public class AddActivity extends AppCompatActivity {
                 RequestBody descriptionBody = RequestBody.create(MediaType.parse("text/plain"), binding.description.getInputText());
                 MultipartBody.Part imagePart = MultipartBody.Part.createFormData("image", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
 
-                Call<ResponseBody> call = service.uploadImage(authorBody, imagePart, nameBody, descriptionBody);
+                Call<ResponseBody> call = service.uploadImage(authorBody, imagePart, nameBody, descriptionBody, App.getMainUser().token, "csrftoken="+App.getMainUser().token+"; "+"sessionid="+App.getMainUser().sessionId);
                 call.enqueue(new Callback<ResponseBody>() {
+
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        try {
-                            Log.e("MyTag", response.errorBody().string());
-                        } catch (Exception e) {
-
+                        if (response.isSuccessful()){
+                            onBackPressed();
                         }
                     }
 
@@ -207,7 +208,7 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    private static String getRealPath(Context context, Uri contentUri) {
+    public static String getRealPath(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         String result = null;
         CursorLoader cursorLoader = new CursorLoader(

@@ -16,12 +16,13 @@
     <color name="text_color">#7b8e8f</color>
     <color name="text_color2">#FFFFFF</color>
     <color name="button">#7b8e8f</color>
+    <color name="button2">#7C9FA0</color>
     <color name="orange">#FF5722</color>
     <color name="yellow">#FFB600</color>
-
     <color name="v1">#a8c9e2</color>
     <color name="v2">#a8ace2</color>
     <color name="v3">#c4d2a4</color>
-    <color name="v4">#d2b3a4</color>
+    <color name="v4">#877439</color>
     <color name="v5">#a4c4d2</color>
+    <color name="back">#6C7C7D</color>
 </resources>

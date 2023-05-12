@@ -7,76 +7,99 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_enter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
-        android:text="Вход"
-        android:textColor="@color/black"
-        android:textSize="19sp" />
+    <Toolbar
+        android:id="@+id/mainToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/toolbar_color"
+        android:title="Авторизация"
+        android:titleTextColor="@color/text_color2">
+    </Toolbar>
 
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/linear_layout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:layout_centerInParent="true">
 
-
-        <ru.senya.pixateka.view.InputField
-            android:id="@+id/input_email"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:inputType="textEmailAddress"
-            app:hint="Адрес электронной почты"
-            app:hint_color="@color/hint_color"
-            app:src="@drawable/pfp"
-            app:title="Email address" />
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <ru.senya.pixateka.view.InputField
-            android:id="@+id/input_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            app:hint="Пароль"
-            app:hint_color="@color/hint_color"
-            app:src="@drawable/password"
-            app:title="Password" />
+            <LinearLayout
+                android:id="@+id/linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
 
 
-        <Button
-            android:id="@+id/button_enter"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/button"
-            android:text="Войти"
-            android:textColor="@color/white" />
-        <TextView
-            android:id="@+id/button_registration"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Регистрация" />
+                <ru.senya.pixateka.view.InputField
+                    android:id="@+id/input_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:inputType="textEmailAddress"
+                    app:hint="Ваш логин"
+                    app:hint_color="@color/hint_color"
+                    app:src="@drawable/pfp"
+                    app:title="Логин" />
 
-    </LinearLayout>
+                <ru.senya.pixateka.view.InputField
+                    android:id="@+id/input_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    app:hint="Ваш пароль"
+                    app:hint_color="@color/hint_color"
+                    app:src="@drawable/password"
+                    app:title="Пароль" />
 
-    <TextView
-        android:id="@+id/wrong_indicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/linear_layout"
-        android:layout_centerHorizontal="true"
-        android:text="Что-то неверно!"
-        android:textColor="@color/red"
-        android:visibility="gone"
-        tools:visibility="visible" />
+
+                <Button
+                    android:id="@+id/button_enter"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:backgroundTint="@color/button"
+                    android:text="Войти"
+                    android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/button_registration"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:backgroundTint="@color/button"
+                    android:text="Регистрация"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/progress_circular"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="60dp"
+                android:layout_below="@+id/linear_layout"
+                android:layout_centerHorizontal="true"
+                 android:visibility="gone"/>
+
+            <TextView
+                android:layout_marginTop="13dp"
+                android:id="@+id/wrong_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linear_layout"
+                android:layout_centerHorizontal="true"
+                android:text="Что-то неверно!"
+                android:textColor="@color/red"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </RelativeLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

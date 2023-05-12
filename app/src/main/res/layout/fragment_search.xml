@@ -1,75 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ru.senya.pixateka.view.viewFullscreen
-        android:id="@+id/fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
-
 
     <RelativeLayout
-        android:id="@+id/relative_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:gravity="center_horizontal"
-            android:text="Поиск"
-            android:textColor="@color/black"
-            android:textSize="20sp" />
-
-        <EditText
-            android:id="@+id/search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text"
-            android:layout_margin="7dp"
-            android:hint="Введите Ваш запрос"
-            android:outlineAmbientShadowColor="@color/black"
-            android:textSize="16sp" />
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_below="@id/search"
-            android:layout_margin="5dp"
-            android:backgroundTint="@color/button"
-            android:text="Найти"
-            android:textColor="@color/white" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@id/list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/button" />
-
         <RelativeLayout
-            android:id="@+id/nothing"
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <Toolbar
+                android:id="@+id/text"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:background="@color/toolbar_color"
+                android:gravity="center_horizontal"
+                android:title="@string/search"
+                android:titleTextColor="@color/text_color2"/>
+
+            <SearchView
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text"
+                android:layout_marginStart="7dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="7dp"
+                android:iconifiedByDefault="false"
+                android:outlineAmbientShadowColor="@color/black"
+                android:queryHint="Введите Ваш запрос"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_below="@id/search"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/button"
+                android:text="Найти"
+                android:textColor="@color/white" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/button" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:id="@+id/nothing_was_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/container"
+            android:layout_centerHorizontal="true"
+            android:text="Ничего не найдено"
+            android:textColor="@color/button"
+            android:textSize="20sp"
+            android:visibility="invisible" />
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@color/toolbar_color"
+            android:subtitleTextColor="@color/white"
             android:visibility="gone"
+            app:title="Photo" />
+
+        <ru.senya.pixateka.view.viewFullscreen
+            android:id="@+id/fragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/button"
-            android:background="@color/white">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:autoSizeTextType="uniform"
-                android:textAlignment="center"
-                android:textColor="@color/text_color"
-                android:text="Nothing was found :(" />
-        </RelativeLayout>
+            android:layout_below="@+id/toolbar"
+            android:visibility="gone" />
     </RelativeLayout>
 
 
-</RelativeLayout>
+</androidx.core.widget.NestedScrollView>

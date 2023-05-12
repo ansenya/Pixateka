@@ -9,8 +9,6 @@
 
 
     <application
-        android:usesCleartextTraffic="true"
-
         android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -21,11 +19,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Pixateka"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <activity
             android:name=".activities.StartActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +36,7 @@
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pixateka">
             <meta-data
                 android:name="android.app.lib_name"
@@ -44,6 +45,7 @@
         <activity
             android:name=".activities.RegistrationActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pixateka">
             <meta-data
                 android:name="android.app.lib_name"
@@ -53,6 +55,7 @@
         <activity
             android:name=".activities.LoginActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pixateka">
             <meta-data
                 android:name="android.app.lib_name"
@@ -62,12 +65,14 @@
         <activity
             android:name=".activities.AddActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pixateka" />
 
 
         <activity
             android:name=".activities.TestActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Pixateka">
 
         </activity>

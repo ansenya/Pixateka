@@ -3,6 +3,12 @@ buildscript {
         ext.jetpack_version = "2.4.1"
         ext.volley_version = "1.2.1"
         ext.kakao_version = "3.0.6"
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+    }
     dependencies {
         classpath 'com.google.gms:google-services:4.3.10'
     }

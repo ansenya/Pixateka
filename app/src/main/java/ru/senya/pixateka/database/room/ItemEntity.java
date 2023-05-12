@@ -15,6 +15,8 @@ public class ItemEntity {
     public String description;
     public String email;
     public String tags;
+    public String color;
+    public String parent;
 
     public ItemEntity(int id, String uid, String path, String name, String description, String email, String tags) {
         this.id = id;
@@ -28,7 +30,6 @@ public class ItemEntity {
             return;
         } else this.name = name;
     }
-
     public int getId() {
         return id;
     }
@@ -55,5 +56,17 @@ public class ItemEntity {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public void setParent(String parent) {
+        this.parent = parent;
     }
 }

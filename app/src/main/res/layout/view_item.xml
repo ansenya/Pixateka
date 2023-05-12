@@ -14,7 +14,7 @@
         android:adjustViewBounds="true"
         android:background="#F6F6F6"
         android:src="@color/v1"
-        app:riv_corner_radius="1dp" />
+        app:riv_corner_radius="4dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"

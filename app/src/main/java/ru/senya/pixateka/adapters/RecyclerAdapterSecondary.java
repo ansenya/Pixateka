@@ -1,18 +1,11 @@
 package ru.senya.pixateka.adapters;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,70 +14,47 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.net.URL;
-import java.util.List;
+import java.util.LinkedList;
 import java.util.Random;
 
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.room.ItemEntity;
+import ru.senya.pixateka.databinding.ViewItemBinding;
+import ru.senya.pixateka.view.viewFullscreen;
 
+public class RecyclerAdapterSecondary extends RecyclerView.Adapter<RecyclerAdapterSecondary.MyViewHolder> {
 
-public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMain.MyViewHolder> {
-
-    private final List<ItemEntity> data;
+    LinkedList<ItemEntity> data;
     private final Context context;
-
-    ru.senya.pixateka.view.viewFullscreen viewFullscreen;
-    RecyclerView recyclerView;
-    Toolbar mainToolbar;
-    androidx.appcompat.widget.Toolbar toolbar;
-    FloatingActionButton floatingActionButton;
     FragmentActivity activity;
-    SwipeRefreshLayout swipeRefreshLayout;
+    Runnable runnable;
+    viewFullscreen viewFullscreen;
 
-    public RecyclerAdapterMain(FragmentActivity activity,
-                               List<ItemEntity> items,
-                               Context context,
-                               View.OnClickListener onClickListener,
-                               ru.senya.pixateka.view.viewFullscreen viewFullscreen,
-                               RecyclerView recyclerView,
-                               Toolbar toolbar,
-                               FloatingActionButton floatingActionButton,
-                               androidx.appcompat.widget.Toolbar toolbar2,
-                               SwipeRefreshLayout swipeRefreshLayout) {
-        this.swipeRefreshLayout = swipeRefreshLayout;
-        this.activity = activity;
-        data = items;
+    public RecyclerAdapterSecondary(LinkedList<ItemEntity> data, Context context, FragmentActivity activity, viewFullscreen viewFullscreen) {
+        this.data = data;
         this.context = context;
+        this.activity = activity;
         this.viewFullscreen = viewFullscreen;
-        this.recyclerView = recyclerView;
-        this.mainToolbar = toolbar;
-        this.floatingActionButton = floatingActionButton;
-        this.toolbar = toolbar2;
     }
 
     @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item, parent, false));
+    public RecyclerAdapterSecondary.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new RecyclerAdapterSecondary.MyViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item, parent, false), parent);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.setImageView(data.get(position), context, activity, this, position);
-        holder.setTextView(data.get(position));
-
+    public void onBindViewHolder(@NonNull RecyclerAdapterSecondary.MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        holder.setItem(context, data.get(position));
         holder.sets.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
             popupMenu.inflate(R.menu.menu);
@@ -105,7 +75,9 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                                     });
 
                                 } catch (Exception e) {
-                                    Toast.makeText(context, "smth wrong", Toast.LENGTH_SHORT).show();
+                                    activity.runOnUiThread(() -> {
+                                        Toast.makeText(context, "smth wrong", Toast.LENGTH_SHORT).show();
+                                    });
                                 }
 
                             }).start();
@@ -117,8 +89,6 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                             clipboard.setPrimaryClip(clip);
                             Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
                             return true;
-
-
                     }
                     return false;
                 }
@@ -126,19 +96,10 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
 
             popupMenu.show();
         });
-
         holder.mainImage.setOnClickListener(v -> {
-            viewFullscreen.setVisibility(VISIBLE);
-            recyclerView.setVisibility(GONE);
-            mainToolbar.setVisibility(View.INVISIBLE);
-            toolbar.setVisibility(VISIBLE);
-            floatingActionButton.setVisibility(GONE);
-            swipeRefreshLayout.setVisibility(GONE);
             viewFullscreen.update(data.get(position), activity);
-        });
-        holder.mainImage.setOnLongClickListener(v -> {
-            Log.e("MyTag", data.get(position).getPath() + '\n' + data.get(position).getName());
-            return true;
+            viewFullscreen.goUp();
+//            viewFullscreen.addUpdate(data.get(position), activity);
         });
     }
 
@@ -147,34 +108,30 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
         return data.size();
     }
 
-
-    static class MyViewHolder extends RecyclerView.ViewHolder {
-
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         int[] colors = {R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5};
         Random random = new Random();
+        ViewItemBinding binding;
+        Context context;
         RoundedImageView mainImage;
-        TextView imageName, imageDescription;
+        TextView imageName;
         ImageView sets;
 
-
-        MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, ViewGroup parent) {
             super(itemView);
             mainImage = itemView.findViewById(R.id.main_image);
             imageName = itemView.findViewById(R.id.image_name);
-            imageDescription = itemView.findViewById(R.id.description);
             sets = itemView.findViewById(R.id.sets);
-        }
-        void setImageView(ItemEntity item, Context context, FragmentActivity activity, RecyclerAdapterMain adapter, int p) {
-            Glide.
-                    with(context).
-                    load(item.getPath()).
-                    placeholder(new ColorDrawable(Integer.parseInt(item.color.split("#")[1], 16))).
-                    into(mainImage);
+            context = parent.getContext();
         }
 
-        void setTextView(ItemEntity item) {
+        public void setItem(Context context, ItemEntity item) {
+            Glide.
+                    with(context).
+                    load(item.getPath()).dontAnimate().
+                    placeholder(colors[random.nextInt(colors.length)]).
+                    into(mainImage);
             imageName.setText(item.getName());
-            imageDescription.setText("by " + item.getEmail());
         }
     }
 }

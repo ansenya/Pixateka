@@ -14,7 +14,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public PagerAdapter(@NonNull FragmentManager fm) {
         super(fm);
         //fragments[0] = new FragmentMain();
-        fragments[1] = new FragmentFullscreen();
     }
 
     @NonNull
