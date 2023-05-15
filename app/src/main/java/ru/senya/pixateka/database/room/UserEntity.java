@@ -10,6 +10,7 @@ public class UserEntity {
     public int id;
     public String username;
     public String avatar;
+    public String background;
     public String email;
     public String first_name;
     public String last_name;
@@ -17,7 +18,7 @@ public class UserEntity {
     public String token;
     public String sessionId;
 
-    public UserEntity(int id, String username, String avatar, String email, String first_name, String last_name, String country, String token, String sessionId) {
+    public UserEntity(int id, String username, String avatar, String email, String first_name, String last_name, String country, String token, String sessionId, String background) {
         this.id = id;
         this.username = username;
         this.avatar = avatar;
@@ -27,5 +28,6 @@ public class UserEntity {
         this.country = country;
         this.token = token;
         this.sessionId = sessionId;
+        this.background = background;
     }
 }

@@ -13,8 +13,7 @@
         android:layout_height="52dp"
         android:background="@color/toolbar_color"
         android:title="Авторизация"
-        android:titleTextColor="@color/text_color2">
-    </Toolbar>
+        android:titleTextColor="@color/text_color2"></Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -59,6 +58,13 @@
                     app:src="@drawable/password"
                     app:title="Пароль" />
 
+                <TextView
+                    android:id="@+id/show_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="2dp"
+                    android:text="Показать пароль" />
+
 
                 <Button
                     android:id="@+id/button_enter"
@@ -82,18 +88,18 @@
                 android:id="@+id/progress_circular"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginTop="60dp"
                 android:layout_below="@+id/linear_layout"
                 android:layout_centerHorizontal="true"
-                 android:visibility="gone"/>
+                android:layout_marginTop="60dp"
+                android:visibility="gone" />
 
             <TextView
-                android:layout_marginTop="13dp"
                 android:id="@+id/wrong_indicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear_layout"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="13dp"
                 android:text="Что-то неверно!"
                 android:textColor="@color/red"
                 android:visibility="gone"

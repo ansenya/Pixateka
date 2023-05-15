@@ -6,10 +6,12 @@ import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteConstraintException;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +19,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,10 +48,13 @@ public class FragmentMain extends Fragment {
 
     public FragmentMainBinding binding;
     RecyclerView list;
-    List<ItemEntity> data = new ArrayList<>();
+    List<ItemEntity> data = new LinkedList<>();
     RecyclerAdapterMain adapter;
     Retrofit retrofit;
     ItemInterface service;
+    Boolean in_order = true;
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
 
     public FragmentMain(List<ItemEntity> items, Context context) {
@@ -57,8 +64,15 @@ public class FragmentMain extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        editor = preferences.edit();
+        if (!preferences.contains("order")) {
+            editor.putBoolean("order", true);
+            editor.commit();
+        } else {
+            in_order = preferences.getBoolean("order", true);
+        }
         binding = FragmentMainBinding.inflate(LayoutInflater.from(getContext()), container, false);
-
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         service = retrofit.create(ItemInterface.class);
         onRefreshListener.onRefresh();
@@ -79,7 +93,26 @@ public class FragmentMain extends Fragment {
         binding.toolbar.setTitle("Photo");
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white, requireContext().getTheme()));
         binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(binding.toolbar);
+        binding.mainToolbar.inflateMenu(R.menu.switch_menu);
+        binding.mainToolbar.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.in_order:
+                    in_order = true;
+                    data.clear();
+                    onRefreshListener.onRefresh();
+                    editor.putBoolean("order", true);
+                    editor.commit();
+                    return true;
+                case R.id.random:
+                    in_order = false;
+                    data.clear();
+                    onRefreshListener.onRefresh();
+                    editor.putBoolean("order", false);
+                    editor.commit();
+                    return true;
+            }
+            return false;
+        });
         binding.toolbar.setNavigationOnClickListener(v -> {
             back();
         });
@@ -94,6 +127,16 @@ public class FragmentMain extends Fragment {
 
     private void upToolbar() {
 
+    }
+
+    public void fullUpdate() {
+        binding.fragment.fullUpdate();
+        binding.fragment.setVisibility(GONE);
+        binding.mainToolbar.setVisibility(VISIBLE);
+        binding.toolbar.setVisibility(GONE);
+        binding.mainRecyclerView.setVisibility(VISIBLE);
+        binding.fab.setVisibility(VISIBLE);
+        binding.swipeContainer.setVisibility(VISIBLE);
     }
 
     public void back() {
@@ -143,6 +186,7 @@ public class FragmentMain extends Fragment {
         @Override
         public void onRefresh() {
             ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+
             boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                     connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
 
@@ -155,6 +199,7 @@ public class FragmentMain extends Fragment {
                         @Override
                         public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
                             if (response.body() != null && response.body().size() > 0) {
+                                if (!in_order) Collections.shuffle(data);
                                 new Thread(() -> {
                                     ArrayList<Item> items = response.body();
                                     for (Item item : items) {
@@ -169,7 +214,9 @@ public class FragmentMain extends Fragment {
                                             ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
                                             entity.setColor(item.color);
                                             entity.setTags(item.tags);
-                                            data.add(entity);
+                                            entity.setHeight(item.height);
+                                            entity.setWidth(item.width);
+                                            data.add(0, entity);
                                             getActivity().runOnUiThread(() -> {
                                                 myNotify(data.size() - 1);
                                             });
@@ -204,9 +251,16 @@ public class FragmentMain extends Fragment {
                                         });
                                     }
                                     getActivity().runOnUiThread(() -> {
+                                        binding.mainRecyclerView.getAdapter().notifyDataSetChanged();
                                         binding.swipeContainer.setRefreshing(false);
                                     });
                                 }).start();
+                                getActivity().runOnUiThread(() -> {
+                                    binding.mainRecyclerView.getAdapter().notifyDataSetChanged();
+                                });
+                            } else if (response.body() != null && response.body().size() == 0) {
+                                Toast.makeText(getContext(), "db is empty", Toast.LENGTH_SHORT).show();
+                                binding.swipeContainer.setRefreshing(false);
                             }
                         }
 

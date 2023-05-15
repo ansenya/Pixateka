@@ -1,9 +1,13 @@
 package ru.senya.pixateka.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +30,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -33,28 +38,33 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
+import ru.senya.pixateka.activities.Visible;
 import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.room.ItemEntity;
+import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
 
 
 public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapterProfile.ViewHolder> {
 
     private final List<ItemEntity> data;
     private final Context context;
-    ru.senya.pixateka.view.viewFullscreen viewFullscreen;
     Toolbar toolbar;
     FragmentActivity activity;
     ru.senya.pixateka.view.viewFullscreen fragment;
     NestedScrollView nestedScrollView;
+    NewFragmentProfileBinding binding;
+    Visible visible;
 
-    public RecyclerAdapterProfile(List<ItemEntity> data, Context context, ru.senya.pixateka.view.viewFullscreen viewFullscreen, Toolbar toolbar, FragmentActivity activity, ru.senya.pixateka.view.viewFullscreen fragment, NestedScrollView nestedScrollView) {
+    public RecyclerAdapterProfile(List<ItemEntity> data, Context context, ru.senya.pixateka.view.viewFullscreen fragment, Toolbar toolbar, FragmentActivity activity, NestedScrollView nestedScrollView, NewFragmentProfileBinding binding, Visible visible) {
         this.data = data;
         this.context = context;
-        this.viewFullscreen = viewFullscreen;
         this.toolbar = toolbar;
         this.activity = activity;
         this.fragment = fragment;
         this.nestedScrollView = nestedScrollView;
+        this.binding = binding;
+        this.visible = visible;
+
     }
 
     @NonNull
@@ -64,7 +74,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.setImage(data.get(position));
         holder.sets.setOnClickListener(v -> {
             PopupMenu menu = new PopupMenu(context, v);
@@ -96,20 +106,19 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                         Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.delete:
-                        App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " +"sessionid="+Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
+                        App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()){
-                                    new Thread(()->{
+                                if (response.isSuccessful()) {
+                                    new Thread(() -> {
                                         App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
-                                        activity.runOnUiThread(()->{
+                                        activity.runOnUiThread(() -> {
                                             data.remove(position);
+                                            binding.swipeContainer.setRefreshing(true);
                                         });
                                     }).start();
-
                                     notifyDataSetChanged();
-                                }
-                                else {
+                                } else {
                                     try {
                                         Log.e("MyTag", response.errorBody().string());
                                     } catch (IOException e) {
@@ -129,11 +138,18 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
             });
             menu.show();
         });
-        holder.mainImage.setOnClickListener(v ->{
+        holder.mainImage.setOnClickListener(v -> {
+            toolbar.setVisibility(View.VISIBLE);
             fragment.update(data.get(position), activity);
+            visible.setVisible(true);
             fragment.setVisibility(View.VISIBLE);
             nestedScrollView.setVisibility(View.GONE);
         });
+        holder.mainImage.setOnLongClickListener(v -> {
+            holder.sets.callOnClick();
+            return true;
+        });
+
     }
 
 
@@ -146,7 +162,8 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
         RoundedImageView mainImage;
         TextView imageName, imageDescription;
         ImageView sets;
-
+        int[] colors = {R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5};
+        Random random = new Random();
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -157,11 +174,28 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
         }
 
         public void setImage(ItemEntity item) {
-            Glide.
-                    with(context).
-                    load(item.getPath()).
-                    into(mainImage);
-            imageName.setText(item.getName());
+            Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888); // create placeholder with exact width and height
+            bitmap.eraseColor(Color.parseColor(item.color)); // fulfill bitmap with average color
+            try {
+                Glide.
+                        with(context).
+                        load(item.getPath()).
+                        placeholder(new BitmapDrawable(bitmap)).
+                        override(1000).
+                        into(mainImage);
+            } catch (NullPointerException e) {
+                Log.e("MyTag", item.id + "");
+                Glide.
+                        with(context).
+                        load(item.getPath()).
+                        placeholder(colors[random.nextInt(colors.length)]).
+                        into(mainImage);
+            }
+            if (item.getName().equals("43083945")) {
+                imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+            } else {
+                imageName.setText(item.getName());
+            }
             imageDescription.setText(item.getDescription());
         }
     }

@@ -18,6 +18,7 @@ public interface UsersInterface {
 
     @GET("users/?format=json")
     Call<List<User>> getUsers();
+
     @GET("users/{id}")
     Call<User> getUser(@Path("id") int id, @Header("X-CSRFToken") String token, @Header("Cookie") String cookie);
 
@@ -38,6 +39,9 @@ public interface UsersInterface {
     @POST("login/")
     Call<User> login(@Part("password") RequestBody password,
                      @Part("username") RequestBody username);
+
+    @POST("login/")
+    Call<ResponseBody> logout(@Header("X-CSRFToken") String token, @Header("Cookie") String cookie);
 
     @Multipart
     @PUT("users/{id}/edit/")

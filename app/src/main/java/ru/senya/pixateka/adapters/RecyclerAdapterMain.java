@@ -3,16 +3,16 @@ package ru.senya.pixateka.adapters;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +36,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
+import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.room.ItemEntity;
 
@@ -123,7 +124,6 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                     return false;
                 }
             });
-
             popupMenu.show();
         });
 
@@ -137,7 +137,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
             viewFullscreen.update(data.get(position), activity);
         });
         holder.mainImage.setOnLongClickListener(v -> {
-            Log.e("MyTag", data.get(position).getPath() + '\n' + data.get(position).getName());
+            holder.sets.callOnClick();
             return true;
         });
     }
@@ -164,17 +164,28 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
             imageDescription = itemView.findViewById(R.id.description);
             sets = itemView.findViewById(R.id.sets);
         }
+
         void setImageView(ItemEntity item, Context context, FragmentActivity activity, RecyclerAdapterMain adapter, int p) {
+            Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888); // create placeholder with exact width and height
+            bitmap.eraseColor(Color.parseColor(item.color)); // fulfill bitmap with average color
             Glide.
                     with(context).
                     load(item.getPath()).
-                    placeholder(new ColorDrawable(Integer.parseInt(item.color.split("#")[1], 16))).
+                    placeholder(new BitmapDrawable(bitmap)).
+                    override(1000).
                     into(mainImage);
+
         }
 
         void setTextView(ItemEntity item) {
-            imageName.setText(item.getName());
-            imageDescription.setText("by " + item.getEmail());
+            if (item.getName().equals("43083945")) {
+                imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                imageName.setTypeface(Typeface.MONOSPACE);
+            } else {
+                imageName.setTypeface(Typeface.DEFAULT);
+                imageName.setText(item.getName());
+            }
+//            imageDescription.setText("by " + );
         }
     }
 }

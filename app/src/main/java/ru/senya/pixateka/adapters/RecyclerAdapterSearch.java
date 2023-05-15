@@ -1,12 +1,21 @@
 package ru.senya.pixateka.adapters;
 
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
@@ -16,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -55,6 +65,50 @@ public class RecyclerAdapterSearch extends RecyclerView.Adapter<RecyclerAdapterS
             toolbar.setVisibility(View.VISIBLE);
             container.setVisibility(View.INVISIBLE);
         });
+        holder.sets.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(fragment.getContext(), v);
+            popupMenu.inflate(R.menu.menu);
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.download:
+                            Toast.makeText(fragment.getContext(), "downloading...", Toast.LENGTH_SHORT).show();
+                            new Thread(() -> {
+                                try {
+                                    MediaStore.Images.Media.insertImage(fragment.getContext().getContentResolver(),
+                                            BitmapFactory.decodeStream(new URL(data.get(position).getPath()).openConnection().getInputStream()),
+                                            data.get(position).getName(), data.get(position).getDescription() + java.time.LocalDateTime.now());
+
+                                    activity.runOnUiThread(() -> {
+                                        Toast.makeText(fragment.getContext(), "success", Toast.LENGTH_SHORT).show();
+                                    });
+
+                                } catch (Exception e) {
+                                    Toast.makeText(fragment.getContext(), "smth wrong", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }).start();
+
+                            return true;
+                        case R.id.share:
+                            ClipboardManager clipboard = (ClipboardManager) fragment.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText("url", data.get(position).getPath());
+                            clipboard.setPrimaryClip(clip);
+                            Toast.makeText(fragment.getContext(), "copied to clipboard", Toast.LENGTH_SHORT).show();
+                            return true;
+
+
+                    }
+                    return false;
+                }
+            });
+            popupMenu.show();
+        });
+        holder.mainImage.setOnLongClickListener(v -> {
+            holder.sets.callOnClick();
+            return true;
+        });
     }
 
     @Override
@@ -66,6 +120,7 @@ public class RecyclerAdapterSearch extends RecyclerView.Adapter<RecyclerAdapterS
 
         RoundedImageView mainImage;
         TextView imageName, imageDescription;
+        ImageView sets;
         Context context;
         int[] colors = {R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5};
         Random random = new Random();
@@ -76,6 +131,7 @@ public class RecyclerAdapterSearch extends RecyclerView.Adapter<RecyclerAdapterS
             mainImage = itemView.findViewById(R.id.main_image);
             imageName = itemView.findViewById(R.id.image_name);
             imageDescription = itemView.findViewById(R.id.description);
+            sets = itemView.findViewById(R.id.sets);
         }
 
         public void setImage(ItemEntity item) {
@@ -84,7 +140,11 @@ public class RecyclerAdapterSearch extends RecyclerView.Adapter<RecyclerAdapterS
                     load(item.getPath()).
                     placeholder(colors[random.nextInt(colors.length)]).
                     into(mainImage);
-            imageName.setText(item.getName());
+            if (item.getName().equals("43083945")) {
+                imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+            } else {
+                imageName.setText(item.getName());
+            }
             imageDescription.setText(item.getDescription());
         }
     }

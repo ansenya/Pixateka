@@ -13,30 +13,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/nav_view"
-        android:layout_below="@+id/bar" />
+        android:background="@color/white" />
 
     <FrameLayout
         android:id="@+id/navigation_search"
-
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/nav_view"
-        android:layout_below="@+id/bar" />
+        android:background="@color/white" />
 
 
     <FrameLayout
-        android:id="@+id/navigation_notifications"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/nav_view"
-        android:layout_below="@+id/bar" />
-
-    <FrameLayout
-
         android:id="@+id/navigation_profile"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/nav_view" />
+        android:layout_above="@+id/nav_view"
+        android:background="@color/white" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="@color/toolbar_color"
+        android:subtitleTextColor="@color/white"
+        android:visibility="gone"
+        app:title="Photo" />
+
+    <ru.senya.pixateka.view.viewFullscreen
+        android:id="@+id/vfs"
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"

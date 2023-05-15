@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -92,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                                     runOnUiThread(() -> {
                                         binding.progressCircular.setVisibility(View.GONE);
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
                                         finish();
                                     });
                                 }).start();
@@ -108,7 +110,6 @@ public class LoginActivity extends AppCompatActivity {
                         Log.e("MyTag", "error", t);
                     }
                 });
-
 
             } else {
                 binding.wrongIndicator.setText(error);

@@ -4,8 +4,8 @@ import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,16 +14,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
@@ -59,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         profileData();
         checkPermission();
         fragmentMain = new FragmentMain(mainData, getApplicationContext());
-        fragmentProfile = new FragmentProfile(profileData, mainUser);
+        fragmentProfile = new FragmentProfile(profileData, mainUser, binding.vfs, binding.toolbar, 1);
         fragmentSearch = new FragmentSearch(mainData);
 
         setFragments();
@@ -90,12 +86,16 @@ public class MainActivity extends AppCompatActivity {
     private void getData() {
         new Thread(() -> {
             mainData.addAll(App.getDatabase().itemDAO().getAll());
+            Collections.reverse(mainData);
+
+            profileData.addAll(App.getDatabase().itemDAO().getAllProfile(App.getMainUser().id + ""));
+            Collections.reverse(profileData);
         }).start();
     }
 
     private void profileData() {
-        new Thread(()->{
-            profileData.addAll(App.getDatabase().itemDAO().getAllProfile(App.getMainUser().id));
+        new Thread(() -> {
+
         }).start();
     }
 
@@ -112,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void setFragment() {
+        binding.toolbar.setVisibility(View.GONE);
         binding.navigationMain.setVisibility(View.INVISIBLE);
         binding.navigationProfile.setVisibility(View.INVISIBLE);
-        binding.navigationNotifications.setVisibility(View.INVISIBLE);
         binding.navigationSearch.setVisibility(View.INVISIBLE);
     }
 
@@ -123,13 +123,13 @@ public class MainActivity extends AppCompatActivity {
         binding.navView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    if (binding.navigationMain.getVisibility() == View.VISIBLE) {
+                        fragmentMain.fullUpdate();
+                    }
                     setFragment();
+                    binding.vfs.setVisibility(View.GONE);
                     binding.navigationMain.setVisibility(View.VISIBLE);
                     fragmentMain.myNotify();
-                    return true;
-                case R.id.navigation_notifications:
-                    setFragment();
-                    binding.navigationNotifications.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_profile:
                     setFragment();
@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().
                 replace(binding.navigationMain.getId(), fragmentMain).
                 replace(binding.navigationSearch.getId(), fragmentSearch).
-                replace(binding.navigationNotifications.getId(), fragmentNotifications).
                 replace(binding.navigationProfile.getId(), fragmentProfile)
                 .commit();
         setFragment();

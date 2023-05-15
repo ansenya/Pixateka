@@ -17,6 +17,8 @@ public class ItemEntity {
     public String tags;
     public String color;
     public String parent;
+    public String height;
+    public String width;
 
     public ItemEntity(int id, String uid, String path, String name, String description, String email, String tags) {
         this.id = id;
@@ -68,5 +70,13 @@ public class ItemEntity {
 
     public void setParent(String parent) {
         this.parent = parent;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
     }
 }

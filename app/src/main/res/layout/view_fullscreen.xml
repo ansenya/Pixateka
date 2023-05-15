@@ -20,6 +20,7 @@
 
 
         <LinearLayout
+            android:paddingBottom="3dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -49,6 +50,7 @@
                 android:textSize="14.3sp" />
 
 
+
         </LinearLayout>
 
 
@@ -57,7 +59,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/tab_layout_bg"
-            android:translationZ="10dp"
             app:tabIndicatorColor="@color/v2"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"

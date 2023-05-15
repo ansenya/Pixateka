@@ -3,7 +3,12 @@ package ru.senya.pixateka.view;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -21,18 +26,14 @@ import com.google.android.material.tabs.TabLayout;
 
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
+import ru.senya.pixateka.activities.ProfileActivity;
 import ru.senya.pixateka.adapters.RecyclerAdapterSecondary;
-import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ViewFullscreenBinding;
 
@@ -92,6 +93,10 @@ public class viewFullscreen extends NestedScrollView {
             });
             popupMenu.show();
         });
+        binding.included.mainImage.setOnLongClickListener(v -> {
+            binding.included.sets.callOnClick();
+            return true;
+        });
         binding.tabs.addTab(binding.tabs.newTab().setText("Фотографии пользователя"));
         binding.tabs.addTab(binding.tabs.newTab().setText("Похожие фотографии"));
         viewFullscreen = this;
@@ -124,6 +129,12 @@ public class viewFullscreen extends NestedScrollView {
         });
         binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.list2.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.pfp.setOnClickListener(v -> {
+            Intent intent = new Intent(activity, ProfileActivity.class);
+            String uid = itemEntity.uid;
+            intent.putExtra("uid", uid);
+            activity.startActivity(intent);
+        });
     }
 
     @Override
@@ -152,36 +163,37 @@ public class viewFullscreen extends NestedScrollView {
         data.clear();
         this.itemEntity = item;
         this.activity = activity;
-        Glide.
-                with(context).
-                load(item.getPath()).
-                placeholder(colors[random.nextInt(colors.length)]).
-                useAnimationPool(true).
-                into(binding.included.mainImage);
+        try {
+            Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888); // create placeholder with exact width and height
+            bitmap.eraseColor(Color.parseColor(item.color)); // fulfill bitmap with average color
+            Glide.
+                    with(context).
+                    load(item.getPath()).
+                    placeholder(new BitmapDrawable(bitmap)).
+                    override(1000).
+                    into(binding.included.mainImage);
+        } catch (NullPointerException e){
+            Glide.
+                    with(context).
+                    load(item.getPath()).
+                    placeholder(colors[random.nextInt(colors.length)]).
+                    into(binding.included.mainImage);
+        }
+
         binding.included.imageName.setText(item.getName());
         binding.mainDescription.setText(item.getDescription());
-        binding.pfp.setImageResource(R.drawable.a21);
+        Glide.
+                with(context).
+                load(App.getMainUser().avatar).
+                into(binding.pfp);
+
         new Thread(() -> {
-            App.getItemService().getPhotosByUserId(1).enqueue(new Callback<ArrayList<Item>>() {
-                @Override
-                public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
-                    if (response.body() != null) {
-                        for (Item item1 : response.body()) {
-                            data.add(new ItemEntity(item1.id, item1.author, item1.image, item1.name, item1.description, item1.author, item1.tags));
-                            activity.runOnUiThread(() -> {
-                                binding.list.getAdapter().notifyItemChanged(data.size() - 1);
-                            });
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
-                    Toast.makeText(activity, "download failed", Toast.LENGTH_SHORT).show();
-                }
+            data.addAll(App.getDatabase().itemDAO().getAllOtherPictures(Integer.parseInt(item.uid), item.id));
+            activity.runOnUiThread(() -> {
+                binding.list.getAdapter().notifyDataSetChanged();
             });
         }).start();
+
         new Thread(() -> {
             likeData.addAll(App.getDatabase().itemDAO().searchByTags(item.tags, item.id + ""));
             activity.runOnUiThread(() -> {
@@ -196,6 +208,7 @@ public class viewFullscreen extends NestedScrollView {
 
     public void update(ItemEntity item, FragmentActivity activity) {
         previous.add(item);
+        binding.tabs.selectTab(binding.tabs.getTabAt(0));
         Log.e("MyTag", previous.toString());
         privateUpdate(item, activity);
     }
@@ -217,4 +230,7 @@ public class viewFullscreen extends NestedScrollView {
         return false;
     }
 
+    public void fullUpdate() {
+        previous.clear();
+    }
 }

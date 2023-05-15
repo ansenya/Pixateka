@@ -11,16 +11,19 @@ public interface ItemDAO {
 
     @Query("SELECT * FROM ItemEntity")
     List<ItemEntity> getAll();
-    @Query("SELECT * FROM ItemEntity WHERE id=:id")
-    List<ItemEntity> getAllProfile(int id);
+    @Query("SELECT * FROM ItemEntity WHERE uid ==:uid")
+    List<ItemEntity> getAllProfile(String uid);
+
+    @Query("SELECT * FROM ItemEntity WHERE uid==:uid AND id!=:id")
+    List<ItemEntity> getAllOtherPictures(int uid, int id);
 
     @Insert
     void save(ItemEntity item);
 
-    @Query("SELECT * FROM ItemEntity WHERE id = :id")
+    @Query("SELECT * FROM ItemEntity WHERE id == :id")
     ItemEntity getId(int id);
 
-    @Query("DELETE FROM ItemEntity WHERE id = :id")
+    @Query("DELETE FROM ItemEntity WHERE id == :id")
     void deleteByUserId(long id);
     @Query("DELETE FROM ItemEntity")
     void delete();

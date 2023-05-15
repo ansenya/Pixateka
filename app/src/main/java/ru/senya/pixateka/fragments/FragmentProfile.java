@@ -4,9 +4,10 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteConstraintException;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,28 +24,38 @@ import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
-import ru.senya.pixateka.adapters.RecyclerAdapterMain;
+import ru.senya.pixateka.R;
+import ru.senya.pixateka.activities.StartActivity;
+import ru.senya.pixateka.activities.Visible;
 import ru.senya.pixateka.adapters.RecyclerAdapterProfile;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
+import ru.senya.pixateka.view.viewFullscreen;
 
 
 public class FragmentProfile extends Fragment {
 
-    NewFragmentProfileBinding binding;
+    public NewFragmentProfileBinding binding;
     ArrayList<ItemEntity> data;
     User mainUser;
+    viewFullscreen vfs;
+    Visible visible = new Visible(false);
+    androidx.appcompat.widget.Toolbar toolbar;
+    int k;
 
-
-    public FragmentProfile(ArrayList<ItemEntity> data, User mainUser) {
+    public FragmentProfile(ArrayList<ItemEntity> data, User mainUser, viewFullscreen vfs, androidx.appcompat.widget.Toolbar toolbar, int k) {
         this.data = data;
         this.mainUser = mainUser;
+        this.vfs = vfs;
+        this.toolbar = toolbar;
+        this.k = k;
     }
 
     @Nullable
@@ -65,25 +76,66 @@ public class FragmentProfile extends Fragment {
         }
 
         binding.name.setText(mainUser.username);
-        binding.name.setText(mainUser.first_name+" "+mainUser.last_name);
+        try {
+            if (!mainUser.about.isEmpty()){
+                binding.about.setText(mainUser.about);
+            }
+        } catch (NullPointerException e){
+            binding.about.setText("Описание не заполнено");
+        }
 
 
+
+        if (k==1){
+            binding.buttonLogout.setVisibility(GONE);
+            binding.buttonEditProfile.setVisibility(GONE);
+        }
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+        toolbar.setNavigationOnClickListener(v -> {
+            back();
+        });
         binding.swipeContainer.setOnRefreshListener(onRefreshListener);
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+
+        binding.buttonLogout.setOnClickListener(v -> {
+            App.getUserService().logout(App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Toast.makeText(getContext(), "ыыыыы", Toast.LENGTH_SHORT).show();
+                }
+            });
+            new Thread(() -> {
+                App.getDatabase().userDAO().deleteUserTable();
+                App.getDatabase().itemDAO().delete();
+            }).start();
+            startActivity(new Intent(getActivity(), StartActivity.class));
+            binding = null;
+            getActivity().finish();
+        });
+
         return binding.getRoot();
     }
 
 
     private void initRecycler() {
-        binding.recyclerList.setAdapter(new RecyclerAdapterProfile(data, getContext(), binding.fragment, null, getActivity(), binding.fragment, binding.nestedScrollView));
+        binding.recyclerList.setAdapter(new RecyclerAdapterProfile(data, getContext(), vfs, toolbar, getActivity(), binding.nestedScrollView, binding, visible));
         binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.recyclerList.getAdapter().notifyDataSetChanged();
     }
 
     public boolean visible() {
-        if (binding.fragment.getVisibility() == VISIBLE) {
+        if (vfs.getVisibility() == VISIBLE) {
             return true;
         }
         return false;
@@ -98,6 +150,9 @@ public class FragmentProfile extends Fragment {
 
     public void myNotify() {
         binding.recyclerList.getAdapter().notifyDataSetChanged();
+        if (visible.getVisible()) {
+            vfs.setVisibility(VISIBLE);
+        }
     }
 
     public void myNotify(int i) {
@@ -109,10 +164,13 @@ public class FragmentProfile extends Fragment {
             binding.fragmentEdit.setVisibility(GONE);
             binding.relativeLayout.setVisibility(VISIBLE);
         } else {
-            binding.fragment.goUp();
-            binding.fragment.setVisibility(GONE);
-            binding.relative.setVisibility(VISIBLE);
-            binding.nestedScrollView.setVisibility(VISIBLE);
+            if (vfs.pop()) {
+                toolbar.setVisibility(GONE);
+                vfs.setVisibility(GONE);
+                visible.setVisible(false);
+                binding.relative.setVisibility(VISIBLE);
+                binding.nestedScrollView.setVisibility(VISIBLE);
+            }
         }
 
     }
@@ -121,9 +179,9 @@ public class FragmentProfile extends Fragment {
         @Override
         public void onRefresh() {
             ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
-
+//            boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+//                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
+            boolean connected = true;
             if (connected) {
                 new Thread(() -> {
                     ArrayList<ItemEntity> arrayList = new ArrayList<>();
@@ -145,7 +203,10 @@ public class FragmentProfile extends Fragment {
                                         }
                                         if (!contains) {
                                             ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
-                                            data.add(entity);
+                                            entity.setWidth(item.width);
+                                            entity.setHeight(item.height);
+                                            entity.setColor(item.color);
+                                            data.add(0, entity);
                                             getActivity().runOnUiThread(() -> {
                                                 myNotify(data.size() - 1);
                                             });
@@ -192,6 +253,7 @@ public class FragmentProfile extends Fragment {
 
                 }).start();
             } else {
+                binding.swipeContainer.setRefreshing(false);
                 Toast.makeText(getContext(), "you don't have internet connection", Toast.LENGTH_SHORT).show();
             }
         }
