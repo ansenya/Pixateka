@@ -5,6 +5,7 @@ import static ru.senya.pixateka.activities.AddActivity.getRealPath;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.JsonElement;
+
+import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,6 +61,13 @@ public class RegistrationActivity extends AppCompatActivity {
                 if (binding.inputLogin.getInputText().isEmpty()) {
                     errorString += "Логин не может быть пустой\n";
                 }
+                if (binding.inputPassword.getInputText().length()<8) {
+                    errorString += "Пароль должен быть больше 8 78знаков\n";
+                } else {
+                    if (!binding.inputRepeatPassword.getInputText().equals(binding.inputPassword.getInputText())) {
+                        errorString += "Пароли не совпадают\n";
+                    }
+                }
                 if (binding.inputLogin.getInputText().isEmpty() || binding.inputRepeatPassword.getInputText().isEmpty()) {
                     errorString += "Пароль не может быть пустой\n";
                 } else {
@@ -65,26 +75,25 @@ public class RegistrationActivity extends AppCompatActivity {
                         errorString += "Пароли не совпадают\n";
                     }
                 }
-                if (!binding.checkbox.isChecked()) {
-                    errorString += "Согласитесь с пользовательским соглашением";
-                }
                 if (errorString.equals("")) {
 
                     RequestBody username = RequestBody.create(MediaType.parse("text/plain"), binding.inputLogin.getInputText());
                     RequestBody password = RequestBody.create(MediaType.parse("text/plain"), binding.inputPassword.getInputText());
-                    RequestBody email = RequestBody.create(MediaType.parse("text/plain"), binding.inputEmail.getInputText());
-                    RequestBody first_name = RequestBody.create(MediaType.parse("text/plain"), binding.inputFirstName.getInputText());
+                    RequestBody email = RequestBody.create(MediaType.parse("text/plain"), "mail@mail.com");
+                    RequestBody first_name = RequestBody.create(MediaType.parse("text/plain"), "first_name");
                     RequestBody last_name = RequestBody.create(MediaType.parse("text/plain"), "last_name");
-                    RequestBody country = RequestBody.create(MediaType.parse("text/plain"), binding.inputCountry.getInputText());
+                    RequestBody country = RequestBody.create(MediaType.parse("text/plain"), "ru");
                     App.getUserService().register(username, avatar, password, email, first_name, last_name, country).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
                             if (response.isSuccessful() && response.body() != null) {
-                                App.setMainUser(response.body());
-                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                Toast.makeText(RegistrationActivity.this, "Теперь нужно войти", Toast.LENGTH_SHORT).show();
+                                onBackPressed();
                             } else {
                                 try {
-                                    Log.e("MyTag", response.errorBody().string());
+                                    if (response.errorBody().string().contains("password")){
+                                        Toast.makeText(RegistrationActivity.this, "Пароль не должен быть простым", Toast.LENGTH_SHORT).show();
+                                    }
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -95,7 +104,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
                             Log.e("MyTag", "error", t);
-                            Toast.makeText(RegistrationActivity.this, "smth wrong happened", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegistrationActivity.this, "что-то пошло не так", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -127,6 +136,28 @@ public class RegistrationActivity extends AppCompatActivity {
         });
         binding.choosePhotoBtn.setOnClickListener(v -> {
             startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 3);
+        });
+        binding.showPassword.setOnClickListener(v -> {
+            binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            new Thread(()->{
+                try {
+                    Thread.sleep(3500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                runOnUiThread(()->binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+            }).start();
+        });
+        binding.showRPassword.setOnClickListener(v -> {
+            binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            new Thread(()->{
+                try {
+                    Thread.sleep(3500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                runOnUiThread(()->binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+            }).start();
         });
     }
 

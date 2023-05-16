@@ -174,6 +174,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                     placeholder(new BitmapDrawable(bitmap)).
                     override(1000).
                     into(mainImage);
+//            mainImage.setImageDrawable(new BitmapDrawable(bitmap));
 
         }
 

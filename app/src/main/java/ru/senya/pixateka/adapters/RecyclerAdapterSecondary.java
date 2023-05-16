@@ -131,7 +131,11 @@ public class RecyclerAdapterSecondary extends RecyclerView.Adapter<RecyclerAdapt
                     load(item.getPath()).dontAnimate().
                     placeholder(colors[random.nextInt(colors.length)]).
                     into(mainImage);
-            imageName.setText(item.getName());
+            if (item.getName().equals("43083945")){
+                imageName.setText("ИИ: "+item.tags.split(" ")[0]);
+            } else {
+                imageName.setText(item.getName());
+            }
         }
     }
 }

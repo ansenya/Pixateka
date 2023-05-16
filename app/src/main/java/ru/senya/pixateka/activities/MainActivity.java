@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         profileData();
         checkPermission();
         fragmentMain = new FragmentMain(mainData, getApplicationContext());
-        fragmentProfile = new FragmentProfile(profileData, mainUser, binding.vfs, binding.toolbar, 1);
+        fragmentProfile = new FragmentProfile(profileData, mainUser, binding.vfs, binding.toolbar, 2);
         fragmentSearch = new FragmentSearch(mainData);
 
         setFragments();

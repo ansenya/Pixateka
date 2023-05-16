@@ -57,4 +57,8 @@ public class InputField extends LinearLayout {
     public String getInputText() {
         return binding.input.getText().toString();
     }
+
+    public void setInputType(int i) {
+        binding.input.setInputType(i);
+    }
 }

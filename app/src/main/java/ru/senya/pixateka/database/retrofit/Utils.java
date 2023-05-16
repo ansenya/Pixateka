@@ -1,7 +1,7 @@
 package ru.senya.pixateka.database.retrofit;
 
 public class Utils {
-    public static String BASE_URL = "http://176.99.188.31:8000/api/";
+    public static String BASE_URL = "http://172.20.10.9:8000/api/";
     public static String TOKEN;
     public static String SESSION_ID;
 

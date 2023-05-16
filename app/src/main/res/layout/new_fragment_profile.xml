@@ -23,8 +23,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center"
                 android:layout_marginEnd="13dp"
-                android:text="Выйти"
                 android:background="#00FFFFFF"
+                android:text="Выйти"
                 android:textColor="@color/white" />
         </androidx.appcompat.widget.Toolbar>
 
@@ -157,14 +157,23 @@
                                 android:textColor="@color/white" />
                         </LinearLayout>
 
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/bio"
+                            android:textAlignment="center"
+                            android:text="Тут ничего нет"
+                            android:textColor="@color/text_color"
+                            android:textSize="20sp" />
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:layout_marginTop="3dp"
+                            android:background="@color/white"
                             android:id="@+id/recycler_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/bio"
-                            android:layout_margin="1dp" />
+                            android:layout_margin="1dp"
+                            android:layout_marginTop="3dp" />
 
 
                     </RelativeLayout>

@@ -3,6 +3,7 @@ package ru.senya.pixateka.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -132,6 +133,17 @@ public class LoginActivity extends AppCompatActivity {
         });
         buttonRegistration.setOnClickListener(view -> {
             startActivity(new Intent(this, RegistrationActivity.class));
+        });
+        binding.showPassword.setOnClickListener(v -> {
+            binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            new Thread(()->{
+                try {
+                    Thread.sleep(3500);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                runOnUiThread(()->binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+            }).start();
         });
     }
 

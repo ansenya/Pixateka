@@ -89,6 +89,10 @@ public class FragmentProfile extends Fragment {
         if (k==1){
             binding.buttonLogout.setVisibility(GONE);
             binding.buttonEditProfile.setVisibility(GONE);
+            binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+            binding.toolbar.setNavigationOnClickListener(v -> {
+                getActivity().finish();
+            });
         }
 
         toolbar.setTitleTextColor(Color.WHITE);
@@ -240,6 +244,9 @@ public class FragmentProfile extends Fragment {
                                         binding.swipeContainer.setRefreshing(false);
                                     });
                                 }).start();
+                            } if (response.body()!=null && response.body().size()==0){
+                                Toast.makeText(getContext(), "Вы еще не загрузили фотографий", Toast.LENGTH_SHORT).show();
+                                binding.swipeContainer.setRefreshing(false);
                             }
                         }
 

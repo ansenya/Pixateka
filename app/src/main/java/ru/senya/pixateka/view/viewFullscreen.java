@@ -179,8 +179,12 @@ public class viewFullscreen extends NestedScrollView {
                     placeholder(colors[random.nextInt(colors.length)]).
                     into(binding.included.mainImage);
         }
+        if (item.getName().equals("43083945")){
+            binding.included.imageName.setText("ИИ: "+item.tags.split(" ")[0]);
+        } else {
+            binding.included.imageName.setText(item.getName());
+        }
 
-        binding.included.imageName.setText(item.getName());
         binding.mainDescription.setText(item.getDescription());
         Glide.
                 with(context).
@@ -195,7 +199,14 @@ public class viewFullscreen extends NestedScrollView {
         }).start();
 
         new Thread(() -> {
-            likeData.addAll(App.getDatabase().itemDAO().searchByTags(item.tags, item.id + ""));
+            for (ItemEntity entity: App.getDatabase().itemDAO().getAll()){
+                for (String tags: entity.tags.split(" ")){
+                    if (itemEntity.tags.contains(tags)){
+                        likeData.add(entity);
+                        break;
+                    }
+                }
+            }
             activity.runOnUiThread(() -> {
                 if (likeData.size() == 0 && binding.list2.getVisibility() == VISIBLE) {
                     binding.nothingWasFound.setVisibility(VISIBLE);

@@ -34,6 +34,7 @@ import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
 import ru.senya.pixateka.databinding.ActivityAddBinding;
+import ru.senya.pixateka.fragments.FragmentMain;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -119,7 +120,6 @@ public class AddActivity extends AppCompatActivity {
 
         Call<ResponseBody> call = service.uploadImage(authorBody, imagePart, nameBody, descriptionBody, App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId);
         call.enqueue(new Callback<ResponseBody>() {
-
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -127,7 +127,6 @@ public class AddActivity extends AppCompatActivity {
                     onBackPressed();
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Toast.makeText(AddActivity.this, "upload failed", Toast.LENGTH_SHORT).show();
@@ -136,8 +135,6 @@ public class AddActivity extends AppCompatActivity {
                 Log.e("MyTag", call.toString(), t);
             }
         });
-
-
     };
 
 

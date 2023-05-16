@@ -8,6 +8,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -19,7 +20,7 @@ public interface UsersInterface {
     @GET("users/?format=json")
     Call<List<User>> getUsers();
 
-    @GET("users/{id}")
+    @GET("users/{id}/")
     Call<User> getUser(@Path("id") int id, @Header("X-CSRFToken") String token, @Header("Cookie") String cookie);
 
 
@@ -53,8 +54,12 @@ public interface UsersInterface {
                         MultipartBody.Part avatar);
 
     @Multipart
+    @Headers("Content-Type: multipart/form-data; boundary=<calculated when request is sent>")
     @PUT("users/{id}/edit/")
-    Call<ResponseBody> editUserAvatar(@Path("id") int id, @Part("last_name") String name, @Part MultipartBody.Part avatar, @Header("X-CSRFToken") String token, @Header("Cookie") String cookie);
+    Call<ResponseBody> editUserAvatar(@Path("id") int id,
+                                      @Header("X-CSRFToken") String token,
+                                      @Header("Cookie") String cookie,
+                                      @Part MultipartBody.Part avatar);
 
 }
 

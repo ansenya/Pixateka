@@ -6,14 +6,15 @@ import static ru.senya.pixateka.activities.AddActivity.getRealPath;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,10 +23,15 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.userApi.User;
@@ -53,7 +59,7 @@ public class FragmentEditProfile extends Fragment {
                     placeholder(new BitmapDrawable(bitmap)).
                     override(1000).
                     into(binding.back);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
 
         }
 
@@ -64,7 +70,7 @@ public class FragmentEditProfile extends Fragment {
                     with(getContext()).
                     load("http://192.168.1.60:8000/media/avatars/img.png").
                     into(binding.pfpImg);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
 
         }
 
@@ -78,10 +84,34 @@ public class FragmentEditProfile extends Fragment {
         binding.buttonSave.setOnClickListener(v -> {
             if (clicked) {
                 File file = new File(getRealPath(getContext(), uri));
+                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
                 MultipartBody.Part imagePart = MultipartBody.Part.createFormData("avatar" + App.getMainUser().id, file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
-                if (!binding.about.getInputText().isEmpty()) mainUser.setAbout(binding.about.getInputText());
-                if (!binding.emailAdress.getInputText().isEmpty()) mainUser.setEmail(binding.emailAdress.getInputText());
-                    App.getUserService().editUser(App.getMainUser().id, App.getMainUser().first_name, App.getMainUser().last_name, App.getMainUser().country, App.getMainUser().about, imagePart);
+
+                App.getUserService().
+                        editUserAvatar(
+                                App.getMainUser().id,
+                                App.getMainUser().token,
+                                cookie,
+                                imagePart
+                        ).enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                                Log.e("Edit", response.raw().toString());
+                                try {
+                                    Log.e("Edit", response.errorBody().string());
+                                } catch (Exception e) {
+                                }
+                                Log.e("Edit", response.headers().toString());
+                                Log.e("Edit", response.message().toString());
+                                Toast.makeText(getContext(), "cool", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                Toast.makeText(getContext(), "not cool", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
