@@ -36,7 +36,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
-import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.room.ItemEntity;
 
@@ -180,13 +179,16 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
 
         void setTextView(ItemEntity item) {
             if (item.getName().equals("43083945")) {
-                imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                if (!item.tags.split(" ")[0].trim().isEmpty()){
+                    imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                } else {
+                    imageName.setText("Ничего нет");
+                }
                 imageName.setTypeface(Typeface.MONOSPACE);
             } else {
                 imageName.setTypeface(Typeface.DEFAULT);
                 imageName.setText(item.getName());
             }
-//            imageDescription.setText("by " + );
         }
     }
 }

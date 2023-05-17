@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,6 +24,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -42,6 +44,7 @@ import ru.senya.pixateka.activities.Visible;
 import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
+import ru.senya.pixateka.view.viewFullscreen;
 
 
 public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapterProfile.ViewHolder> {
@@ -54,8 +57,9 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
     NestedScrollView nestedScrollView;
     NewFragmentProfileBinding binding;
     Visible visible;
+    SwipeRefreshLayout.OnRefreshListener onRefreshListener;
 
-    public RecyclerAdapterProfile(List<ItemEntity> data, Context context, ru.senya.pixateka.view.viewFullscreen fragment, Toolbar toolbar, FragmentActivity activity, NestedScrollView nestedScrollView, NewFragmentProfileBinding binding, Visible visible) {
+    public RecyclerAdapterProfile(List<ItemEntity> data, Context context, viewFullscreen fragment, Toolbar toolbar, FragmentActivity activity, NestedScrollView nestedScrollView, NewFragmentProfileBinding binding, Visible visible, SwipeRefreshLayout.OnRefreshListener onRefreshListener) {
         this.data = data;
         this.context = context;
         this.toolbar = toolbar;
@@ -64,7 +68,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
         this.nestedScrollView = nestedScrollView;
         this.binding = binding;
         this.visible = visible;
-
+        this.onRefreshListener = onRefreshListener;
     }
 
     @NonNull
@@ -114,7 +118,8 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                                         App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
                                         activity.runOnUiThread(() -> {
                                             data.remove(position);
-                                            binding.swipeContainer.setRefreshing(true);
+                                            onRefreshListener.onRefresh();
+                                            binding.recyclerList.getAdapter().notifyDataSetChanged();
                                         });
                                     }).start();
                                     notifyDataSetChanged();
@@ -192,8 +197,14 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                         into(mainImage);
             }
             if (item.getName().equals("43083945")) {
-                imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                if (!item.tags.split(" ")[0].trim().isEmpty()){
+                    imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                } else {
+                    imageName.setText("Ничего нет");
+                }
+                imageName.setTypeface(Typeface.MONOSPACE);
             } else {
+                imageName.setTypeface(Typeface.DEFAULT);
                 imageName.setText(item.getName());
             }
             imageDescription.setText(item.getDescription());

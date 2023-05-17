@@ -99,6 +99,11 @@ public class FragmentEditProfile extends Fragment {
 
                                 Log.e("Edit", response.raw().toString());
                                 try {
+                                    Log.e("Edit", response.body().string());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                try {
                                     Log.e("Edit", response.errorBody().string());
                                 } catch (Exception e) {
                                 }

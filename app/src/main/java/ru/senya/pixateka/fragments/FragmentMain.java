@@ -163,6 +163,7 @@ public class FragmentMain extends Fragment {
     }
 
     public void myNotify() {
+        list.scrollTo(0, 0);
         adapter.notifyDataSetChanged();
     }
 
@@ -216,9 +217,6 @@ public class FragmentMain extends Fragment {
                                             entity.setHeight(item.height);
                                             entity.setWidth(item.width);
                                             data.add(0, entity);
-                                            getActivity().runOnUiThread(() -> {
-                                                myNotify(data.size() - 1);
-                                            });
 
                                             try {
                                                 App.getDatabase().itemDAO().save(entity);
@@ -245,9 +243,6 @@ public class FragmentMain extends Fragment {
                                     }
                                     for (ItemEntity itemEntity : delete) {
                                         data.remove(itemEntity);
-                                        getActivity().runOnUiThread(() -> {
-                                            binding.mainRecyclerView.getAdapter().notifyItemChanged(data.size());
-                                        });
                                     }
                                     getActivity().runOnUiThread(() -> {
                                         binding.mainRecyclerView.getAdapter().notifyDataSetChanged();

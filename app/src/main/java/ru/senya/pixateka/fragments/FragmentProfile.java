@@ -133,7 +133,7 @@ public class FragmentProfile extends Fragment {
 
 
     private void initRecycler() {
-        binding.recyclerList.setAdapter(new RecyclerAdapterProfile(data, getContext(), vfs, toolbar, getActivity(), binding.nestedScrollView, binding, visible));
+        binding.recyclerList.setAdapter(new RecyclerAdapterProfile(data, getContext(), vfs, toolbar, getActivity(), binding.nestedScrollView, binding, visible, onRefreshListener));
         binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.recyclerList.getAdapter().notifyDataSetChanged();
     }

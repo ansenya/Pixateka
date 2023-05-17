@@ -100,15 +100,20 @@ public class LoginActivity extends AppCompatActivity {
                                 }).start();
 
                             } catch (Exception e){
-
+                                binding.progressCircular.setVisibility(View.GONE);
                             }
 
+                        }
+                        else {
+                            binding.progressCircular.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         Log.e("MyTag", "error", t);
+                        Toast.makeText(LoginActivity.this, "что-то пошло не так", Toast.LENGTH_SHORT).show();
+                        binding.progressCircular.setVisibility(View.GONE);
                     }
                 });
 

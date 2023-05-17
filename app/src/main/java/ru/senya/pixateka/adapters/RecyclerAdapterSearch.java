@@ -5,7 +5,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -141,8 +141,14 @@ public class RecyclerAdapterSearch extends RecyclerView.Adapter<RecyclerAdapterS
                     placeholder(colors[random.nextInt(colors.length)]).
                     into(mainImage);
             if (item.getName().equals("43083945")) {
-                imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                if (!item.tags.split(" ")[0].trim().isEmpty()){
+                    imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                } else {
+                    imageName.setText("Ничего нет");
+                }
+                imageName.setTypeface(Typeface.MONOSPACE);
             } else {
+                imageName.setTypeface(Typeface.DEFAULT);
                 imageName.setText(item.getName());
             }
             imageDescription.setText(item.getDescription());

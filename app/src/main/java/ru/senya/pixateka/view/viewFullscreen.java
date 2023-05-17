@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.provider.MediaStore;
@@ -179,13 +180,18 @@ public class viewFullscreen extends NestedScrollView {
                     placeholder(colors[random.nextInt(colors.length)]).
                     into(binding.included.mainImage);
         }
-        if (item.getName().equals("43083945")){
-            binding.included.imageName.setText("ИИ: "+item.tags.split(" ")[0]);
+
+        if (item.getName().equals("43083945")) {
+            if (!item.tags.split(" ")[0].trim().isEmpty()){
+                binding.included.imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+            } else {
+                binding.included.imageName.setText("Ничего нет");
+            }
+            binding.included.imageName.setTypeface(Typeface.MONOSPACE);
         } else {
+            binding.included.imageName.setTypeface(Typeface.DEFAULT);
             binding.included.imageName.setText(item.getName());
         }
-
-        binding.mainDescription.setText(item.getDescription());
         Glide.
                 with(context).
                 load(App.getMainUser().avatar).
@@ -201,7 +207,7 @@ public class viewFullscreen extends NestedScrollView {
         new Thread(() -> {
             for (ItemEntity entity: App.getDatabase().itemDAO().getAll()){
                 for (String tags: entity.tags.split(" ")){
-                    if (itemEntity.tags.contains(tags)){
+                    if (itemEntity.tags.contains(tags) && !entity.tags.trim().isEmpty() && entity.id!= itemEntity.id){
                         likeData.add(entity);
                         break;
                     }

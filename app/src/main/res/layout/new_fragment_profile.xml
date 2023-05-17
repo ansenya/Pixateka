@@ -28,12 +28,12 @@
                 android:textColor="@color/white" />
         </androidx.appcompat.widget.Toolbar>
 
-        <ru.senya.pixateka.view.viewFullscreen
-            android:id="@+id/fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
-            android:visibility="gone" />
+<!--        <ru.senya.pixateka.view.viewFullscreen-->
+<!--            android:id="@+id/fragment"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_below="@+id/toolbar"-->
+<!--            android:visibility="gone" />-->
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
@@ -85,7 +85,7 @@
                             android:layout_height="156dp"
                             android:layout_alignBottom="@+id/backround_frame"
                             android:layout_centerHorizontal="true"
-                            android:layout_marginBottom="-3dp"
+                            android:layout_marginBottom="20dp"
                             android:elevation="12dp"
                             app:cardCornerRadius="80dp">
 
@@ -99,6 +99,7 @@
                             android:id="@+id/pfp_frame"
                             android:layout_width="150dp"
                             android:layout_height="150dp"
+                            android:layout_marginBottom="23dp"
                             android:layout_alignBottom="@+id/backround_frame"
                             android:layout_centerHorizontal="true"
                             android:elevation="12dp"
@@ -116,6 +117,7 @@
 
 
                         <LinearLayout
+                            android:layout_marginTop="-10dp"
                             android:id="@+id/bio"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

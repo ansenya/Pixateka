@@ -54,8 +54,8 @@ public interface UsersInterface {
                         MultipartBody.Part avatar);
 
     @Multipart
-    @Headers("Content-Type: multipart/form-data; boundary=<calculated when request is sent>")
-    @PUT("users/{id}/edit/")
+//    @Headers("Content-Type: multipart/form-data")
+    @POST("users/{id}/edit/")
     Call<ResponseBody> editUserAvatar(@Path("id") int id,
                                       @Header("X-CSRFToken") String token,
                                       @Header("Cookie") String cookie,

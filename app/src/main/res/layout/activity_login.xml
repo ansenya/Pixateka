@@ -82,6 +82,16 @@
                     android:text="Регистрация"
                     android:textColor="@color/white" />
 
+                <TextView
+                    android:id="@+id/wrong_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Что-то неверно!"
+                    android:textAlignment="center"
+                    android:textColor="@color/red"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
             </LinearLayout>
 
             <ProgressBar
@@ -93,17 +103,6 @@
                 android:layout_marginTop="60dp"
                 android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/wrong_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linear_layout"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="13dp"
-                android:text="Что-то неверно!"
-                android:textColor="@color/red"
-                android:visibility="gone"
-                tools:visibility="visible" />
         </RelativeLayout>
     </ScrollView>
 
