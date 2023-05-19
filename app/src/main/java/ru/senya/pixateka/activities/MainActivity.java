@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         binding.toolbar.setVisibility(View.GONE);
         binding.navigationMain.setVisibility(View.INVISIBLE);
         binding.navigationProfile.setVisibility(View.INVISIBLE);
+        binding.vfs.setVisibility(View.GONE);
         binding.navigationSearch.setVisibility(View.INVISIBLE);
     }
 
@@ -127,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
                         fragmentMain.fullUpdate();
                     }
                     setFragment();
-                    binding.vfs.setVisibility(View.GONE);
                     binding.navigationMain.setVisibility(View.VISIBLE);
                     fragmentMain.myNotify();
                     return true;

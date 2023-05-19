@@ -13,7 +13,7 @@
         android:layout_height="52dp"
         android:background="@color/toolbar_color"
         android:title="Авторизация"
-        android:titleTextColor="@color/text_color2"></Toolbar>
+        android:titleTextColor="@color/text_color2"/>
 
     <ScrollView
         android:layout_width="match_parent"

@@ -11,4 +11,5 @@
     <string name="TextUploadPhoto">Загрузить фото</string>
     <string name="OtherPictures">Остальные фотографии этого пользователя</string>
     <string name="search">Поиск</string>
+    <string name="nothing_found">Тегов нет</string>
 </resources>

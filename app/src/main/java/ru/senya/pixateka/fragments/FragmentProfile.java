@@ -64,6 +64,7 @@ public class FragmentProfile extends Fragment {
         binding = NewFragmentProfileBinding.inflate(inflater, container, false);
         initRecycler();
         binding.buttonEditProfile.setOnClickListener(v -> {
+            binding.toolbar.setVisibility(GONE);
             getChildFragmentManager().
                     beginTransaction().
                     replace(binding.fragmentEdit.getId(), new FragmentEditProfile()).commit();
@@ -72,7 +73,10 @@ public class FragmentProfile extends Fragment {
             binding.relativeLayout.setVisibility(GONE);
         });
         if (mainUser.avatar != null) {
-            Glide.with(getContext()).load(App.getMainUser().avatar).into(binding.pfpImg);
+            Glide.with(getContext()).load(mainUser.avatar).into(binding.pfpImg);
+        }
+        if (mainUser.background != null) {
+            Glide.with(getContext()).load(mainUser.background).into(binding.back);
         }
 
         binding.name.setText(mainUser.username);
@@ -105,7 +109,6 @@ public class FragmentProfile extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
 
         binding.buttonLogout.setOnClickListener(v -> {
             App.getUserService().logout(App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<ResponseBody>() {
@@ -156,6 +159,7 @@ public class FragmentProfile extends Fragment {
         binding.recyclerList.getAdapter().notifyDataSetChanged();
         if (visible.getVisible()) {
             vfs.setVisibility(VISIBLE);
+            toolbar.setVisibility(VISIBLE);
         }
     }
 
@@ -167,6 +171,7 @@ public class FragmentProfile extends Fragment {
         if (binding.fragmentEdit.getVisibility() == VISIBLE) {
             binding.fragmentEdit.setVisibility(GONE);
             binding.relativeLayout.setVisibility(VISIBLE);
+            binding.toolbar.setVisibility(VISIBLE);
         } else {
             if (vfs.pop()) {
                 toolbar.setVisibility(GONE);
@@ -190,7 +195,7 @@ public class FragmentProfile extends Fragment {
                 new Thread(() -> {
                     ArrayList<ItemEntity> arrayList = new ArrayList<>();
                     arrayList.addAll(App.getDatabase().itemDAO().getAll());
-                    Call<ArrayList<Item>> call = App.getItemService().getPhotosByUserId(App.getMainUser().id);
+                    Call<ArrayList<Item>> call = App.getItemService().getPhotosByUserId(mainUser.id);
                     call.enqueue(new Callback<ArrayList<Item>>() {
                         @Override
                         public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {

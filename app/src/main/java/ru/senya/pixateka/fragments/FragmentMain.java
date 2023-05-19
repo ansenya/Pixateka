@@ -104,10 +104,9 @@ public class FragmentMain extends Fragment {
                     return true;
                 case R.id.random:
                     in_order = false;
-                    data.clear();
-                    onRefreshListener.onRefresh();
                     editor.putBoolean("order", false);
                     editor.commit();
+                    onRefreshListener.onRefresh();
                     return true;
             }
             return false;

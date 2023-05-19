@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -49,7 +51,6 @@ public class FragmentSearch extends Fragment {
         binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white, requireContext().getTheme()));
         binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
-
         initListeners();
         return binding.getRoot();
     }

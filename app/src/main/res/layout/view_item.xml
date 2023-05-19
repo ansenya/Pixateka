@@ -1,54 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="4dp"
-    android:paddingVertical="3dp">
-
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/main_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:background="#F6F6F6"
-        android:src="@color/v1"
-        app:riv_corner_radius="4dp" />
+    android:layout_margin="3dp"
+    android:padding="3dp"
+    android:layout_marginTop="1dp"
+    android:translationZ="6dp"
+    app:cardCornerRadius="4dp">
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/main_image">
 
-        <TextView
-            android:layout_centerVertical="true"
-            android:id="@+id/image_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textColor="@color/black"
-            android:textSize="15sp"
-            tools:text="подпись" />
-
-        <ImageView
-            android:layout_centerVertical="true"
-            android:id="@+id/sets"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:padding="2dp"
-            android:src="@drawable/baseline_more_horiz_24" />
-    </RelativeLayout>
-
-
-    <TextView
-        android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:visibility="gone"
-        tools:text="description" />
+        android:layout_margin="3dp">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/main_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:background="#F6F6F6"
+            android:src="@color/v1"
+            app:riv_corner_radius="4dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_image">
+
+            <TextView
+                android:id="@+id/image_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:padding="2dp"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                tools:text="подпись" />
+
+            <ImageView
+                android:id="@+id/sets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="2dp"
+                android:src="@drawable/baseline_more_horiz_24" />
+        </RelativeLayout>
 
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:visibility="gone"
+            tools:text="description" />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

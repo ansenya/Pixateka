@@ -1,5 +1,6 @@
 package ru.senya.pixateka.view;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -9,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -31,10 +31,14 @@ import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.activities.ProfileActivity;
 import ru.senya.pixateka.adapters.RecyclerAdapterSecondary;
+import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ViewFullscreenBinding;
 
@@ -149,6 +153,7 @@ public class viewFullscreen extends NestedScrollView {
         return super.fullScroll(direction);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void privateUpdate(ItemEntity item, FragmentActivity activity) {
         binding.nothingWasFound.setVisibility(INVISIBLE);
         goUp();
@@ -158,31 +163,39 @@ public class viewFullscreen extends NestedScrollView {
         if (binding.list2.getAdapter() == null) {
             binding.list2.setAdapter(new RecyclerAdapterSecondary(likeData, getContext(), activity, this));
         }
+        App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    binding.byUser.setText("by " + response.body().username);
+                } else {
+                    binding.byUser.setText("");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                binding.byUser.setText("");
+            }
+        });
         binding.list.getAdapter().notifyDataSetChanged();
         binding.list2.getAdapter().notifyDataSetChanged();
         likeData.clear();
         data.clear();
         this.itemEntity = item;
         this.activity = activity;
-        try {
-            Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888); // create placeholder with exact width and height
-            bitmap.eraseColor(Color.parseColor(item.color)); // fulfill bitmap with average color
-            Glide.
-                    with(context).
-                    load(item.getPath()).
-                    placeholder(new BitmapDrawable(bitmap)).
-                    override(1000).
-                    into(binding.included.mainImage);
-        } catch (NullPointerException e){
-            Glide.
-                    with(context).
-                    load(item.getPath()).
-                    placeholder(colors[random.nextInt(colors.length)]).
-                    into(binding.included.mainImage);
-        }
+        Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888);
+        bitmap.eraseColor(Color.parseColor(item.color));
+        Glide.
+                with(context).
+                load(item.getPath()).
+                placeholder(new BitmapDrawable(bitmap)).
+                override(1500).
+                into(binding.included.mainImage);
+
 
         if (item.getName().equals("43083945")) {
-            if (!item.tags.split(" ")[0].trim().isEmpty()){
+            if (!item.tags.split(" ")[0].trim().isEmpty()) {
                 binding.included.imageName.setText("ИИ: " + item.tags.split(" ")[0]);
             } else {
                 binding.included.imageName.setText("Ничего нет");
@@ -192,10 +205,17 @@ public class viewFullscreen extends NestedScrollView {
             binding.included.imageName.setTypeface(Typeface.DEFAULT);
             binding.included.imageName.setText(item.getName());
         }
+        if (item.description==null){
+            binding.mainDescription.setVisibility(GONE);
+        } else {
+            binding.mainDescription.setVisibility(VISIBLE);
+            binding.mainDescription.setText(item.description);
+        }
         Glide.
                 with(context).
                 load(App.getMainUser().avatar).
                 into(binding.pfp);
+
 
         new Thread(() -> {
             data.addAll(App.getDatabase().itemDAO().getAllOtherPictures(Integer.parseInt(item.uid), item.id));
@@ -205,9 +225,9 @@ public class viewFullscreen extends NestedScrollView {
         }).start();
 
         new Thread(() -> {
-            for (ItemEntity entity: App.getDatabase().itemDAO().getAll()){
-                for (String tags: entity.tags.split(" ")){
-                    if (itemEntity.tags.contains(tags) && !entity.tags.trim().isEmpty() && entity.id!= itemEntity.id){
+            for (ItemEntity entity : App.getDatabase().itemDAO().getAll()) {
+                for (String tags : entity.tags.split(" ")) {
+                    if (itemEntity.tags.contains(tags) && !entity.tags.trim().isEmpty() && entity.id != itemEntity.id) {
                         likeData.add(entity);
                         break;
                     }

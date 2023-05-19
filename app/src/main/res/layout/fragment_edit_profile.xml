@@ -4,138 +4,154 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:ignore="ContentDescription">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="7dp">
+        android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="156dp"
-            android:layout_height="156dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="17dp"
-            android:elevation="12dp"
-            app:cardCornerRadius="80dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@color/white" />
-
-
-        </androidx.cardview.widget.CardView>
-
-        <FrameLayout
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="52dp"
+            android:background="@color/toolbar_color"
+            app:title="Редактировать профиль"
+            app:titleTextColor="@color/white" />
 
-            <ImageView
-                android:id="@+id/back"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:maxHeight="200dp"
-                android:scaleType="centerCrop"
-                tools:src="@drawable/a21" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="156dp"
+                android:layout_height="156dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="17dp"
+                android:elevation="12dp"
+                app:cardCornerRadius="80dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@color/white" />
+
+
+            </androidx.cardview.widget.CardView>
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:adjustViewBounds="true"
-                android:background="@drawable/shape"
-                android:maxHeight="200dp"
-                android:scaleType="centerCrop" />
-        </FrameLayout>
+                android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/pfp_frame"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:elevation="12dp"
-            app:cardCornerRadius="80dp">
+                <ImageView
+                    android:id="@+id/back"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:maxHeight="200dp"
+                    android:scaleType="center"
+                    tools:src="@color/button" />
 
-            <ImageView
-                android:id="@+id/pfp_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/pfp" />
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/shape"
+                    android:maxHeight="200dp"
+                    android:scaleType="centerInside" />
+            </FrameLayout>
 
-        </androidx.cardview.widget.CardView>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/pfp_frame"
-            android:layout_alignBottom="@+id/pfp_frame"
-            android:layout_marginEnd="-15dp"
-            android:layout_marginBottom="-15dp"
-            android:elevation="6dp"
-            android:src="@drawable/baseline_photo_library_24"
-            app:backgroundTint="@color/button"
-            app:fabSize="normal" />
-
-        <LinearLayout
-            android:id="@+id/linear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/pfp_frame"
-            android:orientation="vertical">
-
-            <ru.senya.pixateka.view.InputField
-                android:id="@+id/emailAdress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/pfp_frame"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
-                android:inputType="text"
-                app:hint="Ваша почта"
-                app:hint_color="@color/hint_color"
-                app:title="Почта" />
+                android:elevation="12dp"
+                app:cardCornerRadius="80dp">
 
+                <ImageView
+                    android:id="@+id/pfp_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/pfp" />
 
-            <ru.senya.pixateka.view.InputField
-                android:id="@+id/about"
-                android:layout_width="match_parent"
+            </androidx.cardview.widget.CardView>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:inputType="text"
-                app:hint="Напишите о себе"
-                app:hint_color="@color/hint_color"
-                app:title="О себе" />
+                android:layout_alignEnd="@+id/pfp_frame"
+                android:layout_alignBottom="@+id/pfp_frame"
+                android:layout_marginEnd="-15dp"
+                android:layout_marginBottom="-15dp"
+                android:elevation="6dp"
+                android:src="@drawable/baseline_photo_library_24"
+                app:backgroundTint="@color/button"
+                app:fabSize="normal" />
+
+            <LinearLayout
+                android:id="@+id/linear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/pfp_frame"
+                android:orientation="vertical"
+                android:padding="7dp">
+
+                <ru.senya.pixateka.view.InputField
+                    android:id="@+id/emailAdress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:inputType="text"
+                    app:hint="Ваша почта"
+                    app:hint_color="@color/hint_color"
+                    app:title="Почта" />
+
+
+                <ru.senya.pixateka.view.InputField
+                    android:id="@+id/about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:inputType="text"
+                    app:hint="Напишите о себе"
+                    app:hint_color="@color/hint_color"
+                    app:title="О себе" />
+
+                <Button
+                    android:id="@+id/back_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:layout_marginVertical="10dp"
+                    android:backgroundTint="@color/button"
+                    android:text="Выбрать фоновый рисунок"
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
 
             <Button
+                android:id="@+id/button_save"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:layout_marginHorizontal="30dp"
-                android:layout_marginVertical="10dp"
+                android:layout_height="70dp"
+                android:layout_below="@+id/linear"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="4dp"
+                android:autoSizeMaxTextSize="20sp"
+                android:autoSizeTextType="uniform"
                 android:backgroundTint="@color/button"
-                android:text="Выбрать фоновый рисунок"
-                android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:padding="7dp"
+                android:text="Сохранить"
+                android:textColor="@color/white" />
+        </RelativeLayout>
 
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button_save"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_below="@+id/linear"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
-            android:autoSizeMaxTextSize="20sp"
-            android:autoSizeTextType="uniform"
-            android:backgroundTint="@color/button"
-            android:text="Сохранить"
-            android:textColor="@color/white" />
     </RelativeLayout>
 
 

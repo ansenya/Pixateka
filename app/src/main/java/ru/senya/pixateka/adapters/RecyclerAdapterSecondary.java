@@ -136,13 +136,14 @@ public class RecyclerAdapterSecondary extends RecyclerView.Adapter<RecyclerAdapt
                 if (!item.tags.split(" ")[0].trim().isEmpty()){
                     imageName.setText("ИИ: " + item.tags.split(" ")[0]);
                 } else {
-                    imageName.setText("Ничего нет");
+                    imageName.setText(R.string.nothing_found);
                 }
                 imageName.setTypeface(Typeface.MONOSPACE);
             } else {
                 imageName.setTypeface(Typeface.DEFAULT);
                 imageName.setText(item.getName());
             }
+
         }
     }
 }

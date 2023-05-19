@@ -186,7 +186,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                         with(context).
                         load(item.getPath()).
                         placeholder(new BitmapDrawable(bitmap)).
-                        override(1000).
+                        override(700).
                         into(mainImage);
             } catch (NullPointerException e) {
                 Log.e("MyTag", item.id + "");
@@ -200,7 +200,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                 if (!item.tags.split(" ")[0].trim().isEmpty()){
                     imageName.setText("ИИ: " + item.tags.split(" ")[0]);
                 } else {
-                    imageName.setText("Ничего нет");
+                    imageName.setText(R.string.nothing_found);
                 }
                 imageName.setTypeface(Typeface.MONOSPACE);
             } else {

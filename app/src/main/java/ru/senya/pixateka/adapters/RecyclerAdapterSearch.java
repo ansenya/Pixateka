@@ -4,8 +4,11 @@ package ru.senya.pixateka.adapters;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -135,16 +138,21 @@ public class RecyclerAdapterSearch extends RecyclerView.Adapter<RecyclerAdapterS
         }
 
         public void setImage(ItemEntity item) {
+
+            Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888); // create placeholder with exact width and height
+            bitmap.eraseColor(Color.parseColor(item.color)); // fulfill bitmap with average color
             Glide.
                     with(context).
                     load(item.getPath()).
-                    placeholder(colors[random.nextInt(colors.length)]).
+                    placeholder(new BitmapDrawable(bitmap)).
+                    override(700).
                     into(mainImage);
+
             if (item.getName().equals("43083945")) {
                 if (!item.tags.split(" ")[0].trim().isEmpty()){
                     imageName.setText("ИИ: " + item.tags.split(" ")[0]);
                 } else {
-                    imageName.setText("Ничего нет");
+                    imageName.setText(R.string.nothing_found);
                 }
                 imageName.setTypeface(Typeface.MONOSPACE);
             } else {

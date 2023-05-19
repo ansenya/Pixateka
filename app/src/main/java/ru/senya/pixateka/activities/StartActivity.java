@@ -99,7 +99,7 @@ public class StartActivity extends AppCompatActivity {
                                         Utils.setSessionId(user.sessionId);
                                         new Thread(() -> {
                                             App.getDatabase().userDAO().deleteUserTable();
-                                            App.getDatabase().userDAO().save(response.body());
+                                            App.getDatabase().userDAO().save(user);
                                         }).start();
                                         runOnUiThread(() -> {
                                             startActivity(new Intent(getApplicationContext(), MainActivity.class));

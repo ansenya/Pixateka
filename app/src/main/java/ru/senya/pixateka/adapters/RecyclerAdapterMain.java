@@ -171,18 +171,16 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                     with(context).
                     load(item.getPath()).
                     placeholder(new BitmapDrawable(bitmap)).
-                    override(1000).
+                    override(700).
                     into(mainImage);
-//            mainImage.setImageDrawable(new BitmapDrawable(bitmap));
-
         }
 
         void setTextView(ItemEntity item) {
             if (item.getName().equals("43083945")) {
-                if (!item.tags.split(" ")[0].trim().isEmpty()){
+                if (!item.tags.split(" ")[0].trim().isEmpty()) {
                     imageName.setText("ИИ: " + item.tags.split(" ")[0]);
                 } else {
-                    imageName.setText("Ничего нет");
+                    imageName.setText(R.string.nothing_found);
                 }
                 imageName.setTypeface(Typeface.MONOSPACE);
             } else {

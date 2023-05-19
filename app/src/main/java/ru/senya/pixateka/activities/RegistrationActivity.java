@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,21 +14,20 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.gson.JsonElement;
-
-import org.jetbrains.annotations.TestOnly;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
+import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.databinding.ActivityRegistrationBinding;
 
@@ -46,9 +44,6 @@ public class RegistrationActivity extends AppCompatActivity {
         binding = ActivityRegistrationBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-
-        firebaseAuth = FirebaseAuth.getInstance();
-
         init();
     }
 
@@ -61,7 +56,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 if (binding.inputLogin.getInputText().isEmpty()) {
                     errorString += "Логин не может быть пустой\n";
                 }
-                if (binding.inputPassword.getInputText().length()<8) {
+                if (binding.inputPassword.getInputText().length() < 8) {
                     errorString += "Пароль должен быть больше 8 78знаков\n";
                 } else {
                     if (!binding.inputRepeatPassword.getInputText().equals(binding.inputPassword.getInputText())) {
@@ -87,11 +82,71 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
                             if (response.isSuccessful() && response.body() != null) {
-                                Toast.makeText(RegistrationActivity.this, "Теперь нужно войти", Toast.LENGTH_SHORT).show();
-                                onBackPressed();
+                                binding.progressCircular.setVisibility(View.VISIBLE);
+
+                                RequestBody username = RequestBody.create(MediaType.parse("text/plain"), binding.inputLogin.getInputText().trim());
+                                RequestBody password = RequestBody.create(MediaType.parse("text/plain"), binding.inputPassword.getInputText().trim());
+                                App.getUserService().login(password, username).enqueue(new Callback<User>() {
+                                    @Override
+                                    public void onResponse(Call<User> call, Response<User> response) {
+                                        if (response.isSuccessful()) {
+                                            User user = response.body();
+
+                                            String src = response.headers().toMultimap().get("set-cookie").toString();
+
+                                            String csrftoken = "csrftoken=(.*?);";
+                                            Pattern pattern = Pattern.compile(csrftoken);
+                                            Matcher matcher = pattern.matcher(src);
+
+                                            if (matcher.find()) {
+                                                Utils.setTOKEN(matcher.group(1));
+                                                user.setToken(Utils.TOKEN);
+                                                Log.e("MyTag", "token=" + Utils.TOKEN);
+                                            }
+
+                                            String sessionId = "sessionid=(.*?);";
+                                            pattern = Pattern.compile(sessionId);
+                                            matcher = pattern.matcher(src);
+
+                                            if (matcher.find()) {
+                                                Utils.setSessionId(matcher.group(1));
+                                                user.setSessionId(Utils.SESSION_ID);
+                                                Log.e("MyTag", Utils.SESSION_ID);
+                                            }
+                                            try {
+                                                new Thread(() -> {
+                                                    App.getDatabase().userDAO().save(user);
+                                                    App.setMainUser(App.getDatabase().userDAO().getUser()[0]);
+                                                    Utils.setTOKEN(App.getMainUser().token);
+                                                    Utils.setSessionId(App.getMainUser().sessionId);
+                                                    runOnUiThread(() -> {
+                                                        binding.progressCircular.setVisibility(View.GONE);
+                                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                                        Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
+                                                        finish();
+                                                    });
+                                                }).start();
+
+                                            } catch (Exception e) {
+                                                binding.progressCircular.setVisibility(View.GONE);
+                                            }
+
+                                        } else {
+                                            binding.progressCircular.setVisibility(View.GONE);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<User> call, Throwable t) {
+                                        Log.e("MyTag", "error", t);
+                                        Toast.makeText(getApplicationContext(), "что-то пошло не так", Toast.LENGTH_SHORT).show();
+                                        binding.progressCircular.setVisibility(View.GONE);
+                                    }
+                                });
+
                             } else {
                                 try {
-                                    if (response.errorBody().string().contains("password")){
+                                    if (response.errorBody().string().contains("password")) {
                                         Toast.makeText(RegistrationActivity.this, "Пароль не должен быть простым", Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (IOException e) {
@@ -127,7 +182,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
         });
-        binding.buttonBack.setOnClickListener(v ->{
+        binding.buttonBack.setOnClickListener(v -> {
             Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
             onBackPressed();
         });
@@ -139,24 +194,24 @@ public class RegistrationActivity extends AppCompatActivity {
         });
         binding.showPassword.setOnClickListener(v -> {
             binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-            new Thread(()->{
+            new Thread(() -> {
                 try {
                     Thread.sleep(3500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                runOnUiThread(()->binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+                runOnUiThread(() -> binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
             }).start();
         });
         binding.showRPassword.setOnClickListener(v -> {
             binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-            new Thread(()->{
+            new Thread(() -> {
                 try {
                     Thread.sleep(3500);
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-                runOnUiThread(()->binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+                runOnUiThread(() -> binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
             }).start();
         });
     }
