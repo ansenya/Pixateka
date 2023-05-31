@@ -5,10 +5,10 @@ import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.window.SplashScreenView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,11 +25,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.senya.pixateka.App;
+import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.retrofit.userApi.UsersInterface;
 import ru.senya.pixateka.database.room.ItemEntity;
+import ru.senya.pixateka.databinding.SplashScreenBinding;
 
 
 public class StartActivity extends AppCompatActivity {
@@ -40,15 +42,16 @@ public class StartActivity extends AppCompatActivity {
     UsersInterface service;
     List<ItemEntity> data = new ArrayList<>();
     AppCompatActivity activity;
+    SplashScreenBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = SplashScreenBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         activity = this;
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
-
+        boolean connected = connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
         if (connected) {
             new Thread(() -> {
                 data = App.getDatabase().itemDAO().getAll();
@@ -125,7 +128,7 @@ public class StartActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<User> call, Throwable t) {
-                                    Toast.makeText(StartActivity.this, "error", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
                                     runOnUiThread(() -> {
                                         new Thread(() -> {
                                             App.setMainUser(App.getDatabase().userDAO().getUser()[0]);
@@ -149,7 +152,7 @@ public class StartActivity extends AppCompatActivity {
 
             }).start();
         } else {
-
+            Toast.makeText(activity, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
             new Thread(() -> {
                 try {
                     App.setMainUser(App.getDatabase().userDAO().getUser()[0]);

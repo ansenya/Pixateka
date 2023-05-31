@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
+
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,7 +66,6 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(Call<User> call, Response<User> response) {
                         if (response.isSuccessful()) {
                             User user = response.body();
-
                             String src = response.headers().toMultimap().get("set-cookie").toString();
 
                             String csrftoken = "csrftoken=(.*?);";
@@ -94,7 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                                     runOnUiThread(() -> {
                                         binding.progressCircular.setVisibility(View.GONE);
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                        Toast.makeText(LoginActivity.this, "success", Toast.LENGTH_SHORT).show();
                                         finish();
                                     });
                                 }).start();
@@ -105,6 +106,13 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                         else {
+                            try {
+                                if (response.errorBody().string().contains("Invalid credentials")){
+                                    Snackbar.make(binding.getRoot(), "Логин или пароль неверны", Snackbar.LENGTH_LONG).show();
+                                }
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                             binding.progressCircular.setVisibility(View.GONE);
                         }
                     }
@@ -139,8 +147,9 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegistration.setOnClickListener(view -> {
             startActivity(new Intent(this, RegistrationActivity.class));
         });
-        binding.showPassword.setOnClickListener(v -> {
+        binding.inputPassword.binding.input.setOnClickListener(v -> {
             binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
             new Thread(()->{
                 try {
                     Thread.sleep(3500);
@@ -148,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
                 runOnUiThread(()->binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+                binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
             }).start();
         });
     }

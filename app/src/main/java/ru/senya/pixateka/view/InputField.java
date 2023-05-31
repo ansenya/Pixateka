@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.InputType;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 
@@ -15,7 +16,7 @@ import ru.senya.pixateka.databinding.ViewInputFieldBinding;
 
 public class InputField extends LinearLayout {
 
-     ViewInputFieldBinding binding;
+    public ViewInputFieldBinding binding;
 
     public InputField(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -32,11 +33,11 @@ public class InputField extends LinearLayout {
         initView(attrs);
     }
 
-    private void initView(AttributeSet attrs){
+    private void initView(AttributeSet attrs) {
         binding = ViewInputFieldBinding.inflate(LayoutInflater.from(getContext()), this, true);
         TypedArray attributes = getContext().getTheme().obtainStyledAttributes(attrs,
                 R.styleable.InputField,
-                0, 0 );
+                0, 0);
         try {
             String title = attributes.getString(R.styleable.InputField_title);
             binding.title.setText(title);
@@ -44,16 +45,19 @@ public class InputField extends LinearLayout {
             binding.input.setInputType(inputType);
             binding.input.setHint(attributes.getString(R.styleable.InputField_hint));
             binding.input.setHintTextColor(attributes.getColor(R.styleable.InputField_hint_color, 1));
+
             try {
                 binding.pic.setImageResource(attributes.getResourceId(R.styleable.InputField_src, 1));
-            } catch (Exception e){}
+            } catch (Exception e) {
+                Log.e("MyTag", e.getLocalizedMessage());
+            }
         } finally {
             attributes.recycle();
         }
 
 
-
     }
+
     public String getInputText() {
         return binding.input.getText().toString();
     }

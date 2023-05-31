@@ -23,6 +23,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.tabs.TabLayout;
 
 import java.net.URL;
@@ -63,38 +64,35 @@ public class viewFullscreen extends NestedScrollView {
         binding.included.sets.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
             popupMenu.inflate(R.menu.menu);
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.download:
-                            Toast.makeText(context, "downloading...", Toast.LENGTH_SHORT).show();
-                            new Thread(() -> {
-                                try {
-                                    MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                                            BitmapFactory.decodeStream(new URL(itemEntity.getPath()).openConnection().getInputStream()),
-                                            itemEntity.getName(), itemEntity.getDescription() + LocalDateTime.now());
+            popupMenu.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.download:
+                        Toast.makeText(context, "downloading...", Toast.LENGTH_SHORT).show();
+                        new Thread(() -> {
+                            try {
+                                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+                                        BitmapFactory.decodeStream(new URL(itemEntity.getPath()).openConnection().getInputStream()),
+                                        itemEntity.getName(), itemEntity.getDescription() + LocalDateTime.now());
 
-                                    activity.runOnUiThread(() -> {
-                                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
-                                    });
+                                activity.runOnUiThread(() -> {
+                                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                });
 
-                                } catch (Exception e) {
-                                    Toast.makeText(context, "smth wrong", Toast.LENGTH_SHORT).show();
-                                }
+                            } catch (Exception e) {
+                                Toast.makeText(context, "smth wrong", Toast.LENGTH_SHORT).show();
+                            }
 
-                            }).start();
+                        }).start();
 
-                            return true;
-                        case R.id.share:
-                            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("url", itemEntity.getPath());
-                            clipboard.setPrimaryClip(clip);
-                            Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
-                            return true;
-                    }
-                    return false;
+                        return true;
+                    case R.id.share:
+                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("url", itemEntity.getPath());
+                        clipboard.setPrimaryClip(clip);
+                        Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
+                        return true;
                 }
+                return false;
             });
             popupMenu.show();
         });
@@ -155,6 +153,7 @@ public class viewFullscreen extends NestedScrollView {
 
     @SuppressLint("NotifyDataSetChanged")
     private void privateUpdate(ItemEntity item, FragmentActivity activity) {
+        binding.pfp.setImageResource(R.drawable.pfp);
         binding.nothingWasFound.setVisibility(INVISIBLE);
         goUp();
         if (binding.list.getAdapter() == null) {
@@ -189,11 +188,15 @@ public class viewFullscreen extends NestedScrollView {
         Glide.
                 with(context).
                 load(item.getPath()).
-                placeholder(new BitmapDrawable(bitmap)).
-                override(1500).
+                placeholder(new BitmapDrawable(activity.getResources(), bitmap)).
+                dontAnimate().
+                apply(new RequestOptions().override(1500, 1500)).
                 into(binding.included.mainImage);
-
-
+        if (item.getTags().isEmpty() || item.getName().equals("43083945")){
+            binding.tags.setText("");
+        } else {
+            binding.tags.setText("ИИ: "+ item.getTags());
+        }
         if (item.getName().equals("43083945")) {
             if (!item.tags.split(" ")[0].trim().isEmpty()) {
                 binding.included.imageName.setText("ИИ: " + item.tags.split(" ")[0]);
@@ -211,18 +214,30 @@ public class viewFullscreen extends NestedScrollView {
             binding.mainDescription.setVisibility(VISIBLE);
             binding.mainDescription.setText(item.description);
         }
-        Glide.
-                with(context).
-                load(App.getMainUser().avatar).
-                into(binding.pfp);
+        if (item.getDescription()==null && (item.getTags().isEmpty()|| item.getName().equals("43083945"))) {
+            binding.mainLinear.setVisibility(GONE);
+        } else {
+            binding.mainLinear.setVisibility(VISIBLE);
+        }
+        App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful() && response.body()!=null){
+                    activity.runOnUiThread(()->{
+                        Glide.
+                                with(context).
+                                load(response.body().avatar).
+                                into(binding.pfp);
+                    });
+                }
+            }
 
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
 
-        new Thread(() -> {
-            data.addAll(App.getDatabase().itemDAO().getAllOtherPictures(Integer.parseInt(item.uid), item.id));
-            activity.runOnUiThread(() -> {
-                binding.list.getAdapter().notifyDataSetChanged();
-            });
-        }).start();
+            }
+        });
+
 
         new Thread(() -> {
             for (ItemEntity entity : App.getDatabase().itemDAO().getAll()) {
@@ -239,6 +254,12 @@ public class viewFullscreen extends NestedScrollView {
                 } else {
                     binding.list2.getAdapter().notifyDataSetChanged();
                 }
+            });
+        }).start();
+        new Thread(() -> {
+            data.addAll(App.getDatabase().itemDAO().getAllOtherPictures(Integer.parseInt(item.uid), item.id));
+            activity.runOnUiThread(() -> {
+                binding.list.getAdapter().notifyDataSetChanged();
             });
         }).start();
     }

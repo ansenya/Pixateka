@@ -4,12 +4,13 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteConstraintException;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -85,7 +89,8 @@ public class FragmentMain extends Fragment {
                 binding.mainToolbar,
                 binding.fab,
                 binding.toolbar,
-                binding.swipeContainer);
+                binding.swipeContainer,
+                this);
         initRecycler();
 
 
@@ -145,6 +150,7 @@ public class FragmentMain extends Fragment {
             binding.mainRecyclerView.setVisibility(VISIBLE);
             binding.fab.setVisibility(VISIBLE);
             binding.swipeContainer.setVisibility(VISIBLE);
+            onRefreshListener.onRefresh();
         }
     }
 
@@ -156,7 +162,14 @@ public class FragmentMain extends Fragment {
 
     private void listener() {
         binding.fab.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), AddActivity.class));
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
+                Toast.makeText(getContext(), "Нужен допступ к галлерее", Toast.LENGTH_SHORT).show();
+            } else{
+                startActivity(new Intent(getContext(), AddActivity.class));
+            }
         });
         binding.swipeContainer.setOnRefreshListener(onRefreshListener);
     }
@@ -181,14 +194,11 @@ public class FragmentMain extends Fragment {
         }
     };
 
-    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    public SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
-
+            ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            boolean connected = connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
             if (connected) {
                 new Thread(() -> {
                     ArrayList<ItemEntity> arrayList = new ArrayList<>();
@@ -260,14 +270,15 @@ public class FragmentMain extends Fragment {
                         @Override
                         public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
                             binding.swipeContainer.setRefreshing(false);
-                            Toast.makeText(getContext(), "smth bad happened", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
                         }
                     });
 
 
                 }).start();
             } else {
-                Toast.makeText(getContext(), "you don't have internet connection", Toast.LENGTH_SHORT).show();
+                binding.swipeContainer.setRefreshing(false);
+                Toast.makeText(getContext(), "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
             }
         }
     };

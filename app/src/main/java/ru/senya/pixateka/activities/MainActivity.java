@@ -2,16 +2,10 @@ package ru.senya.pixateka.activities;
 
 import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentMain = new FragmentMain(mainData, getApplicationContext());
         fragmentProfile = new FragmentProfile(profileData, mainUser, binding.vfs, binding.toolbar, 2);
         fragmentSearch = new FragmentSearch(mainData);
-
         setFragments();
     }
 
@@ -69,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        fragmentMain.onRefreshListener.onRefresh();
+        fragmentProfile.onRefreshListener.onRefresh();
         super.onResume();
     }
 
@@ -82,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             fragmentProfile.back();
         }
     }
+
 
     private void getData() {
         new Thread(() -> {
@@ -101,12 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void checkPermission() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
-            Toast.makeText(this, "Need Permission to access storage for Downloading Image", Toast.LENGTH_SHORT).show();
-        }
+
 
     }
 

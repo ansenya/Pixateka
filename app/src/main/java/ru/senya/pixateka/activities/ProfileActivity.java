@@ -14,7 +14,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
-import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ActivityProfileBinding;

@@ -1,7 +1,6 @@
 package ru.senya.pixateka.database.room;
 
 
-import androidx.room.AutoMigration;
 import androidx.room.RoomDatabase;
 
 import ru.senya.pixateka.database.retrofit.userApi.User;

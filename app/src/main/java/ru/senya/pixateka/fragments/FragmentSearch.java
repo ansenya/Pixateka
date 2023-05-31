@@ -4,33 +4,23 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.adapters.RecyclerAdapterMain;
 import ru.senya.pixateka.adapters.RecyclerAdapterSearch;
-import ru.senya.pixateka.adapters.RecyclerAdapterSecondary;
-import ru.senya.pixateka.adapters.RecyclerTouchListener;
-import ru.senya.pixateka.databinding.FragmentSearchBinding;
 import ru.senya.pixateka.database.room.ItemEntity;
+import ru.senya.pixateka.databinding.FragmentSearchBinding;
 
 
 public class FragmentSearch extends Fragment {

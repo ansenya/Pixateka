@@ -1,8 +1,8 @@
 package ru.senya.pixateka.activities;
 
-import android.content.Context;
+import static ru.senya.pixateka.database.retrofit.Utils.getRealPath;
+
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.loader.content.CursorLoader;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.storage.FirebaseStorage;
@@ -20,7 +19,6 @@ import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -34,7 +32,6 @@ import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
 import ru.senya.pixateka.databinding.ActivityAddBinding;
-import ru.senya.pixateka.fragments.FragmentMain;
 
 public class AddActivity extends AppCompatActivity {
 
@@ -86,22 +83,7 @@ public class AddActivity extends AppCompatActivity {
         }
     }
 
-    public static String getRealPath(Context context, Uri contentUri) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        String result = null;
-        CursorLoader cursorLoader = new CursorLoader(
-                context,
-                contentUri, proj, null, null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
 
-        if (cursor != null) {
-            int column_index =
-                    cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            result = cursor.getString(column_index);
-        }
-        return result;
-    }
 
     private View.OnClickListener clickListener = v -> {
         i++;

@@ -15,16 +15,24 @@
         android:title="Регистрация"
         android:titleTextColor="@color/text_color2" />
 
-    <TextView
-        android:id="@+id/text_warning"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/relative_layout"
         android:layout_below="@id/reg"
-        android:layout_marginTop="1dp"
-        android:text="Важно! \n - Пароль не должен быть слишком простым \n - Длина пароля должна быть больше 7 знаков"
-        android:textAlignment="center"
-        android:textColor="@color/red"
-        android:textSize="14sp" />
+        android:layout_marginTop="1dp">
+
+        <TextView
+            android:layout_gravity="center"
+            android:id="@+id/text_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/warning"
+            android:textAlignment="center"
+            android:textColor="@color/red"
+            android:textSize="14sp" />
+    </FrameLayout>
+
 
     <RelativeLayout
         android:id="@+id/relative_layout"
@@ -50,7 +58,7 @@
                 android:inputType="textEmailAddress"
                 app:hint="Придумайте себе логин"
                 app:hint_color="@color/hint_color"
-                app:src="@drawable/pfp"
+                app:src="@drawable/avatar"
                 app:title="Логин" />
 
             <ru.senya.pixateka.view.InputField
@@ -60,15 +68,8 @@
                 android:inputType="textPassword"
                 app:hint="Придумайте пароль"
                 app:hint_color="@color/hint_color"
-                app:src="@drawable/password"
+                app:src="@drawable/password_icon"
                 app:title="Пароль" />
-
-            <TextView
-                android:id="@+id/show_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:text="Показать пароль" />
 
 
             <ru.senya.pixateka.view.InputField
@@ -78,42 +79,8 @@
                 android:inputType="textPassword"
                 app:hint="Подтвердите пароль"
                 app:hint_color="@color/hint_color"
-                app:src="@drawable/password"
+                app:src="@drawable/password_icon"
                 app:title="Повторный пароль" />
-
-            <TextView
-                android:id="@+id/show_r_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:text="Показать пароль" />
-
-            <!--                <ru.senya.pixateka.view.InputField-->
-            <!--                    android:id="@+id/input_first_name"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:inputType="textPassword"-->
-            <!--                    app:hint="Ваше имя"-->
-            <!--                    app:hint_color="@color/hint_color"-->
-            <!--                    app:title="Имя" />-->
-
-            <!--                <ru.senya.pixateka.view.InputField-->
-            <!--                    android:id="@+id/input_country"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:inputType="textPassword"-->
-            <!--                    app:hint="Ваша страна"-->
-            <!--                    app:hint_color="@color/hint_color"-->
-            <!--                    app:title="Страна" />-->
-
-            <!--                <ru.senya.pixateka.view.InputField-->
-            <!--                    android:id="@+id/input_email"-->
-            <!--                    android:layout_width="match_parent"-->
-            <!--                    android:layout_height="wrap_content"-->
-            <!--                    android:inputType="textPassword"-->
-            <!--                    app:hint="Ваша почта"-->
-            <!--                    app:hint_color="@color/hint_color"-->
-            <!--                    app:title="Почта" />-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -172,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/linear_layout"
                 android:layout_centerHorizontal="true"
-                android:text="Что-то неверно!"
+                android:text="Что-то неверно!\nчь\nчто"
                 android:textColor="@color/red"
                 android:visibility="invisible"
                 tools:visibility="visible" />

@@ -12,7 +12,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,12 +34,20 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
+import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.room.ItemEntity;
+import ru.senya.pixateka.fragments.FragmentMain;
 
 
 public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMain.MyViewHolder> {
@@ -52,6 +62,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
     FloatingActionButton floatingActionButton;
     FragmentActivity activity;
     SwipeRefreshLayout swipeRefreshLayout;
+    FragmentMain fragmentMain;
 
     public RecyclerAdapterMain(FragmentActivity activity,
                                List<ItemEntity> items,
@@ -62,7 +73,8 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                                Toolbar toolbar,
                                FloatingActionButton floatingActionButton,
                                androidx.appcompat.widget.Toolbar toolbar2,
-                               SwipeRefreshLayout swipeRefreshLayout) {
+                               SwipeRefreshLayout swipeRefreshLayout,
+                               FragmentMain fragmentMain) {
         this.swipeRefreshLayout = swipeRefreshLayout;
         this.activity = activity;
         data = items;
@@ -72,6 +84,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
         this.mainToolbar = toolbar;
         this.floatingActionButton = floatingActionButton;
         this.toolbar = toolbar2;
+        this.fragmentMain = fragmentMain;
     }
 
     @NonNull
@@ -87,7 +100,12 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
 
         holder.sets.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
-            popupMenu.inflate(R.menu.menu);
+            if (Integer.parseInt(data.get(position).uid) == App.getMainUser().id) {
+                popupMenu.inflate(R.menu.p_menu);
+            } else {
+                popupMenu.inflate(R.menu.menu);
+            }
+
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
@@ -116,6 +134,41 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                             ClipData clip = ClipData.newPlainText("url", data.get(position).getPath());
                             clipboard.setPrimaryClip(clip);
                             Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
+                            return true;
+                        case R.id.delete:
+                            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                            boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
+                            if (connected)
+                                App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
+                                    @Override
+                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                        if (response.isSuccessful()) {
+                                            new Thread(() -> {
+                                                App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
+                                                activity.runOnUiThread(() -> {
+                                                    data.remove(position);
+                                                    fragmentMain.onRefreshListener.onRefresh();
+                                                    RecyclerAdapterMain.super.notifyDataSetChanged();
+                                                });
+                                            }).start();
+                                            notifyDataSetChanged();
+                                        } else {
+                                            try {
+                                                Log.e("MyTag", response.errorBody().string());
+                                            } catch (IOException e) {
+                                                throw new RuntimeException(e);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                                    }
+                                });
+                            else
+                                Toast.makeText(context, "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
+
                             return true;
 
 
@@ -167,12 +220,16 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
         void setImageView(ItemEntity item, Context context, FragmentActivity activity, RecyclerAdapterMain adapter, int p) {
             Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888); // create placeholder with exact width and height
             bitmap.eraseColor(Color.parseColor(item.color)); // fulfill bitmap with average color
+//            mainImage.setImageBitmap(bitmap);
             Glide.
                     with(context).
                     load(item.getPath()).
-                    placeholder(new BitmapDrawable(bitmap)).
+                    placeholder(new BitmapDrawable(activity.getResources(), bitmap)).
+                    dontAnimate().
                     override(700).
                     into(mainImage);
+
+
         }
 
         void setTextView(ItemEntity item) {

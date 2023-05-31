@@ -16,5 +16,11 @@
     <style name="Splash" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground" tools:targetApi="l">#8D979C</item>
     </style>
+    <style name="Theme.Pixateka.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.Pixateka.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Pixateka.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

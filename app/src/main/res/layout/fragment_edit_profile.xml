@@ -106,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:inputType="text"
+                    android:visibility="gone"
                     app:hint="Ваша почта"
                     app:hint_color="@color/hint_color"
                     app:title="Почта" />
@@ -120,6 +121,7 @@
                     app:hint="Напишите о себе"
                     app:hint_color="@color/hint_color"
                     app:title="О себе" />
+
 
                 <Button
                     android:id="@+id/back_button"

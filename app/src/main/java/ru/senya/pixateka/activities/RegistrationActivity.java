@@ -1,6 +1,6 @@
 package ru.senya.pixateka.activities;
 
-import static ru.senya.pixateka.activities.AddActivity.getRealPath;
+import static ru.senya.pixateka.database.retrofit.Utils.getRealPath;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
@@ -57,7 +58,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     errorString += "Логин не может быть пустой\n";
                 }
                 if (binding.inputPassword.getInputText().length() < 8) {
-                    errorString += "Пароль должен быть больше 8 78знаков\n";
+                    errorString += "Пароль должен быть больше 7 знаков\n";
                 } else {
                     if (!binding.inputRepeatPassword.getInputText().equals(binding.inputPassword.getInputText())) {
                         errorString += "Пароли не совпадают\n";
@@ -122,7 +123,6 @@ public class RegistrationActivity extends AppCompatActivity {
                                                     runOnUiThread(() -> {
                                                         binding.progressCircular.setVisibility(View.GONE);
                                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                        Toast.makeText(getApplicationContext(), "success", Toast.LENGTH_SHORT).show();
                                                         finish();
                                                     });
                                                 }).start();
@@ -139,7 +139,7 @@ public class RegistrationActivity extends AppCompatActivity {
                                     @Override
                                     public void onFailure(Call<User> call, Throwable t) {
                                         Log.e("MyTag", "error", t);
-                                        Toast.makeText(getApplicationContext(), "что-то пошло не так", Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(binding.getRoot(), "Что-то пошло не так", Snackbar.LENGTH_LONG).show();
                                         binding.progressCircular.setVisibility(View.GONE);
                                     }
                                 });
@@ -147,7 +147,7 @@ public class RegistrationActivity extends AppCompatActivity {
                             } else {
                                 try {
                                     if (response.errorBody().string().contains("password")) {
-                                        Toast.makeText(RegistrationActivity.this, "Пароль не должен быть простым", Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(binding.getRoot(), "Пароль не должен быть слишком простым", Snackbar.LENGTH_LONG).show();
                                     }
                                 } catch (IOException e) {
                                     throw new RuntimeException(e);
@@ -159,7 +159,7 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
                             Log.e("MyTag", "error", t);
-                            Toast.makeText(RegistrationActivity.this, "что-то пошло не так", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(binding.getRoot(), "Что-то пошло не так", Snackbar.LENGTH_LONG).show();
                         }
                     });
 
@@ -183,7 +183,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
         });
         binding.buttonBack.setOnClickListener(v -> {
-            Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
             onBackPressed();
         });
         binding.choosePhotoImg.setOnClickListener(v -> {
@@ -192,8 +191,9 @@ public class RegistrationActivity extends AppCompatActivity {
         binding.choosePhotoBtn.setOnClickListener(v -> {
             startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 3);
         });
-        binding.showPassword.setOnClickListener(v -> {
+        binding.inputPassword.binding.pic.setOnClickListener(v -> {
             binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
             new Thread(() -> {
                 try {
                     Thread.sleep(3500);
@@ -201,10 +201,12 @@ public class RegistrationActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
                 runOnUiThread(() -> binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+                binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
             }).start();
         });
-        binding.showRPassword.setOnClickListener(v -> {
+        binding.inputRepeatPassword.binding.pic.setOnClickListener(v -> {
             binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+            binding.inputRepeatPassword.binding.input.setSelection(binding.inputRepeatPassword.binding.input.getText().length());
             new Thread(() -> {
                 try {
                     Thread.sleep(3500);
@@ -212,6 +214,7 @@ public class RegistrationActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
                 runOnUiThread(() -> binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+                binding.inputRepeatPassword.binding.input.setSelection(binding.inputRepeatPassword.binding.input.getText().length());
             }).start();
         });
     }
@@ -222,7 +225,6 @@ public class RegistrationActivity extends AppCompatActivity {
         if (requestCode == 3 && resultCode == RESULT_OK && data != null && data.getData() != null) {
             binding.choosePhotoImg.setImageURI(data.getData());
             binding.choosePhotoImg.setCornerRadius(300);
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
             file = new File(getRealPath(getApplicationContext(), data.getData()));
             avatar = MultipartBody.Part.createFormData("avatar", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
         }

@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -86,7 +87,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
             menu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.download:
-                        Toast.makeText(context, "downloading...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "скачивается...", Toast.LENGTH_SHORT).show();
                         new Thread(() -> {
                             try {
                                 MediaStore.Images.Media.insertImage(context.getContentResolver(),
@@ -94,11 +95,11 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                                         data.get(position).getName(), data.get(position).getDescription() + java.time.LocalDateTime.now());
 
                                 activity.runOnUiThread(() -> {
-                                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "скачалось", Toast.LENGTH_SHORT).show();
                                 });
 
                             } catch (Exception e) {
-                                Toast.makeText(context, "smth wrong", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "ошибка", Toast.LENGTH_SHORT).show();
                             }
 
                         }).start();
@@ -107,37 +108,41 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText("url", data.get(position).getPath());
                         clipboard.setPrimaryClip(clip);
-                        Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "скопировано", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.delete:
-                        App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()) {
-                                    new Thread(() -> {
-                                        App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
-                                        activity.runOnUiThread(() -> {
-                                            data.remove(position);
-                                            onRefreshListener.onRefresh();
-                                            binding.recyclerList.getAdapter().notifyDataSetChanged();
-                                        });
-                                    }).start();
-                                    notifyDataSetChanged();
-                                } else {
-                                    try {
-                                        Log.e("MyTag", response.errorBody().string());
-                                    } catch (IOException e) {
-                                        throw new RuntimeException(e);
+                        ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+                        boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
+                        if (connected)
+                            App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
+                                @Override
+                                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                    if (response.isSuccessful()) {
+                                        new Thread(() -> {
+                                            App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
+                                            activity.runOnUiThread(() -> {
+                                                data.remove(position);
+                                                onRefreshListener.onRefresh();
+                                                binding.recyclerList.getAdapter().notifyDataSetChanged();
+                                            });
+                                        }).start();
+                                        notifyDataSetChanged();
+                                    } else {
+                                        try {
+                                            Log.e("MyTag", response.errorBody().string());
+                                        } catch (IOException e) {
+                                            throw new RuntimeException(e);
+                                        }
                                     }
                                 }
-                            }
 
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                            }
-                        });
-
+                                }
+                            });
+                        else
+                            Toast.makeText(context, "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
                 }
                 return false;
             });
@@ -197,7 +202,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                         into(mainImage);
             }
             if (item.getName().equals("43083945")) {
-                if (!item.tags.split(" ")[0].trim().isEmpty()){
+                if (!item.tags.split(" ")[0].trim().isEmpty()) {
                     imageName.setText("ИИ: " + item.tags.split(" ")[0]);
                 } else {
                     imageName.setText(R.string.nothing_found);

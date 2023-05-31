@@ -2,7 +2,7 @@ package ru.senya.pixateka.fragments;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static ru.senya.pixateka.activities.AddActivity.getRealPath;
+import static ru.senya.pixateka.database.retrofit.Utils.getRealPath;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -51,6 +51,7 @@ public class FragmentEditProfile extends Fragment {
         binding.toolbar.setNavigationOnClickListener(v -> {
             getActivity().onBackPressed();
         });
+        binding.about.binding.input.setText(mainUser.about);
         init();
         return binding.getRoot();
     }
@@ -74,7 +75,7 @@ public class FragmentEditProfile extends Fragment {
                 String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
                 MultipartBody.Part imagePart = MultipartBody.Part.createFormData("avatar", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
                 App.getUserService().
-                        editUserAvatar(
+                        editUserPics(
                                 App.getMainUser().id,
                                 App.getMainUser().token,
                                 cookie,
@@ -82,20 +83,10 @@ public class FragmentEditProfile extends Fragment {
                         ).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                if (response.isSuccessful()){
+                                    getActivity().onBackPressed();
+                                }
 
-                                Log.e("Edit", response.raw().toString());
-                                try {
-                                    Log.e("Edit", response.body().string());
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                try {
-                                    Log.e("Edit", response.errorBody().string());
-                                } catch (Exception e) {
-                                }
-                                Log.e("Edit", response.headers().toString());
-                                Log.e("Edit", response.message().toString());
-                                Toast.makeText(getContext(), "cool", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -109,7 +100,7 @@ public class FragmentEditProfile extends Fragment {
                 String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
                 MultipartBody.Part back = MultipartBody.Part.createFormData("background", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
                 App.getUserService().
-                        editUserAvatar(
+                        editUserPics(
                                 App.getMainUser().id,
                                 App.getMainUser().token,
                                 cookie,
@@ -117,20 +108,9 @@ public class FragmentEditProfile extends Fragment {
                         ).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                                Log.e("Edit", response.raw().toString());
-                                try {
-                                    Log.e("Edit", response.body().string());
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
+                                if (response.isSuccessful()){
+                                    getActivity().onBackPressed();
                                 }
-                                try {
-                                    Log.e("Edit", response.errorBody().string());
-                                } catch (Exception e) {
-                                }
-                                Log.e("Edit", response.headers().toString());
-                                Log.e("Edit", response.message().toString());
-                                Toast.makeText(getContext(), "cool", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
@@ -144,7 +124,7 @@ public class FragmentEditProfile extends Fragment {
                     App.getUserService().editUserDesc(App.getMainUser().id, App.getMainUser().token, cookie, binding.about.getInputText()).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                            getActivity().onBackPressed();
                         }
 
                         @Override

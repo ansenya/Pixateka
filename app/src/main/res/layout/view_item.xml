@@ -7,8 +7,8 @@
     android:layout_margin="3dp"
     android:padding="3dp"
     android:layout_marginTop="1dp"
-    android:translationZ="6dp"
-    app:cardCornerRadius="4dp">
+    android:translationZ="3dp"
+    app:cardCornerRadius="1dp">
 
     <RelativeLayout
 
@@ -23,7 +23,7 @@
             android:adjustViewBounds="true"
             android:background="#F6F6F6"
             android:src="@color/v1"
-            app:riv_corner_radius="4dp" />
+            app:riv_corner_radius="1dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

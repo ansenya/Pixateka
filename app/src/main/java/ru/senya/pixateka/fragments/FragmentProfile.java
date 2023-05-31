@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -33,6 +37,7 @@ import ru.senya.pixateka.R;
 import ru.senya.pixateka.activities.StartActivity;
 import ru.senya.pixateka.activities.Visible;
 import ru.senya.pixateka.adapters.RecyclerAdapterProfile;
+import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
@@ -49,6 +54,7 @@ public class FragmentProfile extends Fragment {
     Visible visible = new Visible(false);
     androidx.appcompat.widget.Toolbar toolbar;
     int k;
+    boolean running = false;
 
     public FragmentProfile(ArrayList<ItemEntity> data, User mainUser, viewFullscreen vfs, androidx.appcompat.widget.Toolbar toolbar, int k) {
         this.data = data;
@@ -81,16 +87,16 @@ public class FragmentProfile extends Fragment {
 
         binding.name.setText(mainUser.username);
         try {
-            if (!mainUser.about.isEmpty()){
-                binding.about.setText(mainUser.about);
+            if (!mainUser.about.isEmpty()) {
+                binding.about.setText(mainUser.about.split("\"")[1]);
+
             }
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             binding.about.setText("Описание не заполнено");
         }
 
 
-
-        if (k==1){
+        if (k == 1) {
             binding.buttonLogout.setVisibility(GONE);
             binding.buttonEditProfile.setVisibility(GONE);
             binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
@@ -114,12 +120,11 @@ public class FragmentProfile extends Fragment {
             App.getUserService().logout(App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    Toast.makeText(getContext(), "success", Toast.LENGTH_SHORT).show();
-                }
 
+                }
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(getContext(), "ыыыыы", Toast.LENGTH_SHORT).show();
+
                 }
             });
             new Thread(() -> {
@@ -138,6 +143,7 @@ public class FragmentProfile extends Fragment {
     private void initRecycler() {
         binding.recyclerList.setAdapter(new RecyclerAdapterProfile(data, getContext(), vfs, toolbar, getActivity(), binding.nestedScrollView, binding, visible, onRefreshListener));
         binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.recyclerList.getAdapter().notifyDataSetChanged();
         binding.recyclerList.getAdapter().notifyDataSetChanged();
     }
 
@@ -172,6 +178,7 @@ public class FragmentProfile extends Fragment {
             binding.fragmentEdit.setVisibility(GONE);
             binding.relativeLayout.setVisibility(VISIBLE);
             binding.toolbar.setVisibility(VISIBLE);
+            onRefreshListener.onRefresh();
         } else {
             if (vfs.pop()) {
                 toolbar.setVisibility(GONE);
@@ -184,14 +191,56 @@ public class FragmentProfile extends Fragment {
 
     }
 
-    SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    public SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            ConnectivityManager connectivityManager = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-//            boolean connected = (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-//                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED);
-            boolean connected = true;
+            ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            boolean connected = connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
             if (connected) {
+                new Thread(() -> {
+                    String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
+                    App.getUserService().getUser(mainUser.id, App.getMainUser().token, cookie).enqueue(new Callback<User>() {
+                        @Override
+                        public void onResponse(Call<User> call, Response<User> response) {
+                            if (response.isSuccessful() && !running){
+                                running = true;
+                                new Thread(() -> {
+                                    User user = response.body();
+                                    user.setSessionId(App.getMainUser().sessionId);
+                                    user.setToken(App.getMainUser().token);
+
+                                    App.getDatabase().userDAO().deleteUserTable();
+                                    App.getDatabase().userDAO().save(user);
+                                    App.setMainUser(user);
+                                    mainUser=user;
+                                    getActivity().runOnUiThread(() -> {
+                                        binding.name.setText(App.getMainUser().username);
+                                        if (mainUser.about!= null && !mainUser.about.split("\"")[1].isEmpty()){
+                                            binding.about.setText(mainUser.about.split("\"")[1]);
+                                        }
+                                        Glide.with(getContext()).load(user.avatar).into(binding.pfpImg);
+                                        if (mainUser.background != null) {
+                                            Glide.with(getContext()).load(mainUser.background).into(binding.back);
+                                        }
+                                        running = false;
+                                    });
+                                }).start();
+                            } else{
+                                try {
+                                    Log.e("RefreshP", response.errorBody().string());
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<User> call, Throwable t) {
+                            Toast.makeText(getContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }).start();
                 new Thread(() -> {
                     ArrayList<ItemEntity> arrayList = new ArrayList<>();
                     arrayList.addAll(App.getDatabase().itemDAO().getAll());
@@ -249,8 +298,8 @@ public class FragmentProfile extends Fragment {
                                         binding.swipeContainer.setRefreshing(false);
                                     });
                                 }).start();
-                            } if (response.body()!=null && response.body().size()==0){
-                                Toast.makeText(getContext(), "Вы еще не загрузили фотографий", Toast.LENGTH_SHORT).show();
+                            }
+                            if (response.body() != null && response.body().size() == 0) {
                                 binding.swipeContainer.setRefreshing(false);
                             }
                         }
@@ -258,7 +307,7 @@ public class FragmentProfile extends Fragment {
                         @Override
                         public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
                             binding.swipeContainer.setRefreshing(false);
-                            Toast.makeText(getContext(), "smth bad happened", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -266,7 +315,7 @@ public class FragmentProfile extends Fragment {
                 }).start();
             } else {
                 binding.swipeContainer.setRefreshing(false);
-                Toast.makeText(getContext(), "you don't have internet connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
             }
         }
     };

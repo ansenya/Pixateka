@@ -10,16 +10,18 @@
     android:orientation="vertical">
 
     <include
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:id="@+id/included"
-        layout="@layout/view_item"
-        android:layout_margin="1dp" />
+        android:layout_marginHorizontal="3dp"
+        layout="@layout/view_item" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="3dp"
         android:translationZ="10dp"
-        app:cardCornerRadius="4dp">
+        app:cardCornerRadius="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,9 +33,9 @@
                 android:id="@+id/pfp"
                 android:layout_width="57dp"
                 android:layout_height="57dp"
-                android:layout_marginVertical="1dp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="4dp"
+                android:layout_marginVertical="1dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/pfp"
                 app:riv_corner_radius="80dp" />
@@ -41,20 +43,40 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/main_description"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/main_linear"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="3dp"
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
-                    android:paddingHorizontal="4dp"
-                    android:text="desc"
-                    android:textAlignment="textStart"
-                    android:textColor="#4E4E4E"
-                    android:textSize="14.3sp" />
+                    android:paddingHorizontal="4dp">
+
+                    <TextView
+                        android:id="@+id/main_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="desc"
+                        android:textAlignment="textStart"
+                        android:textColor="#4E4E4E"
+                        android:textSize="14.3sp" />
+
+                    <TextView
+                        android:id="@+id/tags"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="4dp"
+                        android:text="ИИ считает что это: "
+                        android:textColor="#4E4E4E"
+                        android:textSize="14.3sp" />
+
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/by_user"
@@ -63,10 +85,13 @@
                     android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:paddingHorizontal="4dp"
+                    android:paddingBottom="4dp"
                     android:text="by user"
-                    android:textAlignment="textStart"
+                    android:textAlignment="center"
                     android:textColor="#4E4E4E"
                     android:textSize="14.3sp" />
+
+
             </LinearLayout>
 
 
@@ -87,11 +112,11 @@
             android:orientation="vertical">
 
             <com.google.android.material.tabs.TabLayout
-                android:translationZ="10dp"
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/tab_layout_bg"
+                android:translationZ="10dp"
                 app:tabIndicatorColor="@color/v2"
                 app:tabIndicatorFullWidth="false"
                 app:tabIndicatorHeight="3dp"
