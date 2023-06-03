@@ -17,7 +17,6 @@ public class TestActivity extends AppCompatActivity {
         binding = ActvityTestBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        getSupportFragmentManager().beginTransaction().replace(binding.frame.getId(), new FragmentNotifications()).commit();
 
     }
 }

@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
-import java.io.IOException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -51,9 +49,23 @@ public class FragmentEditProfile extends Fragment {
         binding.toolbar.setNavigationOnClickListener(v -> {
             getActivity().onBackPressed();
         });
-        binding.about.binding.input.setText(mainUser.about);
+        if (mainUser.about != null) {
+            setT();
+        }
         init();
         return binding.getRoot();
+    }
+
+    void setT() {
+        String about = "";
+        for (String s : mainUser.about.split("\"")) {
+            for (int i = 0; i < s.split("\\\\n").length; i++) {
+                if (i != 0) about += " \n";
+                about += s.split("\\\\n")[i];
+            }
+
+        }
+        binding.about.binding.input.setText(about); // backend problem :)
     }
 
     private void init() {
@@ -83,7 +95,7 @@ public class FragmentEditProfile extends Fragment {
                         ).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()){
+                                if (response.isSuccessful()) {
                                     getActivity().onBackPressed();
                                 }
 
@@ -108,7 +120,7 @@ public class FragmentEditProfile extends Fragment {
                         ).enqueue(new Callback<ResponseBody>() {
                             @Override
                             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()){
+                                if (response.isSuccessful()) {
                                     getActivity().onBackPressed();
                                 }
                             }
@@ -118,21 +130,20 @@ public class FragmentEditProfile extends Fragment {
                                 Toast.makeText(getContext(), "not cool", Toast.LENGTH_SHORT).show();
                             }
                         });
-            } else {
-                if (!binding.about.getInputText().trim().isEmpty()) {
-                    String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
-                    App.getUserService().editUserDesc(App.getMainUser().id, App.getMainUser().token, cookie, binding.about.getInputText()).enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            getActivity().onBackPressed();
-                        }
+            }
+            if (!binding.about.getInputText().trim().isEmpty()) {
+                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
+                App.getUserService().editUserDesc(App.getMainUser().id, App.getMainUser().token, cookie, binding.about.getInputText()).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        getActivity().onBackPressed();
+                    }
 
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                        }
-                    });
-                }
+                    }
+                });
             }
         });
     }

@@ -5,10 +5,10 @@ import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
-import android.window.SplashScreenView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +25,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.senya.pixateka.App;
-import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.userApi.User;
@@ -38,6 +37,7 @@ public class StartActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     StorageReference storageRef;
+    String uid, id;
     Retrofit retrofit;
     UsersInterface service;
     List<ItemEntity> data = new ArrayList<>();
@@ -50,8 +50,14 @@ public class StartActivity extends AppCompatActivity {
         binding = SplashScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         activity = this;
+        Intent intent = getIntent();
+        Uri deeplinkUri = intent.getData();
+        String path="";
+        if (deeplinkUri != null) {
+            path = deeplinkUri.getPath();
+        }
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        boolean connected = connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
+        boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
         if (connected) {
             new Thread(() -> {
                 data = App.getDatabase().itemDAO().getAll();
@@ -86,6 +92,7 @@ public class StartActivity extends AppCompatActivity {
             retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
             service = retrofit.create(UsersInterface.class);
 
+            String finalPath = path;
             new Thread(() -> {
                 if (App.getDatabase().userDAO().getUser().length == 1) {
                     User mainUser = App.getDatabase().userDAO().getUser()[0];
@@ -105,7 +112,7 @@ public class StartActivity extends AppCompatActivity {
                                             App.getDatabase().userDAO().save(user);
                                         }).start();
                                         runOnUiThread(() -> {
-                                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                            startActivity(new Intent(getApplicationContext(), MainActivity.class).putExtra("link", finalPath));
                                             runOnUiThread(() -> {
                                                 activity.finish();
                                             });
@@ -169,7 +176,6 @@ public class StartActivity extends AppCompatActivity {
                 }
 
             }).start();
-
         }
 
 

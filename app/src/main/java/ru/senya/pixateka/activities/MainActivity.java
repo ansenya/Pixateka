@@ -2,7 +2,9 @@ package ru.senya.pixateka.activities;
 
 import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     Retrofit retrofit;
     ItemInterface service;
     User mainUser;
+    long id, uid;
 
 
     @Override
@@ -52,6 +55,17 @@ public class MainActivity extends AppCompatActivity {
         fragmentProfile = new FragmentProfile(profileData, mainUser, binding.vfs, binding.toolbar, 2);
         fragmentSearch = new FragmentSearch(mainData);
         setFragments();
+    }
+
+    void parseLink() {
+        Intent intent = getIntent();
+        String ids[] = intent.getStringExtra("link").split("/");
+        for (String s : ids) {
+            Log.e("DeepLink", s);
+        }
+        if (ids[0] != null || ids[1] != null) {
+//            fragmentMain.link(ids[1], ids[0]);
+        }
     }
 
     @Override
@@ -83,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             mainData.addAll(App.getDatabase().itemDAO().getAll());
             Collections.reverse(mainData);
-
             profileData.addAll(App.getDatabase().itemDAO().getAllProfile(App.getMainUser().id + ""));
             Collections.reverse(profileData);
         }).start();
@@ -139,11 +152,9 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().
                 replace(binding.navigationMain.getId(), fragmentMain).
                 replace(binding.navigationSearch.getId(), fragmentSearch).
-                replace(binding.navigationProfile.getId(), fragmentProfile)
-                .commit();
+                replace(binding.navigationProfile.getId(), fragmentProfile).
+                commit();
         setFragment();
         binding.navigationMain.setVisibility(View.VISIBLE);
-
     }
-
 }

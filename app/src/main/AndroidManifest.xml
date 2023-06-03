@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -20,37 +20,43 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pixateka"
         android:usesCleartextTraffic="true"
-        tools:targetApi="31" >
-        <activity
-            android:name=".MainActivity2"
-            android:exported="false"
-            android:label="@string/title_activity_main2"
-            android:theme="@style/Theme.Pixateka.NoActionBar" />
+        tools:targetApi="31">
+
         <activity
             android:name=".activities.StartActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Splash" >
+            android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="192.168.50.79" />
+                <data android:pathPrefix="/media/images" />
+
             </intent-filter>
         </activity>
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Pixateka" >
+            android:theme="@style/Theme.Pixateka">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+
         </activity>
         <activity
             android:name=".activities.RegistrationActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Pixateka" >
+            android:theme="@style/Theme.Pixateka">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -59,7 +65,7 @@
             android:name=".activities.LoginActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Pixateka" >
+            android:theme="@style/Theme.Pixateka">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -73,13 +79,27 @@
             android:name=".activities.TestActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Pixateka" >
-        </activity>
+            android:theme="@style/Theme.Pixateka" />
         <activity
             android:name=".activities.ProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Pixateka" />
+        <!--        <activity-->
+        <!--            android:name=".activities.DeepLinkActivity"-->
+        <!--            android:exported="true">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.VIEW" />-->
+
+        <!--                <category android:name="android.intent.category.DEFAULT" />-->
+        <!--                <category android:name="android.intent.category.BROWSABLE" />-->
+
+        <!--                <data-->
+        <!--                    android:host="pdeep"-->
+        <!--                    android:scheme="http" />-->
+        <!--            </intent-filter>-->
+        <!--        </activity>-->
     </application>
+
 
 </manifest>

@@ -195,13 +195,13 @@ public class viewFullscreen extends NestedScrollView {
         if (item.getTags().isEmpty() || item.getName().equals("43083945")){
             binding.tags.setText("");
         } else {
-            binding.tags.setText("ИИ: "+ item.getTags());
+            binding.tags.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
         }
         if (item.getName().equals("43083945")) {
             if (!item.tags.split(" ")[0].trim().isEmpty()) {
-                binding.included.imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                binding.included.imageName.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
             } else {
-                binding.included.imageName.setText("Ничего нет");
+                binding.included.imageName.setText("Тегов нет");
             }
             binding.included.imageName.setTypeface(Typeface.MONOSPACE);
         } else {
@@ -215,9 +215,9 @@ public class viewFullscreen extends NestedScrollView {
             binding.mainDescription.setText(item.description);
         }
         if (item.getDescription()==null && (item.getTags().isEmpty()|| item.getName().equals("43083945"))) {
-            binding.mainLinear.setVisibility(GONE);
+            binding.linear0.setVisibility(GONE);
         } else {
-            binding.mainLinear.setVisibility(VISIBLE);
+            binding.linear0.setVisibility(VISIBLE);
         }
         App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
             @Override

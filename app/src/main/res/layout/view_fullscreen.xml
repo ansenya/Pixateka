@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_fragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,30 +8,25 @@
     android:gravity="center_horizontal"
     android:orientation="vertical">
 
-    <include
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/included"
-        android:layout_marginHorizontal="3dp"
-        layout="@layout/view_item" />
-
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="3dp"
-        android:translationZ="10dp"
-        app:cardCornerRadius="1dp">
+        android:layout_marginBottom="1dp"
+        android:background="@color/white"
+        app:cardCornerRadius="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="RtlSymmetry">
+            android:layout_marginVertical="3dp"
+            android:layout_marginStart="3dp"
+            android:orientation="horizontal">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/pfp"
-                android:layout_width="57dp"
-                android:layout_height="57dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="4dp"
                 android:layout_marginVertical="1dp"
@@ -40,63 +34,57 @@
                 android:src="@drawable/pfp"
                 app:riv_corner_radius="80dp" />
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/by_user"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/main_linear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginVertical="3dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:paddingHorizontal="4dp">
-
-                    <TextView
-                        android:id="@+id/main_description"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="desc"
-                        android:textAlignment="textStart"
-                        android:textColor="#4E4E4E"
-                        android:textSize="14.3sp" />
-
-                    <TextView
-                        android:id="@+id/tags"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="3dp"
-                        android:layout_marginEnd="4dp"
-                        android:text="ИИ считает что это: "
-                        android:textColor="#4E4E4E"
-                        android:textSize="14.3sp" />
-
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/by_user"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="1"
-                    android:paddingHorizontal="4dp"
-                    android:paddingBottom="4dp"
-                    android:text="by user"
-                    android:textAlignment="center"
-                    android:textColor="#4E4E4E"
-                    android:textSize="14.3sp" />
-
-
-            </LinearLayout>
-
+                android:layout_gravity="center"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:paddingHorizontal="4dp"
+                android:paddingBottom="4dp"
+                android:text="by user"
+                android:textColor="#4E4E4E"
+                android:textSize="14.3sp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
+
+    <include
+        android:id="@+id/included"
+        layout="@layout/view_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="3dp" />
+
+    <LinearLayout
+        android:id="@+id/linear0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginVertical="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ИИ считает что это: "
+            android:textAlignment="textStart"
+            android:textColor="#4E4E4E"
+            android:textSize="14.3sp" />
+
+        <TextView
+            android:id="@+id/main_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="desc"
+            android:textAlignment="textStart"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+    </LinearLayout>
+
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -115,10 +103,8 @@
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/tab_layout_bg"
-                android:translationZ="10dp"
-                app:tabIndicatorColor="@color/v2"
-                app:tabIndicatorFullWidth="false"
+                android:textSize="16sp"
+                app:tabIndicatorColor="@color/text_color"
                 app:tabIndicatorHeight="3dp"
                 app:tabTextColor="@color/black" />
 

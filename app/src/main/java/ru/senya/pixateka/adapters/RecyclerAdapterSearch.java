@@ -150,7 +150,7 @@ public class RecyclerAdapterSearch extends RecyclerView.Adapter<RecyclerAdapterS
 
             if (item.getName().equals("43083945")) {
                 if (!item.tags.split(" ")[0].trim().isEmpty()){
-                    imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                    imageName.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
                 } else {
                     imageName.setText(R.string.nothing_found);
                 }

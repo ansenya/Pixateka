@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.audiofx.NoiseSuppressor;
 import android.net.ConnectivityManager;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -52,7 +53,7 @@ import ru.senya.pixateka.fragments.FragmentMain;
 
 public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMain.MyViewHolder> {
 
-    private final List<ItemEntity> data;
+    private List<ItemEntity> data;
     private final Context context;
 
     ru.senya.pixateka.view.viewFullscreen viewFullscreen;
@@ -63,6 +64,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
     FragmentActivity activity;
     SwipeRefreshLayout swipeRefreshLayout;
     FragmentMain fragmentMain;
+    int pos;
 
     public RecyclerAdapterMain(FragmentActivity activity,
                                List<ItemEntity> items,
@@ -95,9 +97,9 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        pos = position;
         holder.setImageView(data.get(position), context, activity, this, position);
         holder.setTextView(data.get(position));
-
         holder.sets.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
             if (Integer.parseInt(data.get(position).uid) == App.getMainUser().id) {
@@ -179,14 +181,14 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
             popupMenu.show();
         });
 
-        holder.mainImage.setOnClickListener(v -> {
+        holder.mainImage.setOnClickListener(v ->{
             viewFullscreen.setVisibility(VISIBLE);
             recyclerView.setVisibility(GONE);
             mainToolbar.setVisibility(View.INVISIBLE);
             toolbar.setVisibility(VISIBLE);
             floatingActionButton.setVisibility(GONE);
             swipeRefreshLayout.setVisibility(GONE);
-            viewFullscreen.update(data.get(position), activity);
+            viewFullscreen.update(data.get(pos), activity);
         });
         holder.mainImage.setOnLongClickListener(v -> {
             holder.sets.callOnClick();
@@ -200,7 +202,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
     }
 
 
-    static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         int[] colors = {R.color.v1, R.color.v2, R.color.v3, R.color.v4, R.color.v5};
         Random random = new Random();
@@ -235,7 +237,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
         void setTextView(ItemEntity item) {
             if (item.getName().equals("43083945")) {
                 if (!item.tags.split(" ")[0].trim().isEmpty()) {
-                    imageName.setText("ИИ: " + item.tags.split(" ")[0]);
+                    imageName.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
                 } else {
                     imageName.setText(R.string.nothing_found);
                 }

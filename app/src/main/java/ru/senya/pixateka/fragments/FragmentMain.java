@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,7 +52,7 @@ public class FragmentMain extends Fragment {
     public FragmentMainBinding binding;
     RecyclerView list;
     List<ItemEntity> data = new LinkedList<>();
-    RecyclerAdapterMain adapter;
+    public RecyclerAdapterMain adapter;
     Retrofit retrofit;
     ItemInterface service;
     Boolean in_order = true;
@@ -67,6 +67,7 @@ public class FragmentMain extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentMainBinding.inflate(LayoutInflater.from(getContext()), container, false);
         preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         editor = preferences.edit();
         if (!preferences.contains("order")) {
@@ -75,7 +76,6 @@ public class FragmentMain extends Fragment {
         } else {
             in_order = preferences.getBoolean("order", true);
         }
-        binding = FragmentMainBinding.inflate(LayoutInflater.from(getContext()), container, false);
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         service = retrofit.create(ItemInterface.class);
         onRefreshListener.onRefresh();
@@ -92,7 +92,6 @@ public class FragmentMain extends Fragment {
                 binding.swipeContainer,
                 this);
         initRecycler();
-
 
         binding.toolbar.setTitle("Photo");
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white, requireContext().getTheme()));
@@ -119,16 +118,36 @@ public class FragmentMain extends Fragment {
         binding.toolbar.setNavigationOnClickListener(v -> {
             back();
         });
-        upToolbar();
+
         binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+        link();
         return binding.getRoot();
     }
 
-
-    private void upToolbar() {
+    public void link() {
+        Intent intent = getActivity().getIntent();
+        String path = "";
+        try {
+            path = intent.getStringExtra("link");
+            path = path.split("/")[3];
+        } catch (Exception e) {
+        }
+        Log.e("asd", path);
+        if (!path.isEmpty())
+            for (ItemEntity item : data) {
+                if (item.path.contains(path)) {
+                    binding.fragment.setVisibility(VISIBLE);
+                    binding.mainRecyclerView.setVisibility(GONE);
+                    binding.mainToolbar.setVisibility(View.INVISIBLE);
+                    binding.toolbar.setVisibility(VISIBLE);
+                    binding.fab.setVisibility(GONE);
+                    binding.swipeContainer.setVisibility(GONE);
+                    binding.fragment.update(item, getActivity());
+                }
+            }
 
     }
 
@@ -150,7 +169,6 @@ public class FragmentMain extends Fragment {
             binding.mainRecyclerView.setVisibility(VISIBLE);
             binding.fab.setVisibility(VISIBLE);
             binding.swipeContainer.setVisibility(VISIBLE);
-            onRefreshListener.onRefresh();
         }
     }
 
@@ -167,7 +185,7 @@ public class FragmentMain extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
                 Toast.makeText(getContext(), "Нужен допступ к галлерее", Toast.LENGTH_SHORT).show();
-            } else{
+            } else {
                 startActivity(new Intent(getContext(), AddActivity.class));
             }
         });
@@ -198,7 +216,7 @@ public class FragmentMain extends Fragment {
         @Override
         public void onRefresh() {
             ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            boolean connected = connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
+            boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
             if (connected) {
                 new Thread(() -> {
                     ArrayList<ItemEntity> arrayList = new ArrayList<>();

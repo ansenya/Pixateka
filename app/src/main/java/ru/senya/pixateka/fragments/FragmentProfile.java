@@ -25,8 +25,6 @@ import com.bumptech.glide.Glide;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,7 +35,6 @@ import ru.senya.pixateka.R;
 import ru.senya.pixateka.activities.StartActivity;
 import ru.senya.pixateka.activities.Visible;
 import ru.senya.pixateka.adapters.RecyclerAdapterProfile;
-import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.retrofit.itemApi.Item;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
@@ -87,9 +84,16 @@ public class FragmentProfile extends Fragment {
 
         binding.name.setText(mainUser.username);
         try {
-            if (!mainUser.about.isEmpty()) {
-                binding.about.setText(mainUser.about.split("\"")[1]);
+            if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
+                String about = "";
+                for (String s : mainUser.about.split("\"")) {
+                    for (int i = 0; i < s.split("\\\\n").length; i++) {
+                        if (i != 0) about += " \n ";
+                        about += s.split("\\\\n")[i];
+                    }
 
+                }
+                binding.about.setText(about); // backend problem :)
             }
         } catch (NullPointerException e) {
             binding.about.setText("Описание не заполнено");
@@ -122,6 +126,7 @@ public class FragmentProfile extends Fragment {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
                 }
+
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
 
@@ -195,14 +200,14 @@ public class FragmentProfile extends Fragment {
         @Override
         public void onRefresh() {
             ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            boolean connected = connectivityManager.getActiveNetworkInfo()!=null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
+            boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
             if (connected) {
                 new Thread(() -> {
                     String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
                     App.getUserService().getUser(mainUser.id, App.getMainUser().token, cookie).enqueue(new Callback<User>() {
                         @Override
                         public void onResponse(Call<User> call, Response<User> response) {
-                            if (response.isSuccessful() && !running){
+                            if (response.isSuccessful() && !running) {
                                 running = true;
                                 new Thread(() -> {
                                     User user = response.body();
@@ -212,11 +217,21 @@ public class FragmentProfile extends Fragment {
                                     App.getDatabase().userDAO().deleteUserTable();
                                     App.getDatabase().userDAO().save(user);
                                     App.setMainUser(user);
-                                    mainUser=user;
+                                    mainUser = user;
                                     getActivity().runOnUiThread(() -> {
-                                        binding.name.setText(App.getMainUser().username);
-                                        if (mainUser.about!= null && !mainUser.about.split("\"")[1].isEmpty()){
-                                            binding.about.setText(mainUser.about.split("\"")[1]);
+                                        binding.name.setText(mainUser.username);
+                                        if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
+                                            String about = "";
+                                            for (String s : mainUser.about.split("\"")) {
+                                                for (int i = 0; i < s.split("\\\\n").length; i++) {
+                                                    if (i != 0) about += " \n ";
+                                                    about += s.split("\\\\n")[i];
+                                                }
+
+                                            }
+                                            binding.about.setText(about); // backend problem :)
+
+
                                         }
                                         Glide.with(getContext()).load(user.avatar).into(binding.pfpImg);
                                         if (mainUser.background != null) {
@@ -225,7 +240,7 @@ public class FragmentProfile extends Fragment {
                                         running = false;
                                     });
                                 }).start();
-                            } else{
+                            } else {
                                 try {
                                     Log.e("RefreshP", response.errorBody().string());
                                 } catch (IOException e) {
