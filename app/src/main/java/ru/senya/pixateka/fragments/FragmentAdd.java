@@ -50,19 +50,6 @@ public class FragmentAdd extends Fragment {
             binding.buttonSelectPhoto.setVisibility(View.GONE);
             binding.button2.setVisibility(View.VISIBLE);
         });
-//        binding.button2.setOnClickListener(view->{
-//            new Thread(()->{
-//                item = new ItemEntity(path, binding.name.getInputText(),
-//                        binding.category.getInputText(),
-//                        binding.tags.getInputText());
-//
-//                App.getDatabase().itemDAO().save(item);
-//                itemsMain.add(item);
-//            }).start();
-//
-//            Toast.makeText(getContext(), "Photo Uploaded", Toast.LENGTH_SHORT).show();
-//            reload();
-//        });
     }
 
     @Override

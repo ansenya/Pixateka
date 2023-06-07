@@ -12,7 +12,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.audiofx.NoiseSuppressor;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -27,11 +28,17 @@ import android.widget.Toast;
 import android.widget.Toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.makeramen.roundedimageview.RoundedImageView;
 
@@ -113,7 +120,6 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                 public boolean onMenuItemClick(MenuItem item) {
                     switch (item.getItemId()) {
                         case R.id.download:
-                            Toast.makeText(context, "downloading...", Toast.LENGTH_SHORT).show();
                             new Thread(() -> {
                                 try {
                                     MediaStore.Images.Media.insertImage(context.getContentResolver(),
@@ -121,11 +127,11 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                                             data.get(position).getName(), data.get(position).getDescription() + java.time.LocalDateTime.now());
 
                                     activity.runOnUiThread(() -> {
-                                        Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "готово", Toast.LENGTH_SHORT).show();
                                     });
 
                                 } catch (Exception e) {
-                                    Toast.makeText(context, "smth wrong", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "произошла ошибка", Toast.LENGTH_SHORT).show();
                                 }
 
                             }).start();
@@ -135,7 +141,7 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
                             ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                             ClipData clip = ClipData.newPlainText("url", data.get(position).getPath());
                             clipboard.setPrimaryClip(clip);
-                            Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "скопировано", Toast.LENGTH_SHORT).show();
                             return true;
                         case R.id.delete:
                             ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -181,14 +187,14 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
             popupMenu.show();
         });
 
-        holder.mainImage.setOnClickListener(v ->{
+        holder.mainImage.setOnClickListener(v -> {
             viewFullscreen.setVisibility(VISIBLE);
             recyclerView.setVisibility(GONE);
             mainToolbar.setVisibility(View.INVISIBLE);
             toolbar.setVisibility(VISIBLE);
             floatingActionButton.setVisibility(GONE);
             swipeRefreshLayout.setVisibility(GONE);
-            viewFullscreen.update(data.get(pos), activity);
+            viewFullscreen.update(data.get(position), activity);
         });
         holder.mainImage.setOnLongClickListener(v -> {
             holder.sets.callOnClick();
@@ -219,18 +225,32 @@ public class RecyclerAdapterMain extends RecyclerView.Adapter<RecyclerAdapterMai
             sets = itemView.findViewById(R.id.sets);
         }
 
+        @SuppressLint("CheckResult")
         void setImageView(ItemEntity item, Context context, FragmentActivity activity, RecyclerAdapterMain adapter, int p) {
-            Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888); // create placeholder with exact width and height
-            bitmap.eraseColor(Color.parseColor(item.color)); // fulfill bitmap with average color
-//            mainImage.setImageBitmap(bitmap);
-            Glide.
+
+            Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888);
+            bitmap.eraseColor(Color.parseColor(item.color));
+            //      mainImage.setImageBitmap(bitmap);
+            mainImage.startAnimation(AnimationUtils.loadAnimation(context, R.anim.wave_animation));
+            RequestBuilder<Drawable> requestBuilder = Glide.
                     with(context).
                     load(item.getPath()).
                     placeholder(new BitmapDrawable(activity.getResources(), bitmap)).
-                    dontAnimate().
-                    override(700).
-                    into(mainImage);
+                    override(480);
+            requestBuilder.addListener(new RequestListener<Drawable>() {
+                @Override
+                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                    mainImage.clearAnimation();
+                    return false;
+                }
 
+                @Override
+                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                    mainImage.clearAnimation();
+                    return false;
+                }
+            });
+            requestBuilder.into(mainImage);
 
         }
 

@@ -51,11 +51,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         activity = this;
         Intent intent = getIntent();
-        Uri deeplinkUri = intent.getData();
         String path="";
-        if (deeplinkUri != null) {
-            path = deeplinkUri.getPath();
-        }
+        path = intent.getStringExtra("link");
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
         if (connected) {

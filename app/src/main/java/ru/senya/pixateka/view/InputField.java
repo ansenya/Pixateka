@@ -1,6 +1,9 @@
 package ru.senya.pixateka.view;
 
+import static com.google.android.material.textfield.TextInputLayout.END_ICON_PASSWORD_TOGGLE;
+
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.text.InputType;
 import android.util.AttributeSet;
@@ -40,14 +43,14 @@ public class InputField extends LinearLayout {
                 0, 0);
         try {
             String title = attributes.getString(R.styleable.InputField_title);
-            binding.title.setText(title);
+            binding.frame.setHint(title);
             int inputType = attributes.getInt(R.styleable.InputField_android_inputType, InputType.TYPE_NULL);
-            binding.input.setInputType(inputType);
-            binding.input.setHint(attributes.getString(R.styleable.InputField_hint));
-            binding.input.setHintTextColor(attributes.getColor(R.styleable.InputField_hint_color, 1));
-
+            binding.mInput.setInputType(inputType);
+            if (inputType == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)){
+                binding.frame.setEndIconMode(END_ICON_PASSWORD_TOGGLE);
+            }
             try {
-                binding.pic.setImageResource(attributes.getResourceId(R.styleable.InputField_src, 1));
+                binding.frame.setEndIconDrawable(attributes.getResourceId(R.styleable.InputField_src, 1));
             } catch (Exception e) {
                 Log.e("MyTag", e.getLocalizedMessage());
             }
@@ -59,10 +62,10 @@ public class InputField extends LinearLayout {
     }
 
     public String getInputText() {
-        return binding.input.getText().toString();
+        return binding.mInput.getText().toString();
     }
 
     public void setInputType(int i) {
-        binding.input.setInputType(i);
+        binding.mInput.setInputType(i);
     }
 }

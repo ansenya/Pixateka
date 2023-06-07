@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -30,16 +31,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="http" />
-                <data android:scheme="https" />
-                <data android:host="192.168.50.79" />
-                <data android:pathPrefix="/media/images" />
-
             </intent-filter>
         </activity>
         <activity
@@ -50,7 +41,9 @@
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.RegistrationActivity"
@@ -82,23 +75,28 @@
             android:theme="@style/Theme.Pixateka" />
         <activity
             android:name=".activities.ProfileActivity"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Pixateka" />
-        <!--        <activity-->
-        <!--            android:name=".activities.DeepLinkActivity"-->
-        <!--            android:exported="true">-->
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.VIEW" />-->
+        <activity
+            android:name=".activities.DeepLinkActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-        <!--                <category android:name="android.intent.category.DEFAULT" />-->
-        <!--                <category android:name="android.intent.category.BROWSABLE" />-->
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-        <!--                <data-->
-        <!--                    android:host="pdeep"-->
-        <!--                    android:scheme="http" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="176.99.175.244" />
+                <data android:pathPrefix="/media/images" />
+
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.SubSampActivity"
+            android:exported="true" />
     </application>
 
 

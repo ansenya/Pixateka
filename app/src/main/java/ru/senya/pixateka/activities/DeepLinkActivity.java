@@ -29,9 +29,11 @@ public class DeepLinkActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         Uri deeplinkUri = intent.getData();
-        if (deeplinkUri != null) {
-            String path = deeplinkUri.getPath();
-            Log.e("DeeplinkTag", path);
+        if (deeplinkUri == null) {
+            startActivity(new Intent(this, StartActivity.class));
+        } else {
+            Log.e("asd", deeplinkUri.getPath());
+            startActivity(new Intent(this, StartActivity.class).putExtra("link", deeplinkUri.getPath()));
         }
     }
 

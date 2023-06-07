@@ -58,7 +58,7 @@
                 android:inputType="textEmailAddress"
                 app:hint="Придумайте себе логин"
                 app:hint_color="@color/hint_color"
-                app:src="@drawable/avatar"
+                app:src="@drawable/ic_action_name"
                 app:title="Логин" />
 
             <ru.senya.pixateka.view.InputField
@@ -68,7 +68,6 @@
                 android:inputType="textPassword"
                 app:hint="Придумайте пароль"
                 app:hint_color="@color/hint_color"
-                app:src="@drawable/password_icon"
                 app:title="Пароль" />
 
 
@@ -79,7 +78,6 @@
                 android:inputType="textPassword"
                 app:hint="Подтвердите пароль"
                 app:hint_color="@color/hint_color"
-                app:src="@drawable/password_icon"
                 app:title="Повторный пароль" />
 
             <LinearLayout
@@ -102,9 +100,9 @@
                     android:gravity="center"
                     android:text="Выбрать аватарку"
                     android:textAlignment="center"
-
+                    android:textSize="15sp"
                     android:textColor="@color/white"
-                    android:textSize="17sp" />
+                    />
             </LinearLayout>
 
 
@@ -120,12 +118,14 @@
                 android:id="@+id/button_enter2"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
+                android:textSize="15sp"
                 android:backgroundTint="@color/button"
                 android:text="Войти"
                 android:textColor="@color/white" />
 
 
             <Button
+                android:textSize="14sp"
                 android:id="@+id/button_back"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"

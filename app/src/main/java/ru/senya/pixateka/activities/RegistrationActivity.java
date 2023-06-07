@@ -191,32 +191,32 @@ public class RegistrationActivity extends AppCompatActivity {
         binding.choosePhotoBtn.setOnClickListener(v -> {
             startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI), 3);
         });
-        binding.inputPassword.binding.pic.setOnClickListener(v -> {
-            binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-            binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
-            new Thread(() -> {
-                try {
-                    Thread.sleep(3500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                runOnUiThread(() -> binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
-                binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
-            }).start();
-        });
-        binding.inputRepeatPassword.binding.pic.setOnClickListener(v -> {
-            binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-            binding.inputRepeatPassword.binding.input.setSelection(binding.inputRepeatPassword.binding.input.getText().length());
-            new Thread(() -> {
-                try {
-                    Thread.sleep(3500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                runOnUiThread(() -> binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
-                binding.inputRepeatPassword.binding.input.setSelection(binding.inputRepeatPassword.binding.input.getText().length());
-            }).start();
-        });
+//        binding.inputPassword.binding.pic.setOnClickListener(v -> {
+//            binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+//            binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
+//            new Thread(() -> {
+//                try {
+//                    Thread.sleep(3500);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                runOnUiThread(() -> binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+//                binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
+//            }).start();
+//        });
+//        binding.inputRepeatPassword.binding.pic.setOnClickListener(v -> {
+//            binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+//            binding.inputRepeatPassword.binding.input.setSelection(binding.inputRepeatPassword.binding.input.getText().length());
+//            new Thread(() -> {
+//                try {
+//                    Thread.sleep(3500);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                runOnUiThread(() -> binding.inputRepeatPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+//                binding.inputRepeatPassword.binding.input.setSelection(binding.inputRepeatPassword.binding.input.getText().length());
+//            }).start();
+//        });
     }
 
     @Override

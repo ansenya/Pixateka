@@ -65,7 +65,7 @@ public class FragmentEditProfile extends Fragment {
             }
 
         }
-        binding.about.binding.input.setText(about); // backend problem :)
+        binding.about.binding.mInput.setText(about); // backend problem :)
     }
 
     private void init() {

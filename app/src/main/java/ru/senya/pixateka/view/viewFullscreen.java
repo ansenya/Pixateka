@@ -10,11 +10,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
 import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -26,19 +26,23 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.activities.ProfileActivity;
+import ru.senya.pixateka.activities.SubSampActivity;
 import ru.senya.pixateka.adapters.RecyclerAdapterSecondary;
+import ru.senya.pixateka.database.retrofit.Utils;
 import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ViewFullscreenBinding;
@@ -60,14 +64,18 @@ public class viewFullscreen extends NestedScrollView {
     public viewFullscreen(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
+
         binding = ViewFullscreenBinding.inflate(LayoutInflater.from(getContext()), this, true);
         binding.included.sets.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
-            popupMenu.inflate(R.menu.menu);
+            if (String.valueOf(itemEntity.uid).equals(App.getMainUser().id)) {
+                popupMenu.inflate(R.menu.p_menu);
+            } else {
+                popupMenu.inflate(R.menu.menu);
+            }
             popupMenu.setOnMenuItemClickListener(item -> {
                 switch (item.getItemId()) {
                     case R.id.download:
-                        Toast.makeText(context, "downloading...", Toast.LENGTH_SHORT).show();
                         new Thread(() -> {
                             try {
                                 MediaStore.Images.Media.insertImage(context.getContentResolver(),
@@ -75,15 +83,14 @@ public class viewFullscreen extends NestedScrollView {
                                         itemEntity.getName(), itemEntity.getDescription() + LocalDateTime.now());
 
                                 activity.runOnUiThread(() -> {
-                                    Toast.makeText(context, "success", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "готово", Toast.LENGTH_SHORT).show();
                                 });
 
                             } catch (Exception e) {
-                                Toast.makeText(context, "smth wrong", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "произошла ошибка", Toast.LENGTH_SHORT).show();
                             }
 
                         }).start();
-
                         return true;
                     case R.id.share:
                         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
@@ -138,6 +145,7 @@ public class viewFullscreen extends NestedScrollView {
             intent.putExtra("uid", uid);
             activity.startActivity(intent);
         });
+        initCLicks();
     }
 
     @Override
@@ -192,29 +200,34 @@ public class viewFullscreen extends NestedScrollView {
                 dontAnimate().
                 apply(new RequestOptions().override(1500, 1500)).
                 into(binding.included.mainImage);
-        if (item.getTags().isEmpty() || item.getName().equals("43083945")){
+        if (item.getTags().isEmpty() || item.getName().equals("43083945")) {
             binding.tags.setText("");
         } else {
             binding.tags.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
+            binding.tags.setVisibility(VISIBLE);
         }
         if (item.getName().equals("43083945")) {
             if (!item.tags.split(" ")[0].trim().isEmpty()) {
                 binding.included.imageName.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
+                binding.tags.setVisibility(VISIBLE);
             } else {
                 binding.included.imageName.setText("Тегов нет");
             }
             binding.included.imageName.setTypeface(Typeface.MONOSPACE);
         } else {
+            if (item.tags.split(" ")[0].trim().isEmpty()) {
+                binding.tags.setVisibility(GONE);
+            }
             binding.included.imageName.setTypeface(Typeface.DEFAULT);
             binding.included.imageName.setText(item.getName());
         }
-        if (item.description==null){
+        if (item.description == null || item.description.isEmpty()) {
             binding.mainDescription.setVisibility(GONE);
         } else {
             binding.mainDescription.setVisibility(VISIBLE);
-            binding.mainDescription.setText(item.description);
+            binding.mainDescription.setText("Описание: " + item.description);
         }
-        if (item.getDescription()==null && (item.getTags().isEmpty()|| item.getName().equals("43083945"))) {
+        if (item.getDescription() == null && (item.getTags().isEmpty() || item.getName().equals("43083945"))) {
             binding.linear0.setVisibility(GONE);
         } else {
             binding.linear0.setVisibility(VISIBLE);
@@ -222,8 +235,8 @@ public class viewFullscreen extends NestedScrollView {
         App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body()!=null){
-                    activity.runOnUiThread(()->{
+                if (response.isSuccessful() && response.body() != null) {
+                    activity.runOnUiThread(() -> {
                         Glide.
                                 with(context).
                                 load(response.body().avatar).
@@ -290,5 +303,11 @@ public class viewFullscreen extends NestedScrollView {
 
     public void fullUpdate() {
         previous.clear();
+    }
+
+    private void initCLicks() {
+        binding.included.mainImage.setOnClickListener(v -> {
+            activity.startActivity(new Intent(activity, SubSampActivity.class).putExtra("link", itemEntity.path).putExtra("w", itemEntity.width).putExtra("h", itemEntity.height).putExtra("color", itemEntity.color));
+        });
     }
 }

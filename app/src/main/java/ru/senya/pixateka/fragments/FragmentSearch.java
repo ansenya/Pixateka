@@ -3,11 +3,11 @@ package ru.senya.pixateka.fragments;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,6 +41,7 @@ public class FragmentSearch extends Fragment {
         binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white, requireContext().getTheme()));
         binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
+        binding.nothingWasFound.setVisibility(VISIBLE);
         initListeners();
         return binding.getRoot();
     }
@@ -51,12 +52,13 @@ public class FragmentSearch extends Fragment {
     }
 
     private void initListeners() {
-        binding.search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public boolean onQueryTextChange(String newText) {
                 itemsSearch.clear();
@@ -65,20 +67,29 @@ public class FragmentSearch extends Fragment {
                     binding.nothingWasFound.setVisibility(VISIBLE);
                     return true;
                 }
-                for (ItemEntity item : items) {
-                    String s = item.name + item.description + item.tags;
-                    s = s.toLowerCase();
-                    s = s.trim();
-                    if (s.contains(newText.toLowerCase().trim())) {
-                        itemsSearch.add(item);
-                        binding.nothingWasFound.setVisibility(View.INVISIBLE);
+                new Thread(() -> {
+                    for (ItemEntity item : items) {
+                        String s = item.name + item.description + item.tags;
+                        s = s.toLowerCase();
+                        s = s.trim();
+                        if (s.contains(newText.toLowerCase().trim())) {
+                            getActivity().runOnUiThread(() -> {
+                                itemsSearch.add(item);
+                                binding.nothingWasFound.setVisibility(View.INVISIBLE);
+                            });
+                        }
+                        getActivity().runOnUiThread(() -> binding.list.getAdapter().notifyDataSetChanged());
+
+                        if (itemsSearch.size() == 0) {
+                            getActivity().runOnUiThread(() -> {
+                                binding.list.getAdapter().notifyDataSetChanged();
+                                binding.nothingWasFound.setVisibility(VISIBLE);
+                            });
+
+                        }
                     }
-                    binding.list.getAdapter().notifyDataSetChanged();
-                    if (itemsSearch.size() == 0) {
-                        binding.list.getAdapter().notifyDataSetChanged();
-                        binding.nothingWasFound.setVisibility(VISIBLE);
-                    }
-                }
+                }).start();
+
                 return false;
             }
         });

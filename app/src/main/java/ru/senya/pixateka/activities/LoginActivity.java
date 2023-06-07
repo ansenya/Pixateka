@@ -147,19 +147,19 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegistration.setOnClickListener(view -> {
             startActivity(new Intent(this, RegistrationActivity.class));
         });
-        binding.inputPassword.binding.input.setOnClickListener(v -> {
-            binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
-            binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
-            new Thread(()->{
-                try {
-                    Thread.sleep(3500);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                runOnUiThread(()->binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
-                binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
-            }).start();
-        });
+//        binding.inputPassword.binding.input.setOnClickListener(v -> {
+//            binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT);
+//            binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
+//            new Thread(()->{
+//                try {
+//                    Thread.sleep(3500);
+//                } catch (InterruptedException e) {
+//                    throw new RuntimeException(e);
+//                }
+//                runOnUiThread(()->binding.inputPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD));
+//                binding.inputPassword.binding.input.setSelection(binding.inputPassword.binding.input.getText().length());
+//            }).start();
+//        });
     }
 
 }

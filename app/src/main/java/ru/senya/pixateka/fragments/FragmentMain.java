@@ -30,6 +30,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -93,7 +94,7 @@ public class FragmentMain extends Fragment {
                 this);
         initRecycler();
 
-        binding.toolbar.setTitle("Photo");
+        binding.toolbar.setTitle("Фото");
         binding.toolbar.setTitleTextColor(getResources().getColor(R.color.white, requireContext().getTheme()));
         binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
         binding.mainToolbar.inflateMenu(R.menu.switch_menu);
@@ -101,7 +102,11 @@ public class FragmentMain extends Fragment {
             switch (item.getItemId()) {
                 case R.id.in_order:
                     in_order = true;
-                    data.clear();
+                    data.sort((o1, o2) -> {
+                        if (o1.id> o2.id) return -1;
+                        if (o1.id< o2.id) return 1;
+                        else return 0;
+                    });
                     onRefreshListener.onRefresh();
                     editor.putBoolean("order", true);
                     editor.commit();
@@ -135,8 +140,9 @@ public class FragmentMain extends Fragment {
             path = path.split("/")[3];
         } catch (Exception e) {
         }
-        Log.e("asd", path);
-        if (!path.isEmpty())
+        if (path != null) {
+            if (!path.isEmpty())
+                Log.e("asd", path);
             for (ItemEntity item : data) {
                 if (item.path.contains(path)) {
                     binding.fragment.setVisibility(VISIBLE);
@@ -148,6 +154,8 @@ public class FragmentMain extends Fragment {
                     binding.fragment.update(item, getActivity());
                 }
             }
+        }
+
 
     }
 
@@ -182,9 +190,8 @@ public class FragmentMain extends Fragment {
         binding.fab.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
-                Toast.makeText(getContext(), "Нужен допступ к галлерее", Toast.LENGTH_SHORT).show();
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 123);
+                Toast.makeText(getContext(), "Нужен доступ к галерее", Toast.LENGTH_SHORT).show();
             } else {
                 startActivity(new Intent(getContext(), AddActivity.class));
             }
