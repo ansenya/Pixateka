@@ -8,7 +8,7 @@ import android.provider.MediaStore;
 import androidx.loader.content.CursorLoader;
 
 public class Utils {
-    public final static String BASE_URL = "http://176.99.146.176:8000/api/";
+    public final static String BASE_URL = "http://176.99.146.176/api/";
     public static String TOKEN;
     public static String SESSION_ID;
 
