@@ -7,6 +7,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -51,7 +53,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<User> call, Throwable t) {
-                    Toast.makeText(ProfileActivity.this, "no internet connection", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(binding.getRoot(), "Нет соединения с интернетом", Snackbar.LENGTH_SHORT).show();
                     if (getApplicationContext() != null) onBackPressed();
                 }
             });

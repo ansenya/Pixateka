@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,6 +21,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -252,7 +252,7 @@ public class FragmentProfile extends Fragment {
 
                         @Override
                         public void onFailure(Call<User> call, Throwable t) {
-                            Toast.makeText(getContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
                         }
                     });
                 }).start();
@@ -322,7 +322,7 @@ public class FragmentProfile extends Fragment {
                         @Override
                         public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
                             binding.swipeContainer.setRefreshing(false);
-                            Toast.makeText(getContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
                         }
                     });
 
@@ -330,7 +330,7 @@ public class FragmentProfile extends Fragment {
                 }).start();
             } else {
                 binding.swipeContainer.setRefreshing(false);
-                Toast.makeText(getContext(), "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "Нет доступа в интернет", Snackbar.LENGTH_SHORT).show();
             }
         }
     };

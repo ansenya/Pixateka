@@ -55,6 +55,28 @@ public class FragmentSearch extends Fragment {
         binding.search.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                itemsSearch.clear();
+                if (query.trim().toLowerCase().length() == 0) {
+                    binding.list.getAdapter().notifyDataSetChanged();
+                    binding.nothingWasFound.setVisibility(VISIBLE);
+                    return true;
+                }
+                for (ItemEntity item : items) {
+                    String s = item.name + item.description + item.tags;
+                    s = s.toLowerCase();
+                    s = s.trim();
+                    if (s.contains(query.toLowerCase().trim())) {
+                        itemsSearch.add(item);
+                        binding.nothingWasFound.setVisibility(View.INVISIBLE);
+                    }
+                    binding.list.getAdapter().notifyDataSetChanged();
+
+                    if (itemsSearch.size() == 0) {
+                        binding.list.getAdapter().notifyDataSetChanged();
+                        binding.nothingWasFound.setVisibility(VISIBLE);
+
+                    }
+                }
                 return false;
             }
 
@@ -63,32 +85,25 @@ public class FragmentSearch extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 itemsSearch.clear();
                 if (newText.trim().toLowerCase().length() == 0) {
-                    binding.list.getAdapter().notifyDataSetChanged();
                     binding.nothingWasFound.setVisibility(VISIBLE);
                     return true;
                 }
-                new Thread(() -> {
-                    for (ItemEntity item : items) {
-                        String s = item.name + item.description + item.tags;
-                        s = s.toLowerCase();
-                        s = s.trim();
-                        if (s.contains(newText.toLowerCase().trim())) {
-                            getActivity().runOnUiThread(() -> {
-                                itemsSearch.add(item);
-                                binding.nothingWasFound.setVisibility(View.INVISIBLE);
-                            });
-                        }
-                        getActivity().runOnUiThread(() -> binding.list.getAdapter().notifyDataSetChanged());
-
-                        if (itemsSearch.size() == 0) {
-                            getActivity().runOnUiThread(() -> {
-                                binding.list.getAdapter().notifyDataSetChanged();
-                                binding.nothingWasFound.setVisibility(VISIBLE);
-                            });
-
-                        }
+                for (ItemEntity item : items) {
+                    String s = item.name + item.description + item.tags;
+                    s = s.toLowerCase();
+                    s = s.trim();
+                    if (s.contains(newText.toLowerCase().trim())) {
+                        itemsSearch.add(item);
+                        binding.nothingWasFound.setVisibility(View.INVISIBLE);
                     }
-                }).start();
+                    binding.list.getAdapter().notifyDataSetChanged();
+
+                    if (itemsSearch.size() == 0) {
+                        binding.list.getAdapter().notifyDataSetChanged();
+                        binding.nothingWasFound.setVisibility(VISIBLE);
+
+                    }
+                }
 
                 return false;
             }
@@ -96,6 +111,32 @@ public class FragmentSearch extends Fragment {
 
         binding.toolbar.setNavigationOnClickListener(v -> {
             back();
+        });
+
+        binding.button.setOnClickListener(v -> {
+            itemsSearch.clear();
+            if (binding.search.getTooltipText().toString().trim().toLowerCase().length() == 0) {
+                binding.list.getAdapter().notifyDataSetChanged();
+                binding.nothingWasFound.setVisibility(VISIBLE);
+            }
+            for (ItemEntity item : items) {
+                String s = item.name + item.description + item.tags;
+                s = s.toLowerCase();
+                s = s.trim();
+                if (s.contains(binding.search.getTooltipText().toString().toLowerCase().trim())) {
+                    itemsSearch.add(item);
+                    binding.nothingWasFound.setVisibility(View.INVISIBLE);
+                }
+            }
+            binding.list.getAdapter().notifyDataSetChanged();
+
+            if (itemsSearch.size() == 0) {
+                getActivity().runOnUiThread(() -> {
+                    binding.list.getAdapter().notifyDataSetChanged();
+                    binding.nothingWasFound.setVisibility(VISIBLE);
+                });
+
+            }
         });
 
     }

@@ -103,7 +103,7 @@ public class FragmentEditProfile extends Fragment {
 
                             @Override
                             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                Toast.makeText(getContext(), "not cool", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "ошибка", Toast.LENGTH_SHORT).show();
                             }
                         });
             }

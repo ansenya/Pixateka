@@ -89,7 +89,7 @@
 
                 <data android:scheme="http" />
                 <data android:scheme="https" />
-                <data android:host="176.99.175.244" />
+                <data android:host="176.99.146.176" />
                 <data android:pathPrefix="/media/images" />
 
             </intent-filter>

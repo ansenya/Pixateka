@@ -37,6 +37,7 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.material.snackbar.Snackbar;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.IOException;
@@ -110,11 +111,11 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                                             data.get(position).getName(), data.get(position).getDescription() + java.time.LocalDateTime.now());
 
                                     activity.runOnUiThread(() -> {
-                                        Toast.makeText(context, "готово", Toast.LENGTH_SHORT).show();
+                                        Snackbar.make(binding.getRoot(), "Готово", Snackbar.LENGTH_SHORT).show();
                                     });
 
                                 } catch (Exception e) {
-                                    Toast.makeText(context, "произошла ошибка", Toast.LENGTH_SHORT).show();
+                                    Snackbar.make(binding.getRoot(), "Произошла ошибка", Snackbar.LENGTH_SHORT).show();
                                 }
 
                             }).start();

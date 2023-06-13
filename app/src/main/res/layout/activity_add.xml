@@ -64,7 +64,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="text"
-                app:src="@color/white"
+                app:src="@drawable/ic_action_text"
+                android:backgroundTint="@color/button"
                 app:title="Название" />
 
 
@@ -73,7 +74,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
-                app:src="@color/white"
+                app:src="@drawable/ic_action_description"
                 app:title="Описание" />
 
 

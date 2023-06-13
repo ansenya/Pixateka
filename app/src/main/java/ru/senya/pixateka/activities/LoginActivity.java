@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
                         Log.e("MyTag", "error", t);
-                        Toast.makeText(LoginActivity.this, "что-то пошло не так", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(binding.getRoot(), "Что-то пошло не так", Snackbar.LENGTH_SHORT).show();
                         binding.progressCircular.setVisibility(View.GONE);
                     }
                 });

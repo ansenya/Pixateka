@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -78,7 +79,7 @@ public class AddActivity extends AppCompatActivity {
                     load(data.getData()).
                     into(binding.selectedPhoto);
         } else if (data == null) {
-            Toast.makeText(this, "Вы не выбрали фото!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), "Вы не выбрали фото!", Snackbar.LENGTH_SHORT).show();
             binding.wrongPic.setVisibility(View.VISIBLE);
         }
     }
@@ -111,7 +112,7 @@ public class AddActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(AddActivity.this, "upload failed", Toast.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "Загрузить не получилось :(", Snackbar.LENGTH_SHORT).show();
                 binding.progressCircular.setVisibility(View.INVISIBLE);
                 binding.button.setOnClickListener(clickListener);
                 Log.e("MyTag", call.toString(), t);

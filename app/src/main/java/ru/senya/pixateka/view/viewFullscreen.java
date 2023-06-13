@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.IOException;
@@ -83,11 +84,11 @@ public class viewFullscreen extends NestedScrollView {
                                         itemEntity.getName(), itemEntity.getDescription() + LocalDateTime.now());
 
                                 activity.runOnUiThread(() -> {
-                                    Toast.makeText(context, "готово", Toast.LENGTH_SHORT).show();
+                                    Snackbar.make(binding.getRoot(), "Готово", Snackbar.LENGTH_SHORT).show();
                                 });
 
                             } catch (Exception e) {
-                                Toast.makeText(context, "произошла ошибка", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(binding.getRoot(), "Произошла ошибка", Snackbar.LENGTH_SHORT).show();
                             }
 
                         }).start();
@@ -96,7 +97,7 @@ public class viewFullscreen extends NestedScrollView {
                         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText("url", itemEntity.getPath());
                         clipboard.setPrimaryClip(clip);
-                        Toast.makeText(context, "copied to clipboard", Toast.LENGTH_SHORT).show();
+                        Snackbar.make(binding.getRoot(), "Скопировано", Snackbar.LENGTH_SHORT).show();
                         return true;
                 }
                 return false;

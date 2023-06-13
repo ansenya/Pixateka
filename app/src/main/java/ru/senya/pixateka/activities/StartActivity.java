@@ -2,6 +2,7 @@ package ru.senya.pixateka.activities;
 
 import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.StorageReference;
 
@@ -47,6 +50,7 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 123);
         binding = SplashScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         activity = this;
@@ -132,7 +136,8 @@ public class StartActivity extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<User> call, Throwable t) {
-                                    Toast.makeText(getApplicationContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
+
+                                    Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
                                     runOnUiThread(() -> {
                                         new Thread(() -> {
                                             App.setMainUser(App.getDatabase().userDAO().getUser()[0]);
@@ -156,7 +161,7 @@ public class StartActivity extends AppCompatActivity {
 
             }).start();
         } else {
-            Toast.makeText(activity, "Нет подключения к интернету", Toast.LENGTH_SHORT).show();
+            Snackbar.make(binding.getRoot(), "Нет подключения к интернету", Snackbar.LENGTH_SHORT).show();
             new Thread(() -> {
                 try {
                     App.setMainUser(App.getDatabase().userDAO().getUser()[0]);

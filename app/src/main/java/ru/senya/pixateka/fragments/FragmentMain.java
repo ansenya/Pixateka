@@ -28,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -186,18 +188,22 @@ public class FragmentMain extends Fragment {
         listener();
     }
 
+
+
     private void listener() {
         binding.fab.setOnClickListener(v -> {
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED &&
                     ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 123);
-                Toast.makeText(getContext(), "Нужен доступ к галерее", Toast.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "Нужен доступ к галерее", Snackbar.LENGTH_SHORT).show();
             } else {
                 startActivity(new Intent(getContext(), AddActivity.class));
             }
         });
         binding.swipeContainer.setOnRefreshListener(onRefreshListener);
     }
+
+
 
     public void myNotify() {
         list.scrollTo(0, 0);
@@ -287,7 +293,7 @@ public class FragmentMain extends Fragment {
                                     binding.mainRecyclerView.getAdapter().notifyDataSetChanged();
                                 });
                             } else if (response.body() != null && response.body().size() == 0) {
-                                Toast.makeText(getContext(), "db is empty", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(binding.getRoot(), "база данных пуста", Snackbar.LENGTH_SHORT).show();
                                 binding.swipeContainer.setRefreshing(false);
                             }
                         }
@@ -295,7 +301,7 @@ public class FragmentMain extends Fragment {
                         @Override
                         public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
                             binding.swipeContainer.setRefreshing(false);
-                            Toast.makeText(getContext(), "Не получилось достучаться до сервера", Toast.LENGTH_SHORT).show();
+                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
                         }
                     });
 
@@ -303,7 +309,7 @@ public class FragmentMain extends Fragment {
                 }).start();
             } else {
                 binding.swipeContainer.setRefreshing(false);
-                Toast.makeText(getContext(), "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
+                Snackbar.make(binding.getRoot(), "Нет доступа в интернет", Snackbar.LENGTH_SHORT).show();
             }
         }
     };
