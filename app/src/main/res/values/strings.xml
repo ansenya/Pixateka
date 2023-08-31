@@ -13,12 +13,10 @@
     <string name="search">Поиск</string>
     <string name="nothing_found">Тегов нет</string>
     <string name="warning">Важно! \n - Пароль не должен быть слишком простым. \n - Длина пароля должна быть больше 7 знаков.</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="error_login">Введите логин!</string>
+    <string name="error_password">Введите пароль!</string>
+    <string name="invalid_login_password">Логин и пароль неверны!</string>
+    <string name="error_server_unavailable">Сервер не доступен, попробуйте позже</string>
+    <string name="error_idk">"Неизвестная ошибка. Попробуйте очистить кэш"</string>
 </resources>

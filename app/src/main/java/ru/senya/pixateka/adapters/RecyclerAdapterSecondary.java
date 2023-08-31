@@ -116,34 +116,34 @@ public class RecyclerAdapterSecondary extends RecyclerView.Adapter<RecyclerAdapt
                             ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
                             boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
                             if (connected)
-                                App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        if (response.isSuccessful()) {
-                                            new Thread(() -> {
-                                                App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
-                                                activity.runOnUiThread(() -> {
-                                                    data.remove(position);
-                                                    RecyclerAdapterSecondary.super.notifyDataSetChanged();
-                                                });
-                                            }).start();
-                                            notifyDataSetChanged();
-                                        } else {
-                                            try {
-                                                Log.e("MyTag", response.errorBody().string());
-                                            } catch (IOException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                                    }
-                                });
-                            else
-                                Toast.makeText(context, "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
+//                                App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
+//                                    @Override
+//                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                                        if (response.isSuccessful()) {
+//                                            new Thread(() -> {
+//                                                App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
+//                                                activity.runOnUiThread(() -> {
+//                                                    data.remove(position);
+//                                                    RecyclerAdapterSecondary.super.notifyDataSetChanged();
+//                                                });
+//                                            }).start();
+//                                            notifyDataSetChanged();
+//                                        } else {
+//                                            try {
+//                                                Log.e("MyTag", response.errorBody().string());
+//                                            } catch (IOException e) {
+//                                                throw new RuntimeException(e);
+//                                            }
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//                                    }
+//                                });
+//                            else
+//                                Toast.makeText(context, "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
 
                             return true;
 

@@ -6,6 +6,9 @@ import android.app.Application;
 
 import androidx.room.Room;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.util.LinkedList;
 
 import retrofit2.Retrofit;
@@ -29,6 +32,7 @@ public class App extends Application {
 
     @Override
     public void onCreate() {
+
         instance = this;
         database = Room.databaseBuilder(this, Database.class, "database").build();
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();

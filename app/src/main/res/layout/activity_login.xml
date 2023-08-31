@@ -75,16 +75,6 @@
                     android:text="Регистрация"
                     android:textColor="@color/white" />
 
-                <TextView
-                    android:id="@+id/wrong_indicator"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Что-то неверно!"
-                    android:textAlignment="center"
-                    android:textColor="@color/red"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
             </LinearLayout>
 
             <ProgressBar

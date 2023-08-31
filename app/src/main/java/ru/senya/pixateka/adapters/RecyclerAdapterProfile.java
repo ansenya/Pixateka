@@ -99,75 +99,75 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
                 popupMenu.inflate(R.menu.menu);
             }
 
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.download:
-                            new Thread(() -> {
-                                try {
-                                    MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                                            BitmapFactory.decodeStream(new URL(data.get(position).getPath()).openConnection().getInputStream()),
-                                            data.get(position).getName(), data.get(position).getDescription() + java.time.LocalDateTime.now());
-
-                                    activity.runOnUiThread(() -> {
-                                        Snackbar.make(binding.getRoot(), "Готово", Snackbar.LENGTH_SHORT).show();
-                                    });
-
-                                } catch (Exception e) {
-                                    Snackbar.make(binding.getRoot(), "Произошла ошибка", Snackbar.LENGTH_SHORT).show();
-                                }
-
-                            }).start();
-
-                            return true;
-                        case R.id.share:
-                            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText("url", data.get(position).getPath());
-                            clipboard.setPrimaryClip(clip);
-                            Toast.makeText(context, "скопировано", Toast.LENGTH_SHORT).show();
-                            return true;
-                        case R.id.delete:
-                            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-                            boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
-                            if (connected)
-                                App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
-                                    @Override
-                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                        if (response.isSuccessful()) {
-                                            new Thread(() -> {
-                                                App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
-                                                activity.runOnUiThread(() -> {
-                                                    data.remove(position);
-                                                    onRefreshListener.onRefresh();
-                                                    RecyclerAdapterProfile.super.notifyDataSetChanged();
-                                                });
-                                            }).start();
-                                            notifyDataSetChanged();
-                                        } else {
-                                            try {
-                                                Log.e("MyTag", response.errorBody().string());
-                                            } catch (IOException e) {
-                                                throw new RuntimeException(e);
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                                    }
-                                });
-                            else
-                                Toast.makeText(context, "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
-
-                            return true;
-
-
-                    }
-                    return false;
-                }
-            });
+//            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                @Override
+//                public boolean onMenuItemClick(MenuItem item) {
+//                    switch (item.getItemId()) {
+//                        case R.id.download:
+//                            new Thread(() -> {
+//                                try {
+//                                    MediaStore.Images.Media.insertImage(context.getContentResolver(),
+//                                            BitmapFactory.decodeStream(new URL(data.get(position).getPath()).openConnection().getInputStream()),
+//                                            data.get(position).getName(), data.get(position).getDescription() + java.time.LocalDateTime.now());
+//
+//                                    activity.runOnUiThread(() -> {
+//                                        Snackbar.make(binding.getRoot(), "Готово", Snackbar.LENGTH_SHORT).show();
+//                                    });
+//
+//                                } catch (Exception e) {
+//                                    Snackbar.make(binding.getRoot(), "Произошла ошибка", Snackbar.LENGTH_SHORT).show();
+//                                }
+//
+//                            }).start();
+//
+//                            return true;
+//                        case R.id.share:
+//                            ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+//                            ClipData clip = ClipData.newPlainText("url", data.get(position).getPath());
+//                            clipboard.setPrimaryClip(clip);
+//                            Toast.makeText(context, "скопировано", Toast.LENGTH_SHORT).show();
+//                            return true;
+//                        case R.id.delete:
+//                            ConnectivityManager connectivityManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+//                            boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
+//                            if (connected)
+//                                App.getItemService().deleteItem(data.get(position).id, Utils.TOKEN, "csrftoken=" + Utils.TOKEN + "; " + "sessionid=" + Utils.SESSION_ID).enqueue(new Callback<ResponseBody>() {
+//                                    @Override
+//                                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                                        if (response.isSuccessful()) {
+//                                            new Thread(() -> {
+//                                                App.getDatabase().itemDAO().deleteByUserId(data.get(position).id);
+//                                                activity.runOnUiThread(() -> {
+//                                                    data.remove(position);
+//                                                    onRefreshListener.onRefresh();
+//                                                    RecyclerAdapterProfile.super.notifyDataSetChanged();
+//                                                });
+//                                            }).start();
+//                                            notifyDataSetChanged();
+//                                        } else {
+//                                            try {
+//                                                Log.e("MyTag", response.errorBody().string());
+//                                            } catch (IOException e) {
+//                                                throw new RuntimeException(e);
+//                                            }
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//                                    }
+//                                });
+//                            else
+//                                Toast.makeText(context, "Нет доступа в интернет", Toast.LENGTH_SHORT).show();
+//
+//                            return true;
+//
+//
+//                    }
+//                    return false;
+//                }
+//            });
             popupMenu.show();
         });
         holder.mainImage.setOnClickListener(v -> {

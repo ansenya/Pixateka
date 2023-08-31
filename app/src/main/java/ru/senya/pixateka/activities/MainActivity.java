@@ -7,13 +7,11 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 import retrofit2.Retrofit;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
-import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ActivityMainBinding;
 import ru.senya.pixateka.fragments.FragmentMain;
@@ -30,38 +28,24 @@ public class MainActivity extends AppCompatActivity {
     FragmentSearch fragmentSearch;
     Retrofit retrofit;
     ItemInterface service;
-    User mainUser;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getData();
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
 
-        mainUser = App.getMainUser();
         retrofit = App.getRetrofit();
         service = App.getItemService();
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-
-        adjustFragmentsAndNavigation();
+        setupFragmentsAndNavigation();
 
         setContentView(binding.getRoot());
     }
 
-    private void getData() {
-        new Thread(() -> {
-            App.getData().addAll(App.getDatabase().itemDAO().getAll());
-            Collections.reverse(mainData);
-            profileData.addAll(App.getDatabase().itemDAO().getAllProfile(App.getMainUser().getId()));
-            Collections.reverse(profileData);
-        }).start();
-    }
-
-
     @SuppressLint("NonConstantResourceId")
-    private void adjustFragmentsAndNavigation() {
-        setupFragments();
+    private void setupFragmentsAndNavigation() {
+        initFragments();
         addFragments();
 
         binding.navView.setOnItemSelectedListener(item -> {
@@ -92,19 +76,18 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setupFragments() {
-        fragmentMain = new FragmentMain(mainData);
-        fragmentProfile = new FragmentProfile(profileData, mainUser, binding.vfs, binding.toolbar, 2);
+    private void initFragments() {
+        fragmentMain = new FragmentMain();
         fragmentSearch = new FragmentSearch(mainData);
     }
 
     private void addFragments() {
         getSupportFragmentManager().beginTransaction()
                 .add(binding.container.getId(), fragmentMain)
-                .add(binding.container.getId(), fragmentSearch)
-                .hide(fragmentSearch)
-                .add(binding.container.getId(), fragmentProfile)
-                .hide(fragmentProfile)
+//                .add(binding.container.getId(), fragmentSearch)
+//                .hide(fragmentSearch)
+//                .add(binding.container.getId(), fragmentProfile)
+//                .hide(fragmentProfile)
                 .commit();
     }
 }

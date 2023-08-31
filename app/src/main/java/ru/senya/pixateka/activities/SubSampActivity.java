@@ -21,22 +21,26 @@ public class SubSampActivity extends AppCompatActivity {
 
     ActivitySubsamplingBinding binding;
     int w = 0, h = 0;
-    String color;
+    String path, color;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySubsamplingBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-        w = Integer.parseInt(getIntent().getStringExtra("w"));
-        h = Integer.parseInt(getIntent().getStringExtra("h"));
+
+        w = getIntent().getIntExtra("w", 0);
+        h = getIntent().getIntExtra("h", 0);
         color = getIntent().getStringExtra("color");
+        path = getIntent().getStringExtra("path");
+
+        setContentView(binding.getRoot());
+
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         bitmap.eraseColor(Color.parseColor(color));
         binding.pic.setImage(ImageSource.bitmap(bitmap));
         Glide
                 .with(getApplicationContext())
                 .asBitmap()
-                .load(getIntent().getStringExtra("link"))
+                .load(getIntent().getStringExtra("path"))
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
@@ -48,6 +52,7 @@ public class SubSampActivity extends AppCompatActivity {
                         onBackPressed();
                     }
                 });
+
         binding.back.setOnClickListener(v -> {
             onBackPressed();
         });

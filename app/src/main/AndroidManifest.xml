@@ -97,6 +97,9 @@
         <activity
             android:name=".activities.SubSampActivity"
             android:exported="true" />
+
+        <activity android:name=".activities.FullscreenViewActivity"
+            android:exported="true"/>
     </application>
 
 
