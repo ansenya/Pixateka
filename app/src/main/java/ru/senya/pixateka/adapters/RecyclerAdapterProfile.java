@@ -93,7 +93,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
         holder.setImage(data.get(position));
         holder.sets.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(context, v);
-            if (Integer.parseInt(data.get(position).uid) == App.getMainUser().id) {
+            if (Integer.parseInt(data.get(position).uid) == Integer.parseInt(App.getMainUser().getId())) {
                 popupMenu.inflate(R.menu.p_menu);
             } else {
                 popupMenu.inflate(R.menu.menu);
@@ -199,7 +199,7 @@ public class RecyclerAdapterProfile extends RecyclerView.Adapter<RecyclerAdapter
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mainImage = itemView.findViewById(R.id.main_image);
+            mainImage = itemView.findViewById(R.id.image);
             imageName = itemView.findViewById(R.id.image_name);
             imageDescription = itemView.findViewById(R.id.description);
             sets = itemView.findViewById(R.id.sets);

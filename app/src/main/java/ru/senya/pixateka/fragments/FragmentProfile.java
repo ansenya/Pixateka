@@ -75,29 +75,29 @@ public class FragmentProfile extends Fragment {
             binding.fragmentEdit.setVisibility(VISIBLE);
             binding.relativeLayout.setVisibility(GONE);
         });
-        if (mainUser.avatar != null) {
-            Glide.with(getContext()).load(mainUser.avatar).into(binding.pfpImg);
-        }
-        if (mainUser.background != null) {
-            Glide.with(getContext()).load(mainUser.background).into(binding.back);
-        }
+//        if (mainUser.avatar != null) {
+//            Glide.with(getContext()).load(mainUser.avatar).into(binding.pfpImg);
+//        }
+//        if (mainUser.background != null) {
+//            Glide.with(getContext()).load(mainUser.background).into(binding.back);
+//        }
 
-        binding.name.setText(mainUser.username);
-        try {
-            if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
-                String about = "";
-                for (String s : mainUser.about.split("\"")) {
-                    for (int i = 0; i < s.split("\\\\n").length; i++) {
-                        if (i != 0) about += " \n ";
-                        about += s.split("\\\\n")[i];
-                    }
-
-                }
-                binding.about.setText(about); // backend problem :)
-            }
-        } catch (NullPointerException e) {
-            binding.about.setText("Описание не заполнено");
-        }
+//        binding.name.setText(mainUser.username);
+//        try {
+//            if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
+//                String about = "";
+//                for (String s : mainUser.about.split("\"")) {
+//                    for (int i = 0; i < s.split("\\\\n").length; i++) {
+//                        if (i != 0) about += " \n ";
+//                        about += s.split("\\\\n")[i];
+//                    }
+//
+//                }
+//                binding.about.setText(about); // backend problem :)
+//            }
+//        } catch (NullPointerException e) {
+//            binding.about.setText("Описание не заполнено");
+//        }
 
 
         if (k == 1) {
@@ -121,17 +121,17 @@ public class FragmentProfile extends Fragment {
                 android.R.color.holo_red_light);
 
         binding.buttonLogout.setOnClickListener(v -> {
-            App.getUserService().logout(App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                }
-            });
+//            App.getUserService().logout(App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//                }
+//            });
             new Thread(() -> {
                 App.getDatabase().userDAO().deleteUserTable();
                 App.getDatabase().itemDAO().delete();
@@ -202,132 +202,132 @@ public class FragmentProfile extends Fragment {
             ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
             boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
             if (connected) {
-                new Thread(() -> {
-                    String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
-                    App.getUserService().getUser(mainUser.id, App.getMainUser().token, cookie).enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            if (response.isSuccessful() && !running) {
-                                running = true;
-                                new Thread(() -> {
-                                    User user = response.body();
-                                    user.setSessionId(App.getMainUser().sessionId);
-                                    user.setToken(App.getMainUser().token);
-
-                                    App.getDatabase().userDAO().deleteUserTable();
-                                    App.getDatabase().userDAO().save(user);
-                                    App.setMainUser(user);
-                                    mainUser = user;
-                                    getActivity().runOnUiThread(() -> {
-                                        binding.name.setText(mainUser.username);
-                                        if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
-                                            String about = "";
-                                            for (String s : mainUser.about.split("\"")) {
-                                                for (int i = 0; i < s.split("\\\\n").length; i++) {
-                                                    if (i != 0) about += " \n ";
-                                                    about += s.split("\\\\n")[i];
-                                                }
-
-                                            }
-                                            binding.about.setText(about); // backend problem :)
-
-
-                                        }
-                                        Glide.with(getContext()).load(user.avatar).into(binding.pfpImg);
-                                        if (mainUser.background != null) {
-                                            Glide.with(getContext()).load(mainUser.background).into(binding.back);
-                                        }
-                                        running = false;
-                                    });
-                                }).start();
-                            } else {
-                                try {
-                                    Log.e("RefreshP", response.errorBody().string());
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<User> call, Throwable t) {
-                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
-                        }
-                    });
-                }).start();
-                new Thread(() -> {
-                    ArrayList<ItemEntity> arrayList = new ArrayList<>();
-                    arrayList.addAll(App.getDatabase().itemDAO().getAll());
-                    Call<ArrayList<Item>> call = App.getItemService().getPhotosByUserId(mainUser.id);
-                    call.enqueue(new Callback<ArrayList<Item>>() {
-                        @Override
-                        public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
-                            if (response.body() != null && response.body().size() > 0) {
-                                new Thread(() -> {
-                                    ArrayList<Item> items = response.body();
-                                    for (Item item : items) {
-                                        boolean contains = false;
-                                        for (ItemEntity itemEntity : data) {
-                                            if (item.id == itemEntity.id) {
-                                                contains = true;
-                                                break;
-                                            }
-                                        }
-                                        if (!contains) {
-                                            ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
-                                            entity.setWidth(item.width);
-                                            entity.setHeight(item.height);
-                                            entity.setColor(item.color);
-                                            data.add(0, entity);
-                                            getActivity().runOnUiThread(() -> {
-                                                myNotify(data.size() - 1);
-                                            });
-                                            try {
-                                                App.getDatabase().itemDAO().save(entity);
-                                            } catch (SQLiteConstraintException e) {
-
-                                            }
-                                        }
-                                    }
-                                    ArrayList<ItemEntity> delete = new ArrayList<ItemEntity>();
-                                    for (ItemEntity itemEntity : data) {
-                                        boolean deleted = true;
-                                        for (Item item : items) {
-                                            if (itemEntity.id == item.id) {
-                                                deleted = false;
-                                            }
-                                        }
-                                        if (deleted) {
-                                            new Thread(() -> {
-                                                App.getDatabase().itemDAO().deleteByUserId(itemEntity.id);
-                                            }).start();
-                                            delete.add(itemEntity);
-                                        }
-                                    }
-                                    for (ItemEntity itemEntity : delete) {
-                                        data.remove(itemEntity);
-                                    }
-                                    getActivity().runOnUiThread(() -> {
-                                        binding.recyclerList.getAdapter().notifyDataSetChanged();
-                                        binding.swipeContainer.setRefreshing(false);
-                                    });
-                                }).start();
-                            }
-                            if (response.body() != null && response.body().size() == 0) {
-                                binding.swipeContainer.setRefreshing(false);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
-                            binding.swipeContainer.setRefreshing(false);
-                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
-                        }
-                    });
-
-
-                }).start();
+//                new Thread(() -> {
+//                    String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
+//                    App.getUserService().getUser(mainUser.id, App.getMainUser().token, cookie).enqueue(new Callback<User>() {
+//                        @Override
+//                        public void onResponse(Call<User> call, Response<User> response) {
+//                            if (response.isSuccessful() && !running) {
+//                                running = true;
+//                                new Thread(() -> {
+//                                    User user = response.body();
+//                                    user.setSessionId(App.getMainUser().sessionId);
+//                                    user.setToken(App.getMainUser().token);
+//
+//                                    App.getDatabase().userDAO().deleteUserTable();
+//                                    App.getDatabase().userDAO().save(user);
+//                                    App.setMainUser(user);
+//                                    mainUser = user;
+//                                    getActivity().runOnUiThread(() -> {
+//                                        binding.name.setText(mainUser.username);
+//                                        if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
+//                                            String about = "";
+//                                            for (String s : mainUser.about.split("\"")) {
+//                                                for (int i = 0; i < s.split("\\\\n").length; i++) {
+//                                                    if (i != 0) about += " \n ";
+//                                                    about += s.split("\\\\n")[i];
+//                                                }
+//
+//                                            }
+//                                            binding.about.setText(about); // backend problem :)
+//
+//
+//                                        }
+//                                        Glide.with(getContext()).load(user.avatar).into(binding.pfpImg);
+//                                        if (mainUser.background != null) {
+//                                            Glide.with(getContext()).load(mainUser.background).into(binding.back);
+//                                        }
+//                                        running = false;
+//                                    });
+//                                }).start();
+//                            } else {
+//                                try {
+//                                    Log.e("RefreshP", response.errorBody().string());
+//                                } catch (IOException e) {
+//                                    throw new RuntimeException(e);
+//                                }
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<User> call, Throwable t) {
+//                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }).start();
+//                new Thread(() -> {
+//                    ArrayList<ItemEntity> arrayList = new ArrayList<>();
+//                    arrayList.addAll(App.getDatabase().itemDAO().getAll());
+//                    Call<ArrayList<Item>> call = App.getItemService().getPhotosByUserId(mainUser.id);
+//                    call.enqueue(new Callback<ArrayList<Item>>() {
+//                        @Override
+//                        public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
+//                            if (response.body() != null && response.body().size() > 0) {
+//                                new Thread(() -> {
+//                                    ArrayList<Item> items = response.body();
+//                                    for (Item item : items) {
+//                                        boolean contains = false;
+//                                        for (ItemEntity itemEntity : data) {
+//                                            if (item.id == itemEntity.id) {
+//                                                contains = true;
+//                                                break;
+//                                            }
+//                                        }
+//                                        if (!contains) {
+//                                            ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
+//                                            entity.setWidth(item.width);
+//                                            entity.setHeight(item.height);
+//                                            entity.setColor(item.color);
+//                                            data.add(0, entity);
+//                                            getActivity().runOnUiThread(() -> {
+//                                                myNotify(data.size() - 1);
+//                                            });
+//                                            try {
+//                                                App.getDatabase().itemDAO().save(entity);
+//                                            } catch (SQLiteConstraintException e) {
+//
+//                                            }
+//                                        }
+//                                    }
+//                                    ArrayList<ItemEntity> delete = new ArrayList<ItemEntity>();
+//                                    for (ItemEntity itemEntity : data) {
+//                                        boolean deleted = true;
+//                                        for (Item item : items) {
+//                                            if (itemEntity.id == item.id) {
+//                                                deleted = false;
+//                                            }
+//                                        }
+//                                        if (deleted) {
+//                                            new Thread(() -> {
+//                                                App.getDatabase().itemDAO().deleteByUserId(itemEntity.id);
+//                                            }).start();
+//                                            delete.add(itemEntity);
+//                                        }
+//                                    }
+//                                    for (ItemEntity itemEntity : delete) {
+//                                        data.remove(itemEntity);
+//                                    }
+//                                    getActivity().runOnUiThread(() -> {
+//                                        binding.recyclerList.getAdapter().notifyDataSetChanged();
+//                                        binding.swipeContainer.setRefreshing(false);
+//                                    });
+//                                }).start();
+//                            }
+//                            if (response.body() != null && response.body().size() == 0) {
+//                                binding.swipeContainer.setRefreshing(false);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
+//                            binding.swipeContainer.setRefreshing(false);
+//                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
+//                        }
+//                    });
+//
+//
+//                }).start();
             } else {
                 binding.swipeContainer.setRefreshing(false);
                 Snackbar.make(binding.getRoot(), "Нет доступа в интернет", Snackbar.LENGTH_SHORT).show();

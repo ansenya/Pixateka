@@ -12,16 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
-
-import java.util.List;
-
-import ru.senya.pixateka.R;
-import ru.senya.pixateka.databinding.ActvityTestBinding;
-
 public class DeepLinkActivity extends AppCompatActivity {
 
     @Override

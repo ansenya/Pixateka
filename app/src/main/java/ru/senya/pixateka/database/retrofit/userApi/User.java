@@ -1,90 +1,73 @@
 package ru.senya.pixateka.database.retrofit.userApi;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.util.UUID;
+
 
 @Entity
 public class User {
     @PrimaryKey
-    public int id;
-    public String username;
-    public String avatar;
-    public String background;
-    public String email;
-    public String first_name;
-    public String last_name;
-    public String country;
-    public String token;
-    public String sessionId;
-    public String about;
+    @NonNull
+    private String id = UUID.randomUUID().toString();
 
+    protected String username;
 
+    private String password;
 
-    public User(int id, String username, String avatar, String email, String first_name, String last_name, String country) {
+    private String role = "USER";
+
+//    private Date created;
+//
+//    private Date updated;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
         this.id = id;
-        this.username = username;
-        this.avatar = avatar;
-        this.email = email;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.country = country;
     }
 
-
-
-    @Ignore
-    public User(int id, String username, String avatar, String email, String first_name, String last_name, String country, String token, String sessionId, String about, String background) {
-        this.id = id;
-        this.username = username;
-        this.avatar = avatar;
-        this.email = email;
-        this.first_name = first_name;
-        this.last_name = last_name;
-        this.country = country;
-        this.token = token;
-        this.sessionId = sessionId;
-        this.about = about;
-        this.background = background;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public String getPassword() {
+        return password;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public String getRole() {
+        return role;
     }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
+    public void setRole(String role) {
+        this.role = role;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
-    }
+//    public Date getCreated() {
+//        return created;
+//    }
+//
+//    public void setCreated(Date created) {
+//        this.created = created;
+//    }
+//
+//    public Date getUpdated() {
+//        return updated;
+//    }
+//
+//    public void setUpdated(Date updated) {
+//        this.updated = updated;
+//    }
 }

@@ -67,44 +67,44 @@ public class viewFullscreen extends NestedScrollView {
         this.context = context;
 
         binding = ViewFullscreenBinding.inflate(LayoutInflater.from(getContext()), this, true);
-        binding.included.sets.setOnClickListener(v -> {
-            PopupMenu popupMenu = new PopupMenu(context, v);
-            if (String.valueOf(itemEntity.uid).equals(App.getMainUser().id)) {
-                popupMenu.inflate(R.menu.p_menu);
-            } else {
-                popupMenu.inflate(R.menu.menu);
-            }
-            popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.download:
-                        new Thread(() -> {
-                            try {
-                                MediaStore.Images.Media.insertImage(context.getContentResolver(),
-                                        BitmapFactory.decodeStream(new URL(itemEntity.getPath()).openConnection().getInputStream()),
-                                        itemEntity.getName(), itemEntity.getDescription() + LocalDateTime.now());
-
-                                activity.runOnUiThread(() -> {
-                                    Snackbar.make(binding.getRoot(), "Готово", Snackbar.LENGTH_SHORT).show();
-                                });
-
-                            } catch (Exception e) {
-                                Snackbar.make(binding.getRoot(), "Произошла ошибка", Snackbar.LENGTH_SHORT).show();
-                            }
-
-                        }).start();
-                        return true;
-                    case R.id.share:
-                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("url", itemEntity.getPath());
-                        clipboard.setPrimaryClip(clip);
-                        Snackbar.make(binding.getRoot(), "Скопировано", Snackbar.LENGTH_SHORT).show();
-                        return true;
-                }
-                return false;
-            });
-            popupMenu.show();
-        });
-        binding.included.mainImage.setOnLongClickListener(v -> {
+//        binding.included.sets.setOnClickListener(v -> {
+//            PopupMenu popupMenu = new PopupMenu(context, v);
+//            if (String.valueOf(itemEntity.uid).equals(App.getMainUser().id)) {
+//                popupMenu.inflate(R.menu.p_menu);
+//            } else {
+//                popupMenu.inflate(R.menu.menu);
+//            }
+//            popupMenu.setOnMenuItemClickListener(item -> {
+//                switch (item.getItemId()) {
+//                    case R.id.download:
+//                        new Thread(() -> {
+//                            try {
+//                                MediaStore.Images.Media.insertImage(context.getContentResolver(),
+//                                        BitmapFactory.decodeStream(new URL(itemEntity.getPath()).openConnection().getInputStream()),
+//                                        itemEntity.getName(), itemEntity.getDescription() + LocalDateTime.now());
+//
+//                                activity.runOnUiThread(() -> {
+//                                    Snackbar.make(binding.getRoot(), "Готово", Snackbar.LENGTH_SHORT).show();
+//                                });
+//
+//                            } catch (Exception e) {
+//                                Snackbar.make(binding.getRoot(), "Произошла ошибка", Snackbar.LENGTH_SHORT).show();
+//                            }
+//
+//                        }).start();
+//                        return true;
+//                    case R.id.share:
+//                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+//                        ClipData clip = ClipData.newPlainText("url", itemEntity.getPath());
+//                        clipboard.setPrimaryClip(clip);
+//                        Snackbar.make(binding.getRoot(), "Скопировано", Snackbar.LENGTH_SHORT).show();
+//                        return true;
+//                }
+//                return false;
+//            });
+//            popupMenu.show();
+//        });
+        binding.included.image.setOnLongClickListener(v -> {
             binding.included.sets.callOnClick();
             return true;
         });
@@ -162,120 +162,120 @@ public class viewFullscreen extends NestedScrollView {
 
     @SuppressLint("NotifyDataSetChanged")
     private void privateUpdate(ItemEntity item, FragmentActivity activity) {
-        binding.pfp.setImageResource(R.drawable.pfp);
-        binding.nothingWasFound.setVisibility(INVISIBLE);
-        goUp();
-        if (binding.list.getAdapter() == null) {
-            binding.list.setAdapter(new RecyclerAdapterSecondary(data, getContext(), activity, this));
-        }
-        if (binding.list2.getAdapter() == null) {
-            binding.list2.setAdapter(new RecyclerAdapterSecondary(likeData, getContext(), activity, this));
-        }
-        App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    binding.byUser.setText("by " + response.body().username);
-                } else {
-                    binding.byUser.setText("");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                binding.byUser.setText("");
-            }
-        });
-        binding.list.getAdapter().notifyDataSetChanged();
-        binding.list2.getAdapter().notifyDataSetChanged();
-        likeData.clear();
-        data.clear();
-        this.itemEntity = item;
-        this.activity = activity;
-        Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(Color.parseColor(item.color));
-        Glide.
-                with(context).
-                load(item.getPath()).
-                placeholder(new BitmapDrawable(activity.getResources(), bitmap)).
-                dontAnimate().
-                apply(new RequestOptions().override(1500, 1500)).
-                into(binding.included.mainImage);
-        if (item.getTags().isEmpty() || item.getName().equals("43083945")) {
-            binding.tags.setText("");
-        } else {
-            binding.tags.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
-            binding.tags.setVisibility(VISIBLE);
-        }
-        if (item.getName().equals("43083945")) {
-            if (!item.tags.split(" ")[0].trim().isEmpty()) {
-                binding.included.imageName.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
-                binding.tags.setVisibility(VISIBLE);
-            } else {
-                binding.included.imageName.setText("Тегов нет");
-            }
-            binding.included.imageName.setTypeface(Typeface.MONOSPACE);
-        } else {
-            if (item.tags.split(" ")[0].trim().isEmpty()) {
-                binding.tags.setVisibility(GONE);
-            }
-            binding.included.imageName.setTypeface(Typeface.DEFAULT);
-            binding.included.imageName.setText(item.getName());
-        }
-        if (item.description == null || item.description.isEmpty()) {
-            binding.mainDescription.setVisibility(GONE);
-        } else {
-            binding.mainDescription.setVisibility(VISIBLE);
-            binding.mainDescription.setText("Описание: " + item.description);
-        }
-        if (item.getDescription() == null && (item.getTags().isEmpty() || item.getName().equals("43083945"))) {
-            binding.linear0.setVisibility(GONE);
-        } else {
-            binding.linear0.setVisibility(VISIBLE);
-        }
-        App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    activity.runOnUiThread(() -> {
-                        Glide.
-                                with(context).
-                                load(response.body().avatar).
-                                into(binding.pfp);
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-
-            }
-        });
-
-
-        new Thread(() -> {
-            for (ItemEntity entity : App.getDatabase().itemDAO().getAll()) {
-                for (String tags : entity.tags.split(" ")) {
-                    if (itemEntity.tags.contains(tags) && !entity.tags.trim().isEmpty() && entity.id != itemEntity.id) {
-                        likeData.add(entity);
-                        break;
-                    }
-                }
-            }
-            activity.runOnUiThread(() -> {
-                if (likeData.size() == 0 && binding.list2.getVisibility() == VISIBLE) {
-                    binding.nothingWasFound.setVisibility(VISIBLE);
-                } else {
-                    binding.list2.getAdapter().notifyDataSetChanged();
-                }
-            });
-        }).start();
-        new Thread(() -> {
-            data.addAll(App.getDatabase().itemDAO().getAllOtherPictures(Integer.parseInt(item.uid), item.id));
-            activity.runOnUiThread(() -> {
-                binding.list.getAdapter().notifyDataSetChanged();
-            });
-        }).start();
+//        binding.pfp.setImageResource(R.drawable.pfp);
+//        binding.nothingWasFound.setVisibility(INVISIBLE);
+//        goUp();
+//        if (binding.list.getAdapter() == null) {
+//            binding.list.setAdapter(new RecyclerAdapterSecondary(data, getContext(), activity, this));
+//        }
+//        if (binding.list2.getAdapter() == null) {
+//            binding.list2.setAdapter(new RecyclerAdapterSecondary(likeData, getContext(), activity, this));
+//        }
+//        App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    binding.byUser.setText("by " + response.body().username);
+//                } else {
+//                    binding.byUser.setText("");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//                binding.byUser.setText("");
+//            }
+//        });
+//        binding.list.getAdapter().notifyDataSetChanged();
+//        binding.list2.getAdapter().notifyDataSetChanged();
+//        likeData.clear();
+//        data.clear();
+//        this.itemEntity = item;
+//        this.activity = activity;
+//        Bitmap bitmap = Bitmap.createBitmap(Integer.parseInt(item.width), Integer.parseInt(item.height), Bitmap.Config.ARGB_8888);
+//        bitmap.eraseColor(Color.parseColor(item.color));
+//        Glide.
+//                with(context).
+//                load(item.getPath()).
+//                placeholder(new BitmapDrawable(activity.getResources(), bitmap)).
+//                dontAnimate().
+//                apply(new RequestOptions().override(1500, 1500)).
+//                into(binding.included.image);
+//        if (item.getTags().isEmpty() || item.getName().equals("43083945")) {
+//            binding.tags.setText("");
+//        } else {
+//            binding.tags.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
+//            binding.tags.setVisibility(VISIBLE);
+//        }
+//        if (item.getName().equals("43083945")) {
+//            if (!item.tags.split(" ")[0].trim().isEmpty()) {
+//                binding.included.imageName.setText("\uD83E\uDD16: " + item.tags.split(" ")[0]);
+//                binding.tags.setVisibility(VISIBLE);
+//            } else {
+//                binding.included.imageName.setText("Тегов нет");
+//            }
+//            binding.included.imageName.setTypeface(Typeface.MONOSPACE);
+//        } else {
+//            if (item.tags.split(" ")[0].trim().isEmpty()) {
+//                binding.tags.setVisibility(GONE);
+//            }
+//            binding.included.imageName.setTypeface(Typeface.DEFAULT);
+//            binding.included.imageName.setText(item.getName());
+//        }
+//        if (item.description == null || item.description.isEmpty()) {
+//            binding.mainDescription.setVisibility(GONE);
+//        } else {
+//            binding.mainDescription.setVisibility(VISIBLE);
+//            binding.mainDescription.setText("Описание: " + item.description);
+//        }
+//        if (item.getDescription() == null && (item.getTags().isEmpty() || item.getName().equals("43083945"))) {
+//            binding.linear0.setVisibility(GONE);
+//        } else {
+//            binding.linear0.setVisibility(VISIBLE);
+//        }
+//        App.getUserService().getUser(Integer.parseInt(item.uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
+//            @Override
+//            public void onResponse(Call<User> call, Response<User> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    activity.runOnUiThread(() -> {
+//                        Glide.
+//                                with(context).
+//                                load(response.body().avatar).
+//                                into(binding.pfp);
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<User> call, Throwable t) {
+//
+//            }
+//        });
+//
+//
+//        new Thread(() -> {
+//            for (ItemEntity entity : App.getDatabase().itemDAO().getAll()) {
+//                for (String tags : entity.tags.split(" ")) {
+//                    if (itemEntity.tags.contains(tags) && !entity.tags.trim().isEmpty() && entity.id != itemEntity.id) {
+//                        likeData.add(entity);
+//                        break;
+//                    }
+//                }
+//            }
+//            activity.runOnUiThread(() -> {
+//                if (likeData.size() == 0 && binding.list2.getVisibility() == VISIBLE) {
+//                    binding.nothingWasFound.setVisibility(VISIBLE);
+//                } else {
+//                    binding.list2.getAdapter().notifyDataSetChanged();
+//                }
+//            });
+//        }).start();
+//        new Thread(() -> {
+//            data.addAll(App.getDatabase().itemDAO().getAllOtherPictures(Integer.parseInt(item.uid), item.id));
+//            activity.runOnUiThread(() -> {
+//                binding.list.getAdapter().notifyDataSetChanged();
+//            });
+//        }).start();
     }
 
     public void update(ItemEntity item, FragmentActivity activity) {
@@ -302,12 +302,8 @@ public class viewFullscreen extends NestedScrollView {
         return false;
     }
 
-    public void fullUpdate() {
-        previous.clear();
-    }
-
     private void initCLicks() {
-        binding.included.mainImage.setOnClickListener(v -> {
+        binding.included.image.setOnClickListener(v -> {
             activity.startActivity(new Intent(activity, SubSampActivity.class).putExtra("link", itemEntity.path).putExtra("w", itemEntity.width).putExtra("h", itemEntity.height).putExtra("color", itemEntity.color));
         });
     }

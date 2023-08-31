@@ -17,7 +17,7 @@
     <!--        app:riv_corner_radius="1dp" />-->
 
     <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
-        android:id="@+id/main_image"
+        android:id="@+id/image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

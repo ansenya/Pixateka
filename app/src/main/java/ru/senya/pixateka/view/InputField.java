@@ -46,7 +46,7 @@ public class InputField extends LinearLayout {
             binding.frame.setHint(title);
             int inputType = attributes.getInt(R.styleable.InputField_android_inputType, InputType.TYPE_NULL);
             binding.mInput.setInputType(inputType);
-            if (inputType == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)){
+            if (inputType == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
                 binding.frame.setEndIconMode(END_ICON_PASSWORD_TOGGLE);
             }
             try {
@@ -57,9 +57,12 @@ public class InputField extends LinearLayout {
         } finally {
             attributes.recycle();
         }
-
-
     }
+
+    public void setError(String error) {
+        binding.frame.setError(error);
+    }
+
 
     public String getInputText() {
         return binding.mInput.getText().toString();

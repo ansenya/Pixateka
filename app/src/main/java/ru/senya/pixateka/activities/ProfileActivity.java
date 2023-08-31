@@ -35,29 +35,29 @@ public class ProfileActivity extends AppCompatActivity {
         binding.toolbar.setNavigationOnClickListener(v -> {
             onBackPressed();
         });
-        new Thread(() -> {
-            ArrayList<ItemEntity> arrayList = (ArrayList<ItemEntity>) App.getDatabase().itemDAO().getAllProfile(uid);
-            Collections.reverse(arrayList);
-            App.getUserService().getUser(Integer.parseInt(uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
-                @Override
-                public void onResponse(Call<User> call, Response<User> response) {
-                    if (response.isSuccessful()) {
-                        fragmentProfile = new FragmentProfile(arrayList,
-                                response.body(),
-                                binding.vfs, binding.toolbar, 1);
-                        runOnUiThread(() -> {
-                            getSupportFragmentManager().beginTransaction().replace(binding.profile.getId(), fragmentProfile).commit();
-                        });
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<User> call, Throwable t) {
-                    Snackbar.make(binding.getRoot(), "Нет соединения с интернетом", Snackbar.LENGTH_SHORT).show();
-                    if (getApplicationContext() != null) onBackPressed();
-                }
-            });
-        }).start();
+//        new Thread(() -> {
+//            ArrayList<ItemEntity> arrayList = (ArrayList<ItemEntity>) App.getDatabase().itemDAO().getAllProfile(uid);
+//            Collections.reverse(arrayList);
+//            App.getUserService().getUser(Integer.parseInt(uid), App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<User>() {
+//                @Override
+//                public void onResponse(Call<User> call, Response<User> response) {
+//                    if (response.isSuccessful()) {
+//                        fragmentProfile = new FragmentProfile(arrayList,
+//                                response.body(),
+//                                binding.vfs, binding.toolbar, 1);
+//                        runOnUiThread(() -> {
+//                            getSupportFragmentManager().beginTransaction().replace(binding.profile.getId(), fragmentProfile).commit();
+//                        });
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<User> call, Throwable t) {
+//                    Snackbar.make(binding.getRoot(), "Нет соединения с интернетом", Snackbar.LENGTH_SHORT).show();
+//                    if (getApplicationContext() != null) onBackPressed();
+//                }
+//            });
+//        }).start();
 
 
     }

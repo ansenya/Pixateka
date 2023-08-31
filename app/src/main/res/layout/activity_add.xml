@@ -37,40 +37,19 @@
             android:orientation="vertical"
             android:paddingHorizontal="10dp">
 
-            <TextView
-                android:id="@+id/wrongPic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Вы не выбрали фото!"
-                android:textColor="@color/red"
-                android:textSize="16sp"
-                android:visibility="invisible"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/wrongName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Имя не должно быть пустое"
-                android:textColor="@color/red"
-                android:textSize="16sp"
-                android:visibility="invisible"
-                tools:visibility="visible" />
 
             <ru.senya.pixateka.view.InputField
-                android:id="@+id/name"
+                android:id="@+id/inputName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button"
                 android:inputType="text"
                 app:src="@drawable/ic_action_text"
-                android:backgroundTint="@color/button"
                 app:title="Название" />
 
 
             <ru.senya.pixateka.view.InputField
-                android:id="@+id/description"
+                android:id="@+id/inputDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine"
@@ -96,14 +75,14 @@
                 tools:visibility="visible" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/submit_button"
                 android:layout_width="230dp"
                 android:layout_height="65dp"
-                android:textSize="16sp"
                 android:layout_marginBottom="30dp"
                 android:backgroundTint="@color/button"
                 android:text="@string/TextUploadPhoto"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp" />
         </LinearLayout>
     </RelativeLayout>
 

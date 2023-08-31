@@ -58,7 +58,7 @@
                     app:title="Пароль" />
 
                 <Button
-                    android:id="@+id/button_enter"
+                    android:id="@+id/submit_button"
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
                     android:textSize="15sp"

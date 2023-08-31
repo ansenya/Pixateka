@@ -79,89 +79,89 @@ public class RegistrationActivity extends AppCompatActivity {
                     RequestBody first_name = RequestBody.create(MediaType.parse("text/plain"), "first_name");
                     RequestBody last_name = RequestBody.create(MediaType.parse("text/plain"), "last_name");
                     RequestBody country = RequestBody.create(MediaType.parse("text/plain"), "ru");
-                    App.getUserService().register(username, avatar, password, email, first_name, last_name, country).enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            if (response.isSuccessful() && response.body() != null) {
-                                binding.progressCircular.setVisibility(View.VISIBLE);
-
-                                RequestBody username = RequestBody.create(MediaType.parse("text/plain"), binding.inputLogin.getInputText().trim());
-                                RequestBody password = RequestBody.create(MediaType.parse("text/plain"), binding.inputPassword.getInputText().trim());
-                                App.getUserService().login(password, username).enqueue(new Callback<User>() {
-                                    @Override
-                                    public void onResponse(Call<User> call, Response<User> response) {
-                                        if (response.isSuccessful()) {
-                                            User user = response.body();
-
-                                            String src = response.headers().toMultimap().get("set-cookie").toString();
-
-                                            String csrftoken = "csrftoken=(.*?);";
-                                            Pattern pattern = Pattern.compile(csrftoken);
-                                            Matcher matcher = pattern.matcher(src);
-
-                                            if (matcher.find()) {
-                                                Utils.setTOKEN(matcher.group(1));
-                                                user.setToken(Utils.TOKEN);
-                                                Log.e("MyTag", "token=" + Utils.TOKEN);
-                                            }
-
-                                            String sessionId = "sessionid=(.*?);";
-                                            pattern = Pattern.compile(sessionId);
-                                            matcher = pattern.matcher(src);
-
-                                            if (matcher.find()) {
-                                                Utils.setSessionId(matcher.group(1));
-                                                user.setSessionId(Utils.SESSION_ID);
-                                                Log.e("MyTag", Utils.SESSION_ID);
-                                            }
-                                            try {
-                                                new Thread(() -> {
-                                                    App.getDatabase().userDAO().save(user);
-                                                    App.setMainUser(App.getDatabase().userDAO().getUser()[0]);
-                                                    Utils.setTOKEN(App.getMainUser().token);
-                                                    Utils.setSessionId(App.getMainUser().sessionId);
-                                                    runOnUiThread(() -> {
-                                                        binding.progressCircular.setVisibility(View.GONE);
-                                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                                        finish();
-                                                    });
-                                                }).start();
-
-                                            } catch (Exception e) {
-                                                binding.progressCircular.setVisibility(View.GONE);
-                                            }
-
-                                        } else {
-                                            binding.progressCircular.setVisibility(View.GONE);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onFailure(Call<User> call, Throwable t) {
-                                        Log.e("MyTag", "error", t);
-                                        Snackbar.make(binding.getRoot(), "Что-то пошло не так", Snackbar.LENGTH_LONG).show();
-                                        binding.progressCircular.setVisibility(View.GONE);
-                                    }
-                                });
-
-                            } else {
-                                try {
-                                    if (response.errorBody().string().contains("password")) {
-                                        Snackbar.make(binding.getRoot(), "Пароль не должен быть слишком простым", Snackbar.LENGTH_LONG).show();
-                                    }
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
-                            }
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<User> call, Throwable t) {
-                            Log.e("MyTag", "error", t);
-                            Snackbar.make(binding.getRoot(), "Что-то пошло не так", Snackbar.LENGTH_LONG).show();
-                        }
-                    });
+//                    App.getUserService().register(username, avatar, password, email, first_name, last_name, country).enqueue(new Callback<User>() {
+//                        @Override
+//                        public void onResponse(Call<User> call, Response<User> response) {
+//                            if (response.isSuccessful() && response.body() != null) {
+//                                binding.progressCircular.setVisibility(View.VISIBLE);
+//
+//                                RequestBody username = RequestBody.create(MediaType.parse("text/plain"), binding.inputLogin.getInputText().trim());
+//                                RequestBody password = RequestBody.create(MediaType.parse("text/plain"), binding.inputPassword.getInputText().trim());
+//                                App.getUserService().login(password, username).enqueue(new Callback<User>() {
+//                                    @Override
+//                                    public void onResponse(Call<User> call, Response<User> response) {
+//                                        if (response.isSuccessful()) {
+//                                            User user = response.body();
+//
+//                                            String src = response.headers().toMultimap().get("set-cookie").toString();
+//
+//                                            String csrftoken = "csrftoken=(.*?);";
+//                                            Pattern pattern = Pattern.compile(csrftoken);
+//                                            Matcher matcher = pattern.matcher(src);
+//
+//                                            if (matcher.find()) {
+//                                                Utils.setTOKEN(matcher.group(1));
+//                                                user.setToken(Utils.TOKEN);
+//                                                Log.e("MyTag", "token=" + Utils.TOKEN);
+//                                            }
+//
+//                                            String sessionId = "sessionid=(.*?);";
+//                                            pattern = Pattern.compile(sessionId);
+//                                            matcher = pattern.matcher(src);
+//
+//                                            if (matcher.find()) {
+//                                                Utils.setSessionId(matcher.group(1));
+//                                                user.setSessionId(Utils.SESSION_ID);
+//                                                Log.e("MyTag", Utils.SESSION_ID);
+//                                            }
+//                                            try {
+//                                                new Thread(() -> {
+//                                                    App.getDatabase().userDAO().save(user);
+//                                                    App.setMainUser(App.getDatabase().userDAO().getUser()[0]);
+//                                                    Utils.setTOKEN(App.getMainUser().token);
+//                                                    Utils.setSessionId(App.getMainUser().sessionId);
+//                                                    runOnUiThread(() -> {
+//                                                        binding.progressCircular.setVisibility(View.GONE);
+//                                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                                                        finish();
+//                                                    });
+//                                                }).start();
+//
+//                                            } catch (Exception e) {
+//                                                binding.progressCircular.setVisibility(View.GONE);
+//                                            }
+//
+//                                        } else {
+//                                            binding.progressCircular.setVisibility(View.GONE);
+//                                        }
+//                                    }
+//
+//                                    @Override
+//                                    public void onFailure(Call<User> call, Throwable t) {
+//                                        Log.e("MyTag", "error", t);
+//                                        Snackbar.make(binding.getRoot(), "Что-то пошло не так", Snackbar.LENGTH_LONG).show();
+//                                        binding.progressCircular.setVisibility(View.GONE);
+//                                    }
+//                                });
+//
+//                            } else {
+//                                try {
+//                                    if (response.errorBody().string().contains("password")) {
+//                                        Snackbar.make(binding.getRoot(), "Пароль не должен быть слишком простым", Snackbar.LENGTH_LONG).show();
+//                                    }
+//                                } catch (IOException e) {
+//                                    throw new RuntimeException(e);
+//                                }
+//                            }
+//
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<User> call, Throwable t) {
+//                            Log.e("MyTag", "error", t);
+//                            Snackbar.make(binding.getRoot(), "Что-то пошло не так", Snackbar.LENGTH_LONG).show();
+//                        }
+//                    });
 
                 } else {
                     binding.wrong.setText(errorString);

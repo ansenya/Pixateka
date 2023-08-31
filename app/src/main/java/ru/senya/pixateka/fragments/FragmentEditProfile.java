@@ -49,103 +49,103 @@ public class FragmentEditProfile extends Fragment {
         binding.toolbar.setNavigationOnClickListener(v -> {
             getActivity().onBackPressed();
         });
-        if (mainUser.about != null) {
-            setT();
-        }
+//        if (mainUser.get != null) {
+//            setT();
+//        }
         init();
         return binding.getRoot();
     }
 
-    void setT() {
-        String about = "";
-        for (String s : mainUser.about.split("\"")) {
-            for (int i = 0; i < s.split("\\\\n").length; i++) {
-                if (i != 0) about += " \n";
-                about += s.split("\\\\n")[i];
-            }
-
-        }
-        binding.about.binding.mInput.setText(about); // backend problem :)
-    }
+//    void setT() {
+//        String about = "";
+//        for (String s : mainUser.about.split("\"")) {
+//            for (int i = 0; i < s.split("\\\\n").length; i++) {
+//                if (i != 0) about += " \n";
+//                about += s.split("\\\\n")[i];
+//            }
+//
+//        }
+//        binding.about.binding.mInput.setText(about); // backend problem :)
+//    }
 
     private void init() {
-        if (mainUser.avatar != null) {
-            Glide.with(getContext()).load(App.getMainUser().avatar).into(binding.pfpImg);
-        }
-        if (mainUser.background != null) {
-            Glide.with(getContext()).load(App.getMainUser().background).centerCrop().into(binding.back);
-        }
+//        if (mainUser.avatar != null) {
+//            Glide.with(getContext()).load(App.getMainUser().avatar).into(binding.pfpImg);
+//        }
+//        if (mainUser.background != null) {
+//            Glide.with(getContext()).load(App.getMainUser().background).centerCrop().into(binding.back);
+//        }
         binding.fab.setOnClickListener(v -> {
             startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).addFlags(FLAG_GRANT_READ_URI_PERMISSION), 3);
         });
         binding.backButton.setOnClickListener(v -> {
             startActivityForResult(new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).addFlags(FLAG_GRANT_READ_URI_PERMISSION), 4);
         });
-        binding.buttonSave.setOnClickListener(v -> {
-            if (clicked1) {
-                File file = new File(getRealPath(getContext(), uri));
-                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
-                MultipartBody.Part imagePart = MultipartBody.Part.createFormData("avatar", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
-                App.getUserService().
-                        editUserPics(
-                                App.getMainUser().id,
-                                App.getMainUser().token,
-                                cookie,
-                                imagePart
-                        ).enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()) {
-                                    getActivity().onBackPressed();
-                                }
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                    Toast.makeText(getContext(), "ошибка", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-            if (clicked2) {
-                File file = new File(getRealPath(getContext(), uriB));
-                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
-                MultipartBody.Part back = MultipartBody.Part.createFormData("background", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
-                App.getUserService().
-                        editUserPics(
-                                App.getMainUser().id,
-                                App.getMainUser().token,
-                                cookie,
-                                back
-                        ).enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                if (response.isSuccessful()) {
-                                    getActivity().onBackPressed();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                Toast.makeText(getContext(), "not cool", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-            if (!binding.about.getInputText().trim().isEmpty()) {
-                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
-                App.getUserService().editUserDesc(App.getMainUser().id, App.getMainUser().token, cookie, binding.about.getInputText()).enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        getActivity().onBackPressed();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-                    }
-                });
-            }
-        });
+//        binding.buttonSave.setOnClickListener(v -> {
+//            if (clicked1) {
+//                File file = new File(getRealPath(getContext(), uri));
+//                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
+//                MultipartBody.Part imagePart = MultipartBody.Part.createFormData("avatar", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+//                App.getUserService().
+//                        editUserPics(
+//                                App.getMainUser().id,
+//                                App.getMainUser().token,
+//                                cookie,
+//                                imagePart
+//                        ).enqueue(new Callback<ResponseBody>() {
+//                            @Override
+//                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                                if (response.isSuccessful()) {
+//                                    getActivity().onBackPressed();
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                                    Toast.makeText(getContext(), "ошибка", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//            }
+//            if (clicked2) {
+//                File file = new File(getRealPath(getContext(), uriB));
+//                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
+//                MultipartBody.Part back = MultipartBody.Part.createFormData("background", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+//                App.getUserService().
+//                        editUserPics(
+//                                App.getMainUser().id,
+//                                App.getMainUser().token,
+//                                cookie,
+//                                back
+//                        ).enqueue(new Callback<ResponseBody>() {
+//                            @Override
+//                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                                if (response.isSuccessful()) {
+//                                    getActivity().onBackPressed();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                                Toast.makeText(getContext(), "not cool", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//            }
+//            if (!binding.about.getInputText().trim().isEmpty()) {
+//                String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
+//                App.getUserService().editUserDesc(App.getMainUser().id, App.getMainUser().token, cookie, binding.about.getInputText()).enqueue(new Callback<ResponseBody>() {
+//                    @Override
+//                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+//                        getActivity().onBackPressed();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+//
+//                    }
+//                });
+//            }
+//        });
     }
 
     @Override

@@ -9,22 +9,7 @@
 
 
     <FrameLayout
-        android:id="@+id/navigation_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/nav_view"
-        android:background="@color/white" />
-
-    <FrameLayout
-        android:id="@+id/navigation_search"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/nav_view"
-        android:background="@color/white" />
-
-
-    <FrameLayout
-        android:id="@+id/navigation_profile"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/nav_view"
@@ -39,13 +24,13 @@
         android:visibility="gone"
         app:title="Photo" />
 
-        <ru.senya.pixateka.view.viewFullscreen
-            android:id="@+id/vfs"
-            android:layout_below="@id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:visibility="gone" />
+    <ru.senya.pixateka.view.viewFullscreen
+        android:id="@+id/vfs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:background="@color/white"
+        android:visibility="gone" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
