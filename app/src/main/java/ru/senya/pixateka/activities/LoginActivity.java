@@ -22,8 +22,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.database.retrofit.userApi.UserToken;
-import ru.senya.pixateka.database.retrofit.userApi.UsersInterface;
+import ru.senya.pixateka.retrofit.userApi.UserToken;
+import ru.senya.pixateka.retrofit.userApi.UsersInterface;
 import ru.senya.pixateka.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package ru.senya.pixateka.database.retrofit.userApi.old;
+package ru.senya.pixateka.retrofit.userApi.old;
 
 import androidx.room.Entity;
 import androidx.room.Ignore;

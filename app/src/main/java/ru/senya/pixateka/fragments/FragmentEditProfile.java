@@ -2,7 +2,6 @@ package ru.senya.pixateka.fragments;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION;
-import static ru.senya.pixateka.database.retrofit.Utils.getRealPath;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,26 +10,14 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.bumptech.glide.Glide;
-
-import java.io.File;
-
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.database.retrofit.userApi.User;
+import ru.senya.pixateka.retrofit.userApi.User;
 import ru.senya.pixateka.databinding.FragmentEditProfileBinding;
 
 public class FragmentEditProfile extends Fragment {

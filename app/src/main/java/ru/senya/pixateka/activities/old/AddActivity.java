@@ -1,12 +1,11 @@
 package ru.senya.pixateka.activities.old;
 
-import static ru.senya.pixateka.database.retrofit.Utils.getRealPath;
+import static ru.senya.pixateka.retrofit.Utils.getRealPath;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -20,14 +19,10 @@ import java.io.File;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
+import ru.senya.pixateka.retrofit.itemApi.ItemInterface;
 import ru.senya.pixateka.databinding.ActivityAddBinding;
 
 public class AddActivity extends AppCompatActivity {

@@ -4,7 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import ru.senya.pixateka.database.retrofit.userApi.User;
+import ru.senya.pixateka.retrofit.userApi.User;
 
 @Dao
 public interface UserDAO {

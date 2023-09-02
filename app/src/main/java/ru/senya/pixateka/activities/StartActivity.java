@@ -1,35 +1,20 @@
 package ru.senya.pixateka.activities;
 
-import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
-
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import ru.senya.pixateka.App;
-import ru.senya.pixateka.database.retrofit.Utils;
-import ru.senya.pixateka.database.retrofit.itemApi.Item;
-import ru.senya.pixateka.database.retrofit.userApi.User;
-import ru.senya.pixateka.database.retrofit.userApi.UsersInterface;
+import ru.senya.pixateka.retrofit.userApi.UsersInterface;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.SplashScreenBinding;
 

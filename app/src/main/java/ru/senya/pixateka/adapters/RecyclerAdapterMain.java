@@ -53,7 +53,7 @@
 //import retrofit2.Response;
 //import ru.senya.pixateka.App;
 //import ru.senya.pixateka.R;
-//import ru.senya.pixateka.database.retrofit.Utils;
+//import ru.senya.pixateka.retrofit.Utils;
 //import ru.senya.pixateka.database.room.ItemEntity;
 //import ru.senya.pixateka.fragments.FragmentMain;
 //

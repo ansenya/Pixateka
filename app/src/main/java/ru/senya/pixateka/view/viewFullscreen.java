@@ -1,50 +1,25 @@
 package ru.senya.pixateka.view;
 
 import android.annotation.SuppressLint;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.ConnectivityManager;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
-import java.io.IOException;
-import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Stack;
 
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
 import ru.senya.pixateka.activities.ProfileActivity;
 import ru.senya.pixateka.activities.SubSampActivity;
-import ru.senya.pixateka.adapters.RecyclerAdapterSecondary;
-import ru.senya.pixateka.database.retrofit.Utils;
-import ru.senya.pixateka.database.retrofit.userApi.User;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ViewFullscreenBinding;
 

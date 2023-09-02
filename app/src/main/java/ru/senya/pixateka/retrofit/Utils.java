@@ -1,4 +1,4 @@
-package ru.senya.pixateka.database.retrofit;
+package ru.senya.pixateka.retrofit;
 
 import android.content.Context;
 import android.database.Cursor;

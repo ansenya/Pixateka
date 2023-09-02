@@ -17,6 +17,9 @@
     <string name="error_login">Введите логин!</string>
     <string name="error_password">Введите пароль!</string>
     <string name="invalid_login_password">Логин и пароль неверны!</string>
-    <string name="error_server_unavailable">Сервер не доступен, попробуйте позже</string>
+    <string name="error_server_unavailable">Сервер недоступен, попробуйте позже</string>
     <string name="error_idk">"Неизвестная ошибка. Попробуйте очистить кэш"</string>
+    <string name="error_service_unavailable">"Ошибка обработки фотографии. Попробуйте позже"</string>
+    <string name="image_ready">"Изображение скачано"</string>
+    <string name="image_deleted">"Изображение удалено"</string>
 </resources>

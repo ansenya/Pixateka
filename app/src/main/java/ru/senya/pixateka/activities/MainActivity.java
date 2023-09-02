@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import retrofit2.Retrofit;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
+import ru.senya.pixateka.retrofit.itemApi.ItemInterface;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ActivityMainBinding;
 import ru.senya.pixateka.fragments.FragmentMain;

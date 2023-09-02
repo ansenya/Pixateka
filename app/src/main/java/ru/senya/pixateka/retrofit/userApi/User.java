@@ -1,4 +1,4 @@
-package ru.senya.pixateka.database.retrofit.userApi;
+package ru.senya.pixateka.retrofit.userApi;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

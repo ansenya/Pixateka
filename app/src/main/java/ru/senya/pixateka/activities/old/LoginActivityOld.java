@@ -24,8 +24,8 @@
 //import ru.senya.pixateka.App;
 //import ru.senya.pixateka.activities.MainActivity;
 //import ru.senya.pixateka.activities.RegistrationActivity;
-//import ru.senya.pixateka.database.retrofit.Utils;
-//import ru.senya.pixateka.database.retrofit.userApi.User;
+//import ru.senya.pixateka.retrofit.Utils;
+//import ru.senya.pixateka.retrofit.userApi.User;
 //import ru.senya.pixateka.databinding.ActivityLoginBinding;
 //
 //

@@ -2,22 +2,10 @@ package ru.senya.pixateka.activities;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import ru.senya.pixateka.App;
-import ru.senya.pixateka.database.retrofit.userApi.User;
-import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.ActivityProfileBinding;
 import ru.senya.pixateka.fragments.FragmentProfile;
 

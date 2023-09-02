@@ -1,4 +1,4 @@
-package ru.senya.pixateka.database.retrofit.itemApi;
+package ru.senya.pixateka.retrofit.itemApi;
 
 public class ModelResponse {
     String detail;

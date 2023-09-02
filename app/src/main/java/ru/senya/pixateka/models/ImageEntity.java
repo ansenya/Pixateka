@@ -4,8 +4,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-import ru.senya.pixateka.database.retrofit.userApi.User;
-import ru.senya.pixateka.database.room.UserEntity;
+import ru.senya.pixateka.retrofit.userApi.User;
 
 public class ImageEntity {
 

@@ -1,21 +1,18 @@
 package ru.senya.pixateka;
 
-import static ru.senya.pixateka.database.retrofit.Utils.BASE_URL;
+import static ru.senya.pixateka.retrofit.Utils.BASE_URL;
 
 import android.app.Application;
 
 import androidx.room.Room;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.util.LinkedList;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.senya.pixateka.database.retrofit.itemApi.ItemInterface;
-import ru.senya.pixateka.database.retrofit.userApi.User;
-import ru.senya.pixateka.database.retrofit.userApi.UsersInterface;
+import ru.senya.pixateka.retrofit.itemApi.ItemInterface;
+import ru.senya.pixateka.retrofit.userApi.User;
+import ru.senya.pixateka.retrofit.userApi.UsersInterface;
 import ru.senya.pixateka.database.room.Database;
 import ru.senya.pixateka.database.room.ItemEntity;
 
@@ -26,23 +23,17 @@ public class App extends Application {
     private static ItemInterface itemService;
     private static UsersInterface userService;
     private static User mainUser;
-    private static String token;
     private static LinkedList<ItemEntity> data = new LinkedList<>();
 
 
     @Override
     public void onCreate() {
-
+        super.onCreate();
         instance = this;
         database = Room.databaseBuilder(this, Database.class, "database").build();
         retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
         itemService = retrofit.create(ItemInterface.class);
         userService = retrofit.create(UsersInterface.class);
-        super.onCreate();
-    }
-
-    public static String getToken() {
-        return token;
     }
 
     public static App getInstance() {
