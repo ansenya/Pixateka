@@ -27,7 +27,7 @@ import ru.senya.pixateka.R;
 import ru.senya.pixateka.activities.StartActivity;
 import ru.senya.pixateka.activities.Visible;
 import ru.senya.pixateka.adapters.RecyclerAdapterProfile;
-import ru.senya.pixateka.retrofit.userApi.User;
+import ru.senya.pixateka.models.UserEntity;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
 import ru.senya.pixateka.view.viewFullscreen;
@@ -37,16 +37,16 @@ public class FragmentProfile extends Fragment {
 
     public NewFragmentProfileBinding binding;
     ArrayList<ItemEntity> data;
-    User mainUser;
+    UserEntity mainUserEntity;
     viewFullscreen vfs;
     Visible visible = new Visible(false);
     androidx.appcompat.widget.Toolbar toolbar;
     int k;
     boolean running = false;
 
-    public FragmentProfile(ArrayList<ItemEntity> data, User mainUser, viewFullscreen vfs, androidx.appcompat.widget.Toolbar toolbar, int k) {
+    public FragmentProfile(ArrayList<ItemEntity> data, UserEntity mainUserEntity, viewFullscreen vfs, androidx.appcompat.widget.Toolbar toolbar, int k) {
         this.data = data;
-        this.mainUser = mainUser;
+        this.mainUserEntity = mainUserEntity;
         this.vfs = vfs;
         this.toolbar = toolbar;
         this.k = k;

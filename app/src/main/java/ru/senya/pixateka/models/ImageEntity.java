@@ -4,8 +4,6 @@ import androidx.room.PrimaryKey;
 
 import java.util.Date;
 
-import ru.senya.pixateka.retrofit.userApi.User;
-
 public class ImageEntity {
 
     @PrimaryKey
@@ -15,7 +13,7 @@ public class ImageEntity {
 
     private String label;
 
-    private String tags;
+    private Tag[] tags;
 
     private String hexColor;
 
@@ -33,7 +31,19 @@ public class ImageEntity {
 
     private Date updated;
 
-    private User user;
+    private UserEntity user;
+
+    static class Tag{
+        private String ruTag, enTag;
+
+        public String getEnTag() {
+            return enTag;
+        }
+
+        public String getRuTag() {
+            return ruTag;
+        }
+    }
 
     public String getId() {
         return id;
@@ -59,11 +69,11 @@ public class ImageEntity {
         this.label = label;
     }
 
-    public String getTags() {
+    public Tag[] getTags() {
         return tags;
     }
 
-    public void setTags(String tags) {
+    public void setTags(Tag[] tags) {
         this.tags = tags;
     }
 
@@ -131,11 +141,11 @@ public class ImageEntity {
         this.updated = updated;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(UserEntity userEntity) {
+        this.user = userEntity;
     }
 }

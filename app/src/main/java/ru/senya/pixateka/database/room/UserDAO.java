@@ -4,16 +4,16 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import ru.senya.pixateka.retrofit.userApi.User;
+import ru.senya.pixateka.models.UserEntity;
 
 @Dao
 public interface UserDAO {
-    @Query("SELECT * FROM User")
-    User[] getUser();
+    @Query("SELECT * FROM UserEntity")
+    UserEntity[] getUser();
 
     @Insert
-    void save(User user);
+    void save(UserEntity userEntity);
 
-    @Query("DELETE FROM User")
+    @Query("DELETE FROM UserEntity")
     void deleteUserTable();
 }

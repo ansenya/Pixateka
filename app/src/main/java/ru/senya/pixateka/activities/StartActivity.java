@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Retrofit;
-import ru.senya.pixateka.retrofit.userApi.UsersInterface;
+import ru.senya.pixateka.retrofit.UsersInterface;
 import ru.senya.pixateka.database.room.ItemEntity;
 import ru.senya.pixateka.databinding.SplashScreenBinding;
 

@@ -1,10 +1,11 @@
 package ru.senya.pixateka.activities;
 
-import static ru.senya.pixateka.retrofit.Utils.getRealPath;
+import static ru.senya.pixateka.utils.Utils.getRealPath;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -50,7 +51,7 @@ public class AddActivity extends AppCompatActivity {
         editor = sharedPreferences.edit();
 
         getImage();
-        adjustClickListeners();
+        setupClickListeners();
 
         setContentView(binding.getRoot());
     }
@@ -84,6 +85,7 @@ public class AddActivity extends AppCompatActivity {
                     Snackbar.make(binding.getRoot(), getString(R.string.error_server_unavailable), Snackbar.LENGTH_LONG).show();
                 }
                 catch (Throwable e) {
+                    Log.e("AddError", e.getMessage());
                     Snackbar.make(binding.getRoot(), getString(R.string.error_idk), Snackbar.LENGTH_LONG).show();
                 }
 
@@ -91,7 +93,7 @@ public class AddActivity extends AppCompatActivity {
         });
     }
 
-    private void adjustClickListeners() {
+    private void setupClickListeners() {
         binding.selectedPhoto.setOnClickListener(view -> getImage());
 
         binding.submitButton.setOnClickListener(view -> {
@@ -120,12 +122,15 @@ public class AddActivity extends AppCompatActivity {
         return
                 registerForActivityResult(new ActivityResultContracts.GetContent(), result -> {
                     if (result != null) {
+                        path = getRealPath(getApplicationContext(), result);
+//                        path = result.getEncodedPath();
+                        Log.e("MyTag", path);
+
                         Glide.
                                 with(this).
                                 load(result).
                                 into(binding.selectedPhoto);
 
-                        path = getRealPath(getApplicationContext(), result);
                     } else {
                         Snackbar.make(binding.getRoot(), "Вы не выбрали фото!", Snackbar.LENGTH_SHORT).show();
                     }

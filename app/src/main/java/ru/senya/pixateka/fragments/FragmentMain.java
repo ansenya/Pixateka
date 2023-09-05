@@ -25,7 +25,7 @@ import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.activities.AddActivity;
 import ru.senya.pixateka.adapters.NewRecyclerAdapter;
-import ru.senya.pixateka.retrofit.Page;
+import ru.senya.pixateka.models.Page;
 import ru.senya.pixateka.databinding.FragmentMainBinding;
 import ru.senya.pixateka.models.ImageEntity;
 

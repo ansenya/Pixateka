@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.retrofit.userApi.User;
+import ru.senya.pixateka.models.UserEntity;
 import ru.senya.pixateka.databinding.FragmentEditProfileBinding;
 
 public class FragmentEditProfile extends Fragment {
@@ -25,13 +25,13 @@ public class FragmentEditProfile extends Fragment {
     FragmentEditProfileBinding binding;
     public boolean clicked1 = false, clicked2 = false;
     Uri uri, uriB;
-    User mainUser;
+    UserEntity mainUserEntity;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentEditProfileBinding.inflate(LayoutInflater.from(getContext()), container, false);
-        mainUser = App.getMainUser();
+        mainUserEntity = App.getMainUser();
         binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
         binding.toolbar.setNavigationOnClickListener(v -> {
             getActivity().onBackPressed();

@@ -1,6 +1,5 @@
 package ru.senya.pixateka.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,8 +21,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.retrofit.userApi.UserToken;
-import ru.senya.pixateka.retrofit.userApi.UsersInterface;
+import ru.senya.pixateka.models.UserEntityToken;
+import ru.senya.pixateka.retrofit.UsersInterface;
 import ru.senya.pixateka.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
@@ -41,8 +40,8 @@ public class LoginActivity extends AppCompatActivity {
         startMainActivity();
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
-        sharedPreferences = getSharedPreferences("auth", Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
+        sharedPreferences = App.getSharedPreferences();
+        editor = App.getEditor();
 
         adjustClickListeners();
 
@@ -61,10 +60,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void getToken(Call<UserToken> call) {
-        call.enqueue(new Callback<UserToken>() {
+    private void getToken(Call<UserEntityToken> call) {
+        call.enqueue(new Callback<UserEntityToken>() {
             @Override
-            public void onResponse(@NonNull Call<UserToken> call, @NonNull Response<UserToken> response) {
+            public void onResponse(@NonNull Call<UserEntityToken> call, @NonNull Response<UserEntityToken> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
 
@@ -83,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(@NonNull Call<UserToken> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<UserEntityToken> call, @NonNull Throwable t) {
                 binding.progressCircular.setActivated(true);
 
                 try {

@@ -1,6 +1,6 @@
 package ru.senya.pixateka.activities.old;
 
-import static ru.senya.pixateka.retrofit.Utils.getRealPath;
+import static ru.senya.pixateka.utils.Utils.getRealPath;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -22,7 +22,7 @@ import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.retrofit.itemApi.ItemInterface;
+import ru.senya.pixateka.retrofit.ItemInterface;
 import ru.senya.pixateka.databinding.ActivityAddBinding;
 
 public class AddActivity extends AppCompatActivity {

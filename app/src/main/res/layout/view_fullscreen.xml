@@ -44,7 +44,7 @@
                 android:layout_weight="1"
                 android:paddingHorizontal="4dp"
                 android:paddingBottom="4dp"
-                android:text="by user"
+                android:text="by userEntity"
                 android:textColor="#4E4E4E"
                 android:textSize="14.3sp" />
 

@@ -1,6 +1,6 @@
 package ru.senya.pixateka.activities;
 
-import static ru.senya.pixateka.retrofit.Utils.getRealPath;
+import static ru.senya.pixateka.utils.Utils.getRealPath;
 
 import android.content.Intent;
 import android.os.Bundle;

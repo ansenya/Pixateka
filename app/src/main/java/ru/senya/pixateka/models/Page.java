@@ -1,4 +1,4 @@
-package ru.senya.pixateka.retrofit;
+package ru.senya.pixateka.models;
 
 
 public class Page<T> {

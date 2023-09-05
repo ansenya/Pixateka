@@ -1,6 +1,6 @@
-package ru.senya.pixateka.retrofit.userApi;
+package ru.senya.pixateka.models;
 
-public class UserToken {
+public class UserEntityToken {
     private String id;
     private String token;
     private String username;
