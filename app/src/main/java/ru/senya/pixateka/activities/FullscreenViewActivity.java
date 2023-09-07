@@ -45,21 +45,23 @@ public class FullscreenViewActivity extends AppCompatActivity {
 
     FullscreenViewActivityBinding binding;
     int width, height;
-    String id, uid, path, color;
+    String id, uid, path, color, username, title, pfp;
     private final List<ImageEntity> firstData = new LinkedList<>(), secondData = new LinkedList<>();
-    private final NewRecyclerAdapter firstAdapter = new NewRecyclerAdapter(firstData), secondAdapter = new NewRecyclerAdapter(secondData);
+    private final NewRecyclerAdapter firstAdapter = new NewRecyclerAdapter(firstData, this), secondAdapter = new NewRecyclerAdapter(secondData, this);
     int firstPage = 0, secondPage = 0;
     int firstTotalPages = 1, secondTotalPages = 1;
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sendClickedRequest();
 
         binding = FullscreenViewActivityBinding.inflate(getLayoutInflater());
 
         loadImage();
-
+        setupToolbar();
         setupClickListeners();
         getFirstData(firstPage);
         getSecondData(secondPage);
@@ -68,19 +70,48 @@ public class FullscreenViewActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
     }
 
+    private void sendClickedRequest() {
+        String token = "Bearer " + App.getSharedPreferences().getString("jwt_key", "");
+        id = Objects.requireNonNull(getIntent().getExtras().getString("id"));
+        App.getItemService().increaseClick(token, id).enqueue(new Callback<ImageEntity>() {
+            @Override
+            public void onResponse(Call<ImageEntity> call, Response<ImageEntity> response) {
+                if (response.isSuccessful()){
+                    Log.i("Click", "ok");
+                } else {
+                    Log.i("Click", "not_ok " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ImageEntity> call, Throwable t) {
+                Toast.makeText(FullscreenViewActivity.this, "error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void loadImage() {
         path = Objects.requireNonNull(getIntent().getExtras()).getString("path");
         color = getIntent().getExtras().getString("color");
         width = (int) Double.parseDouble(Objects.requireNonNull(getIntent().getExtras().getString("width")));
         height = (int) Double.parseDouble(Objects.requireNonNull(getIntent().getExtras().getString("height")));
-        id = Objects.requireNonNull(getIntent().getExtras().getString("id"));
         uid = Objects.requireNonNull(getIntent().getExtras().getString("uid"));
+        username = Objects.requireNonNull(getIntent().getExtras().getString("username"));
+        title = Objects.requireNonNull(getIntent().getExtras().getString("title"));
+        pfp = Objects.requireNonNull(getIntent().getExtras().getString("pfp"));
+
+        binding.included.image.setTransitionName(id);
+        binding.byUser.setText(username);
         Glide
                 .with(getBaseContext())
                 .load(path)
                 .placeholder(getPlaceholder(width, height, color))
-                .override(700)
                 .into(binding.included.image);
+
+        Glide
+                .with(getBaseContext())
+                .load(pfp)
+                .into(binding.pfp);
 
     }
 
@@ -114,6 +145,7 @@ public class FullscreenViewActivity extends AppCompatActivity {
 
         }
     }
+
     private void getSecondData(int numPage) {
         if (numPage < secondTotalPages) {
             secondPage++;
@@ -153,7 +185,7 @@ public class FullscreenViewActivity extends AppCompatActivity {
         });
     }
 
-    private void setupPopupMenu(){
+    private void setupPopupMenu() {
         binding.included.sets.setOnClickListener(view -> {
             PopupMenu popupMenu = new PopupMenu(getBaseContext(), binding.included.sets);
 
@@ -211,6 +243,14 @@ public class FullscreenViewActivity extends AppCompatActivity {
 
 
     }
+
+    private void setupToolbar(){
+        binding.toolbar.setTitle(title);
+        binding.toolbar.setNavigationOnClickListener(view -> {
+            onBackPressed();
+        });
+    }
+
     private void setupRecycler() {
         binding.list.setAdapter(firstAdapter);
         binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
@@ -240,7 +280,7 @@ public class FullscreenViewActivity extends AppCompatActivity {
         });
 
         binding.tabs.addTab(binding.tabs.newTab().setText("Похожие"));
-        binding.tabs.addTab(binding.tabs.newTab().setText("Все фотографии пользователя"));
+        binding.tabs.addTab(binding.tabs.newTab().setText("Все"));
 
         binding.tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -248,8 +288,7 @@ public class FullscreenViewActivity extends AppCompatActivity {
                 int position = tab.getPosition();
                 if (position == 0) {
                     binding.list.setAdapter(firstAdapter);
-                }
-                else {
+                } else {
                     binding.list.setAdapter(secondAdapter);
                 }
             }

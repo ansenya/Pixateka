@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+около-релиз!около-релиз!около-релиз!<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@color/toolbar_color"
-            android:titleTextColor="@color/text_color2" />
+            app:title="Загрузить фотографию"
+            app:titleTextColor="@color/text_color2" />
 
 
         <com.makeramen.roundedimageview.RoundedImageView

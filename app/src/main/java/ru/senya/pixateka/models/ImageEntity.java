@@ -12,6 +12,7 @@ public class ImageEntity {
     private String name;
 
     private String label;
+    private String pfp = "";
 
     private Tag[] tags;
 

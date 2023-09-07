@@ -49,14 +49,15 @@
                 android:layout_marginBottom="7dp"
                 android:background="@drawable/search_bg"
                 android:textColor="@color/white"
-                android:translationZ="10dp"
                 android:textColorHint="@color/white"
                 android:textSize="16sp"
+                android:translationZ="10dp"
                 app:closeIcon="@drawable/ic_action_close"
                 app:defaultQueryHint="Введите Ваш запрос"
                 app:iconifiedByDefault="false"
                 app:queryHint="Введите Ваш запрос"
                 app:searchIcon="@drawable/ic_action_search" />
+
 
             <Button
                 android:id="@+id/button"
@@ -65,13 +66,13 @@
                 android:layout_below="@id/search"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
-                android:translationZ="10dp"
-                android:textSize="16sp"
                 android:layout_marginEnd="5dp"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="@color/button"
                 android:text="Найти"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:translationZ="10dp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@id/list"
@@ -102,12 +103,12 @@
             app:title="Photo" />
 
 
-                <ru.senya.pixateka.view.viewFullscreen
-                    android:id="@+id/fragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/toolbar"
-                    android:visibility="gone" />
+        <ru.senya.pixateka.view.viewFullscreen
+            android:id="@+id/fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar"
+            android:visibility="gone" />
     </RelativeLayout>
 
 

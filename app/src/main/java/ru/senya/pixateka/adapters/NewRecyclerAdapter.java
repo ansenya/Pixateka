@@ -2,6 +2,7 @@ package ru.senya.pixateka.adapters;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -11,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -42,10 +46,12 @@ import ru.senya.pixateka.models.ImageEntity;
 public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.ViewHolder> {
 
     List<ImageEntity> data;
+    Activity activity;
 
 
-    public NewRecyclerAdapter(List<ImageEntity> data) {
+    public NewRecyclerAdapter(List<ImageEntity> data, Activity activity) {
         this.data = data;
+        this.activity = activity;
     }
 
     @NonNull
@@ -56,6 +62,7 @@ public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull NewRecyclerAdapter.ViewHolder holder, int position) {
+        holder.giveActivity(activity);
         holder.loadImage(data.get(position));
         holder.setupClickListener(position, data, this);
     }
@@ -70,6 +77,7 @@ public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.
         private final ViewItemBinding binding;
         private final Context context;
         SharedPreferences preferences;
+        Activity activity;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,13 +86,19 @@ public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.
             preferences = App.getSharedPreferences();
         }
 
+        public void giveActivity(Activity activity) {
+            this.activity = activity;
+        }
+
         public void loadImage(ImageEntity item) {
+
+            binding.image.setTransitionName(item.getId());
 
             Glide
                     .with(context)
                     .load(item.getPath())
                     .placeholder(getPlaceholder(item))
-                    .override(300)
+                    .override(500)
                     .into(binding.image);
 
             binding.imageName.setText(item.getName());
@@ -98,14 +112,26 @@ public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.
 
             binding.image.setOnClickListener(view -> {
                 Bundle extras = new Bundle();
+
                 extras.putString("path", image.getPath());
                 extras.putString("color", image.getHexColor());
                 extras.putString("width", String.valueOf(image.getWidth()));
                 extras.putString("height", String.valueOf(image.getHeight()));
                 extras.putString("id", image.getId());
                 extras.putString("uid", image.getUser().getId());
+                extras.putString("username", image.getUser().getUsername());
+                extras.putString("title", image.getName());
+                extras.putString("pfp", image.getUser().getPfp());
 
-                context.startActivity(new Intent(context, FullscreenViewActivity.class).putExtras(extras));
+                Intent intent = new Intent(context, FullscreenViewActivity.class);
+                intent.putExtras(extras);
+//                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                        activity,
+//                        binding.image,
+//                        image.getId()
+//                );
+//                context.startActivity(intent, options.toBundle());
+                context.startActivity(intent);
             });
 
             binding.sets.setOnClickListener(view -> {

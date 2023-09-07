@@ -10,8 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:background="@color/toolbar_color"
-        android:title="@string/app_name"
-        android:titleTextColor="@color/text_color2" />
+        app:title="@string/app_name"
+        app:titleTextColor="@color/text_color2" />
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

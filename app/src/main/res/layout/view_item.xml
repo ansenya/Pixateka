@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             android:background="#F6F6F6"
             android:src="@color/v1"
             app:riv_corner_radius="1dp" />

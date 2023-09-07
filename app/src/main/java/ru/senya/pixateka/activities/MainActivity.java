@@ -53,14 +53,14 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     getSupportFragmentManager().beginTransaction()
                             .hide(fragmentSearch)
-                            .hide(fragmentProfile)
+//                            .hide(fragmentProfile)
                             .show(fragmentMain)
                             .commit();
                     return true;
                 case R.id.search:
                     getSupportFragmentManager().beginTransaction()
                             .hide(fragmentMain)
-                            .hide(fragmentProfile)
+//                            .hide(fragmentProfile)
                             .show(fragmentSearch)
                             .commit();
                     return true;
@@ -78,14 +78,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFragments() {
         fragmentMain = new FragmentMain();
-        fragmentSearch = new FragmentSearch(mainData);
+        fragmentSearch = new FragmentSearch();
     }
 
     private void addFragments() {
         getSupportFragmentManager().beginTransaction()
                 .add(binding.container.getId(), fragmentMain)
-//                .add(binding.container.getId(), fragmentSearch)
-//                .hide(fragmentSearch)
+                .add(binding.container.getId(), fragmentSearch)
+                .hide(fragmentSearch)
 //                .add(binding.container.getId(), fragmentProfile)
 //                .hide(fragmentProfile)
                 .commit();

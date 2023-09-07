@@ -13,9 +13,12 @@
         android:orientation="vertical">
 
         <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/toolbar_color" />
+            app:titleTextColor="@color/white"
+            android:background="@color/toolbar_color"
+            app:navigationIcon="@drawable/baseline_arrow_back_24" />
 
 
         <androidx.cardview.widget.CardView
@@ -120,8 +123,8 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/list"
                     android:layout_width="match_parent"
-                    android:isScrollContainer="false"
                     android:layout_height="wrap_content"
+                    android:isScrollContainer="false"
                     android:nestedScrollingEnabled="true" />
 
 

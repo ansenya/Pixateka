@@ -40,4 +40,10 @@ public interface ItemInterface {
     @GET("img/getByUserId")
     Call<Page<ImageEntity>> getByUid(@Header("Authorization") String token, @Query("uid") String uid, @Query("page") int page);
 
+    @POST("img/clicked")
+    Call<ImageEntity> increaseClick(@Header("Authorization") String token, @Query("id") String id);
+
+    @GET("es/search")
+    Call<Page<ImageEntity>> search(@Header("Authorization") String token, @Query("query") String query, @Query("page") int page);
+
 }

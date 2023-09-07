@@ -11,9 +11,12 @@ import java.util.UUID;
 public class UserEntity {
     @PrimaryKey
     @NonNull
-    private String  id;
+    private String id;
 
     protected String username;
+
+
+    private String pfp;
 
     private String role;
 
@@ -27,6 +30,14 @@ public class UserEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPfp() {
+        return pfp;
+    }
+
+    public void setPfp(String pfp) {
+        this.pfp = pfp;
     }
 
     public String getUsername() {
