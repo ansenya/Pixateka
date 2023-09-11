@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_alignParentBottom="true">
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/toolbar_color"
+        app:title="Профиль"
+        app:titleTextColor="@color/white" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/profile_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_alignBottom="@+id/linear_card"
+                            android:layout_alignParentTop="true">
+
+
+                            <ImageView
+                                android:id="@+id/background"
+                                android:stateListAnimator="@anim/wave_animation"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:scaleType="centerCrop"
+                                tools:src="@drawable/holder_gradient" />
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignBottom="@+id/background"
+                                android:layout_alignParentTop="true"
+                                android:background="@drawable/background_profile" />
+
+                        </RelativeLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/linear_card"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="16dp"
+                            android:paddingTop="20dp">
+
+                            <com.makeramen.roundedimageview.RoundedImageView
+                                android:id="@+id/profile_image"
+                                android:layout_width="135dp"
+                                android:layout_height="135dp"
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:background="@color/background"
+                                android:padding="2dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/pfp"
+                                app:riv_corner_radius="200dp"
+                                app:riv_mutate_background="true" />
+
+                            <!-- Имя пользователя -->
+                            <TextView
+                                android:id="@+id/profile_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="11dp"
+                                android:text="Имя пользователя"
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="16dp"
+                        android:paddingBottom="16dp">
+                        <!-- Биография -->
+                        <TextView
+                            android:id="@+id/profile_bio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="16dp"
+                            android:padding="2dp"
+                            android:text="Биография пользователя. Здесь может быть длинный текст, описывающий пользователя и его интересы."
+                            android:textAlignment="center"
+                            android:textSize="16sp" />
+
+                        <!-- Кнопка редактирования профиля -->
+                        <Button
+                            android:id="@+id/edit_profile_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="54dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="24dp"
+                            android:backgroundTint="@color/button"
+                            android:text="Редактировать профиль"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/profile_card"
+                    android:layout_alignParentBottom="true" />
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:contentDescription="@string/fab"
+        android:elevation="6dp"
+        android:src="@drawable/outline_add_24"
+        app:backgroundTint="@color/button"
+        app:fabSize="normal" />
+
+
+</RelativeLayout>

@@ -18,8 +18,10 @@
     <string name="error_password">Введите пароль!</string>
     <string name="invalid_login_password">Логин и пароль неверны!</string>
     <string name="error_server_unavailable">Сервер недоступен, попробуйте позже</string>
+    <string name="not_authorized">Вы не авторизованы</string>
     <string name="error_idk">"Неизвестная ошибка. Попробуйте очистить кэш"</string>
     <string name="error_service_unavailable">"Ошибка обработки фотографии. Попробуйте позже"</string>
     <string name="image_ready">"Изображение скачано"</string>
     <string name="image_deleted">"Изображение удалено"</string>
+    <string name="fab">fab</string>
 </resources>

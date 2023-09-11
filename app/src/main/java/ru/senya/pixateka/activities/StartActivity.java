@@ -41,6 +41,7 @@ public class StartActivity extends AppCompatActivity {
 //        path = intent.getStringExtra("link");
 //        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
         startActivity(new Intent(this, LoginActivity.class));
+        onDestroy();
         setContentView(binding.getRoot());
 //        boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
 //        if (connected) {

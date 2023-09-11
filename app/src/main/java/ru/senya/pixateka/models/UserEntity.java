@@ -15,14 +15,35 @@ public class UserEntity {
 
     protected String username;
 
+    protected String name;
+    protected String bio;
+
 
     private String pfp;
+    private String back;
 
     private String role;
 
 //    private Date created;
 //
 //    private Date updated;
+
+
+    public String getBack() {
+        return back;
+    }
+
+    public void setBack(String back) {
+        this.back = back;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getId() {
         return id;
@@ -54,6 +75,14 @@ public class UserEntity {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 
 //    public Date getCreated() {

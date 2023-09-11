@@ -37,7 +37,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        startMainActivity();
+
+        if (getIntent().getStringExtra("auth") == null){
+            startMainActivity();
+        }
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         sharedPreferences = App.getSharedPreferences();

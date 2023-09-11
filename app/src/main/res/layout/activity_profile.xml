@@ -1,30 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
+    <!-- Изображение профиля -->
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/pfp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+         />
 
-    <FrameLayout
-        android:id="@+id/profile"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!-- Имя пользователя -->
+    <TextView
+        android:id="@+id/profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Имя пользователя"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_below="@id/profile_image"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:background="@color/toolbar_color"
-        android:subtitleTextColor="@color/white"
-        android:visibility="gone"
-        app:title="Photo" />
+    <!-- Биография -->
+    <TextView
+        android:id="@+id/profile_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Биография пользователя"
+        android:textSize="16sp"
+        android:layout_below="@id/profile_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
-    <ru.senya.pixateka.view.viewFullscreen
-        android:id="@+id/vfs"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:background="@color/white"
-        android:visibility="gone" />
+    <!-- Кнопка редактирования профиля -->
+    <Button
+        android:id="@+id/edit_profile_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Редактировать профиль"
+        android:layout_below="@id/profile_bio"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp" />
+
+    <!-- Кнопки для социальных сетей -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_profile_button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="24dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/facebook_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="Facebook" />
+
+        <ImageButton
+            android:id="@+id/twitter_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="Twitter" />
+
+        <ImageButton
+            android:id="@+id/instagram_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="Instagram" />
+    </LinearLayout>
 
 </RelativeLayout>

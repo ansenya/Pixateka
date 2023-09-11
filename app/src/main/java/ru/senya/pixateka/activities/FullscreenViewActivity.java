@@ -36,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.adapters.NewRecyclerAdapter;
+import ru.senya.pixateka.adapters.RecyclerAdapter;
 import ru.senya.pixateka.databinding.FullscreenViewActivityBinding;
 import ru.senya.pixateka.models.ImageEntity;
 import ru.senya.pixateka.models.Page;
@@ -47,7 +47,7 @@ public class FullscreenViewActivity extends AppCompatActivity {
     int width, height;
     String id, uid, path, color, username, title, pfp;
     private final List<ImageEntity> firstData = new LinkedList<>(), secondData = new LinkedList<>();
-    private final NewRecyclerAdapter firstAdapter = new NewRecyclerAdapter(firstData, this), secondAdapter = new NewRecyclerAdapter(secondData, this);
+    private final RecyclerAdapter firstAdapter = new RecyclerAdapter(firstData, this), secondAdapter = new RecyclerAdapter(secondData, this);
     int firstPage = 0, secondPage = 0;
     int firstTotalPages = 1, secondTotalPages = 1;
 

@@ -12,8 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -23,7 +21,6 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -43,25 +40,25 @@ import ru.senya.pixateka.activities.FullscreenViewActivity;
 import ru.senya.pixateka.databinding.ViewItemBinding;
 import ru.senya.pixateka.models.ImageEntity;
 
-public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.ViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
 
     List<ImageEntity> data;
     Activity activity;
 
 
-    public NewRecyclerAdapter(List<ImageEntity> data, Activity activity) {
+    public RecyclerAdapter(List<ImageEntity> data, Activity activity) {
         this.data = data;
         this.activity = activity;
     }
 
     @NonNull
     @Override
-    public NewRecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NewRecyclerAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerAdapter.ViewHolder holder, int position) {
         holder.giveActivity(activity);
         holder.loadImage(data.get(position));
         holder.setupClickListener(position, data, this);
@@ -91,14 +88,11 @@ public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.
         }
 
         public void loadImage(ImageEntity item) {
-
-            binding.image.setTransitionName(item.getId());
-
             Glide
                     .with(context)
                     .load(item.getPath())
                     .placeholder(getPlaceholder(item))
-                    .override(500)
+                    .override(700)
                     .into(binding.image);
 
             binding.imageName.setText(item.getName());
@@ -106,7 +100,7 @@ public class NewRecyclerAdapter extends RecyclerView.Adapter<NewRecyclerAdapter.
         }
 
         @SuppressLint("NonConstantResourceId")
-        public void setupClickListener(int position, List<ImageEntity> data, NewRecyclerAdapter adapter) {
+        public void setupClickListener(int position, List<ImageEntity> data, RecyclerAdapter adapter) {
 
             ImageEntity image = data.get(position);
 

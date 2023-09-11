@@ -22,25 +22,33 @@ public class SubSampActivity extends AppCompatActivity {
     ActivitySubsamplingBinding binding;
     int w = 0, h = 0;
     String path, color;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySubsamplingBinding.inflate(getLayoutInflater());
-
-        w = getIntent().getIntExtra("w", 0);
-        h = getIntent().getIntExtra("h", 0);
-        color = getIntent().getStringExtra("color");
-        path = getIntent().getStringExtra("path");
-
         setContentView(binding.getRoot());
 
-        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-        bitmap.eraseColor(Color.parseColor(color));
-        binding.pic.setImage(ImageSource.bitmap(bitmap));
+        path = getIntent().getStringExtra("path");
+
+        try {
+
+
+            w = getIntent().getIntExtra("w", 0);
+            h = getIntent().getIntExtra("h", 0);
+            color = getIntent().getStringExtra("color");
+
+
+
+            Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            bitmap.eraseColor(Color.parseColor(color));
+            binding.pic.setImage(ImageSource.bitmap(bitmap));
+        } catch (Exception ignored){}
+
         Glide
                 .with(getApplicationContext())
                 .asBitmap()
-                .load(getIntent().getStringExtra("path"))
+                .load(path)
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {

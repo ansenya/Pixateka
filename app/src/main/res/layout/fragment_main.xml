@@ -8,10 +8,10 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="55dp"
         android:background="@color/toolbar_color"
         app:title="@string/app_name"
-        app:titleTextColor="@color/text_color2" />
+        app:titleTextColor="@color/text_color2"/>
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -40,10 +40,10 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:contentDescription="@string/fab"
         android:elevation="6dp"
         android:src="@drawable/outline_add_24"
         app:backgroundTint="@color/button"
         app:fabSize="normal" />
-
 
 </RelativeLayout>

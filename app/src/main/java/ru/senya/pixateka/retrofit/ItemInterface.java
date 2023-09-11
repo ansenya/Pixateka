@@ -16,31 +16,31 @@ import ru.senya.pixateka.models.ImageEntity;
 
 public interface ItemInterface {
 
-    @GET("img/getAll")
+    @GET("i/getAll")
     Call<Page<ImageEntity>> getAll(@Header("Authorization") String token, @Query("page") int page);
 
     @Multipart
-    @POST("img/upload")
+    @POST("i/upload")
     Call<ImageEntity> upload(@Header("Authorization") String token,
                              @Part MultipartBody.Part file,
                              @Part("name") RequestBody name);
 
-    @DELETE("img/delete")
+    @DELETE("i/delete")
     Call<Void> delete(@Header("Authorization") String token, @Query("id") String id);
 
-    @GET("img/getInfo")
+    @GET("i/getInfo")
     Call<ImageEntity> getById(@Header("Authorization") String token, @Query("id") String id);
 
     @GET("es/getAlike")
     Call<Page<ImageEntity>> getAlike(@Header("Authorization") String token, @Query("id") String id, @Query("page") int page);
 
-    @GET("img/getByUserId")
+    @GET("i/getByUserId")
     Call<Page<ImageEntity>> getByUid(@Header("Authorization") String token, @Query("uid") String uid, @Query("id") String id, @Query("page") int page);
 
-    @GET("img/getByUserId")
+    @GET("i/getByUserId")
     Call<Page<ImageEntity>> getByUid(@Header("Authorization") String token, @Query("uid") String uid, @Query("page") int page);
 
-    @POST("img/clicked")
+    @POST("i/clicked")
     Call<ImageEntity> increaseClick(@Header("Authorization") String token, @Query("id") String id);
 
     @GET("es/search")

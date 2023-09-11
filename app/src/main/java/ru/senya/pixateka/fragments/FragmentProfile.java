@@ -1,328 +1,160 @@
 package ru.senya.pixateka.fragments;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.ConnectivityManager;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.snackbar.Snackbar;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
-import java.util.ArrayList;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import ru.senya.pixateka.App;
 import ru.senya.pixateka.R;
-import ru.senya.pixateka.activities.StartActivity;
-import ru.senya.pixateka.activities.Visible;
-import ru.senya.pixateka.adapters.RecyclerAdapterProfile;
+import ru.senya.pixateka.activities.AddActivity;
+import ru.senya.pixateka.activities.SubSampActivity;
+import ru.senya.pixateka.adapters.RecyclerAdapter;
 import ru.senya.pixateka.models.UserEntity;
-import ru.senya.pixateka.database.room.ItemEntity;
-import ru.senya.pixateka.databinding.NewFragmentProfileBinding;
-import ru.senya.pixateka.view.viewFullscreen;
+import ru.senya.pixateka.databinding.FragmentProfileBinding;
 
 
-public class FragmentProfile extends Fragment {
+public class FragmentProfile extends BaseFragment<FragmentProfileBinding> {
 
-    public NewFragmentProfileBinding binding;
-    ArrayList<ItemEntity> data;
-    UserEntity mainUserEntity;
-    viewFullscreen vfs;
-    Visible visible = new Visible(false);
-    androidx.appcompat.widget.Toolbar toolbar;
-    int k;
-    boolean running = false;
-
-    public FragmentProfile(ArrayList<ItemEntity> data, UserEntity mainUserEntity, viewFullscreen vfs, androidx.appcompat.widget.Toolbar toolbar, int k) {
-        this.data = data;
-        this.mainUserEntity = mainUserEntity;
-        this.vfs = vfs;
-        this.toolbar = toolbar;
-        this.k = k;
-    }
+    UserEntity userEntity;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = NewFragmentProfileBinding.inflate(inflater, container, false);
-        initRecycler();
-        binding.buttonEditProfile.setOnClickListener(v -> {
-            binding.toolbar.setVisibility(GONE);
-            getChildFragmentManager().
-                    beginTransaction().
-                    replace(binding.fragmentEdit.getId(), new FragmentEditProfile()).commit();
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
-            binding.fragmentEdit.setVisibility(VISIBLE);
-            binding.relativeLayout.setVisibility(GONE);
-        });
-//        if (mainUser.avatar != null) {
-//            Glide.with(getContext()).load(mainUser.avatar).into(binding.pfpImg);
-//        }
-//        if (mainUser.background != null) {
-//            Glide.with(getContext()).load(mainUser.background).into(binding.back);
-//        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        initPfpAndBack();
+    }
 
-//        binding.name.setText(mainUser.username);
-//        try {
-//            if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
-//                String about = "";
-//                for (String s : mainUser.about.split("\"")) {
-//                    for (int i = 0; i < s.split("\\\\n").length; i++) {
-//                        if (i != 0) about += " \n ";
-//                        about += s.split("\\\\n")[i];
-//                    }
-//
-//                }
-//                binding.about.setText(about); // backend problem :)
-//            }
-//        } catch (NullPointerException e) {
-//            binding.about.setText("Описание не заполнено");
-//        }
+    @Override
+    public void getData(int page, boolean clear) {
+        
+    }
 
+    @Override
+    public void initRecyclerView() {
+        binding.list.setAdapter(new RecyclerAdapter(data, getActivity()));
+        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+    }
 
-        if (k == 1) {
-            binding.buttonLogout.setVisibility(GONE);
-            binding.buttonEditProfile.setVisibility(GONE);
-            binding.toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
-            binding.toolbar.setNavigationOnClickListener(v -> {
-                getActivity().finish();
-            });
-        }
+    @Override
+    public void initBinding(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+    }
 
-        toolbar.setTitleTextColor(Color.WHITE);
-        toolbar.setNavigationIcon(R.drawable.baseline_arrow_back_24);
-        toolbar.setNavigationOnClickListener(v -> {
-            back();
-        });
-        binding.swipeContainer.setOnRefreshListener(onRefreshListener);
-        binding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+    @Override
+    public void initCLickListeners() {
+        binding.fab.setOnClickListener(view -> startActivity(new Intent(getContext(), AddActivity.class)));
+        binding.editProfileButton.setOnClickListener(view -> {
 
-        binding.buttonLogout.setOnClickListener(v -> {
-//            App.getUserService().logout(App.getMainUser().token, "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId).enqueue(new Callback<ResponseBody>() {
-//                @Override
-//                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-//
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ResponseBody> call, Throwable t) {
-//
-//                }
-//            });
-            new Thread(() -> {
-                App.getDatabase().userDAO().deleteUserTable();
-                App.getDatabase().itemDAO().delete();
-            }).start();
-            startActivity(new Intent(getActivity(), StartActivity.class));
-            binding = null;
-            getActivity().finish();
         });
 
-        return binding.getRoot();
+        binding.swipeContainer.setOnRefreshListener(() -> {
+            initPfpAndBack();
+            getData(page, true);
+            binding.swipeContainer.setRefreshing(false);
+        });
+
+        binding.profileImage.setOnClickListener(view -> {
+            Bundle extras = new Bundle();
+
+            extras.putString("path", userEntity.getPfp());
+
+            Intent intent = new Intent(getActivity(), SubSampActivity.class);
+            intent.putExtras(extras);
+
+            startActivity(intent);
+        });
+
+        binding.background.setOnClickListener(view -> {
+            Bundle extras = new Bundle();
+
+            extras.putString("path", userEntity.getBack());
+
+            Intent intent = new Intent(getActivity(), SubSampActivity.class);
+            intent.putExtras(extras);
+
+            startActivity(intent);
+        });
     }
 
+    public void initPfpAndBack() {
+        App.getUserService().getUser(auth, userId).enqueue(new Callback<UserEntity>() {
+            @Override
+            public void onResponse(@NonNull Call<UserEntity> call, @NonNull Response<UserEntity> response) {
+                if (response.isSuccessful()) {
+                    if (response.body() == null)
+                        return;
 
-    private void initRecycler() {
-        binding.recyclerList.setAdapter(new RecyclerAdapterProfile(data, getContext(), vfs, toolbar, getActivity(), binding.nestedScrollView, binding, visible, onRefreshListener));
-        binding.recyclerList.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        binding.recyclerList.getAdapter().notifyDataSetChanged();
-        binding.recyclerList.getAdapter().notifyDataSetChanged();
-    }
+                    Animation pulseAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.wave_animation);
+                    binding.background.startAnimation(pulseAnimation);
+                    binding.profileImage.startAnimation(pulseAnimation);
 
-    public boolean visible() {
-        if (vfs.getVisibility() == VISIBLE) {
-            return true;
-        }
-        return false;
-    }
+                    userEntity = response.body();
 
-    public boolean isEditVisible() {
-        if (binding.fragmentEdit.getVisibility() == VISIBLE) {
-            return true;
-        }
-        return false;
-    }
+                    binding.profileName.setText(userEntity.getName());
 
-    public void myNotify() {
-        binding.recyclerList.getAdapter().notifyDataSetChanged();
-        if (visible.getVisible()) {
-            vfs.setVisibility(VISIBLE);
-            toolbar.setVisibility(VISIBLE);
-        }
-    }
+                    binding.profileBio.setText(userEntity.getBio());
 
-    public void myNotify(int i) {
-        binding.recyclerList.getAdapter().notifyItemChanged(i);
-    }
+                    Glide.with(binding.profileImage)
+                            .load(userEntity.getPfp())
+                            .placeholder(R.drawable.pfp)
+                            .addListener(getListener(binding.profileImage))
+                            .into(binding.profileImage);
 
-    public void back() {
-        if (binding.fragmentEdit.getVisibility() == VISIBLE) {
-            binding.fragmentEdit.setVisibility(GONE);
-            binding.relativeLayout.setVisibility(VISIBLE);
-            binding.toolbar.setVisibility(VISIBLE);
-            onRefreshListener.onRefresh();
-        } else {
-            if (vfs.pop()) {
-                toolbar.setVisibility(GONE);
-                vfs.setVisibility(GONE);
-                visible.setVisible(false);
-                binding.relative.setVisibility(VISIBLE);
-                binding.nestedScrollView.setVisibility(VISIBLE);
+                    if (userEntity.getBack() != null) {
+                        Glide.with(binding.background)
+                                .load(userEntity.getBack())
+                                .placeholder(R.drawable.holder_gradient)
+                                .addListener(getListener(binding.background))
+                                .into(binding.background);
+                    }
+                }
             }
-        }
 
+            @Override
+            public void onFailure(@NonNull Call<UserEntity> call, @NonNull Throwable t) {
+
+            }
+        });
     }
 
-    public SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-            boolean connected = connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected() && connectivityManager.getActiveNetworkInfo().isAvailable();
-            if (connected) {
-//                new Thread(() -> {
-//                    String cookie = "csrftoken=" + App.getMainUser().token + "; " + "sessionid=" + App.getMainUser().sessionId;
-//                    App.getUserService().getUser(mainUser.id, App.getMainUser().token, cookie).enqueue(new Callback<User>() {
-//                        @Override
-//                        public void onResponse(Call<User> call, Response<User> response) {
-//                            if (response.isSuccessful() && !running) {
-//                                running = true;
-//                                new Thread(() -> {
-//                                    User user = response.body();
-//                                    user.setSessionId(App.getMainUser().sessionId);
-//                                    user.setToken(App.getMainUser().token);
-//
-//                                    App.getDatabase().userDAO().deleteUserTable();
-//                                    App.getDatabase().userDAO().save(user);
-//                                    App.setMainUser(user);
-//                                    mainUser = user;
-//                                    getActivity().runOnUiThread(() -> {
-//                                        binding.name.setText(mainUser.username);
-//                                        if (mainUser.about != null && !mainUser.about.split("\"")[1].isEmpty()) {
-//                                            String about = "";
-//                                            for (String s : mainUser.about.split("\"")) {
-//                                                for (int i = 0; i < s.split("\\\\n").length; i++) {
-//                                                    if (i != 0) about += " \n ";
-//                                                    about += s.split("\\\\n")[i];
-//                                                }
-//
-//                                            }
-//                                            binding.about.setText(about); // backend problem :)
-//
-//
-//                                        }
-//                                        Glide.with(getContext()).load(user.avatar).into(binding.pfpImg);
-//                                        if (mainUser.background != null) {
-//                                            Glide.with(getContext()).load(mainUser.background).into(binding.back);
-//                                        }
-//                                        running = false;
-//                                    });
-//                                }).start();
-//                            } else {
-//                                try {
-//                                    Log.e("RefreshP", response.errorBody().string());
-//                                } catch (IOException e) {
-//                                    throw new RuntimeException(e);
-//                                }
-//                            }
-//
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<User> call, Throwable t) {
-//                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }).start();
-//                new Thread(() -> {
-//                    ArrayList<ItemEntity> arrayList = new ArrayList<>();
-//                    arrayList.addAll(App.getDatabase().itemDAO().getAll());
-//                    Call<ArrayList<Item>> call = App.getItemService().getPhotosByUserId(mainUser.id);
-//                    call.enqueue(new Callback<ArrayList<Item>>() {
-//                        @Override
-//                        public void onResponse(Call<ArrayList<Item>> call, Response<ArrayList<Item>> response) {
-//                            if (response.body() != null && response.body().size() > 0) {
-//                                new Thread(() -> {
-//                                    ArrayList<Item> items = response.body();
-//                                    for (Item item : items) {
-//                                        boolean contains = false;
-//                                        for (ItemEntity itemEntity : data) {
-//                                            if (item.id == itemEntity.id) {
-//                                                contains = true;
-//                                                break;
-//                                            }
-//                                        }
-//                                        if (!contains) {
-//                                            ItemEntity entity = new ItemEntity(item.id, item.author, item.image, item.name, item.description, item.author, item.tags);
-//                                            entity.setWidth(item.width);
-//                                            entity.setHeight(item.height);
-//                                            entity.setColor(item.color);
-//                                            data.add(0, entity);
-//                                            getActivity().runOnUiThread(() -> {
-//                                                myNotify(data.size() - 1);
-//                                            });
-//                                            try {
-//                                                App.getDatabase().itemDAO().save(entity);
-//                                            } catch (SQLiteConstraintException e) {
-//
-//                                            }
-//                                        }
-//                                    }
-//                                    ArrayList<ItemEntity> delete = new ArrayList<ItemEntity>();
-//                                    for (ItemEntity itemEntity : data) {
-//                                        boolean deleted = true;
-//                                        for (Item item : items) {
-//                                            if (itemEntity.id == item.id) {
-//                                                deleted = false;
-//                                            }
-//                                        }
-//                                        if (deleted) {
-//                                            new Thread(() -> {
-//                                                App.getDatabase().itemDAO().deleteByUserId(itemEntity.id);
-//                                            }).start();
-//                                            delete.add(itemEntity);
-//                                        }
-//                                    }
-//                                    for (ItemEntity itemEntity : delete) {
-//                                        data.remove(itemEntity);
-//                                    }
-//                                    getActivity().runOnUiThread(() -> {
-//                                        binding.recyclerList.getAdapter().notifyDataSetChanged();
-//                                        binding.swipeContainer.setRefreshing(false);
-//                                    });
-//                                }).start();
-//                            }
-//                            if (response.body() != null && response.body().size() == 0) {
-//                                binding.swipeContainer.setRefreshing(false);
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<ArrayList<Item>> call, Throwable t) {
-//                            binding.swipeContainer.setRefreshing(false);
-//                            Snackbar.make(binding.getRoot(), "Не получилось достучаться до сервера", Snackbar.LENGTH_SHORT).show();
-//                        }
-//                    });
-//
-//
-//                }).start();
-            } else {
-                binding.swipeContainer.setRefreshing(false);
-                Snackbar.make(binding.getRoot(), "Нет доступа в интернет", Snackbar.LENGTH_SHORT).show();
+
+    public RequestListener<Drawable> getListener(View view) {
+        RequestListener<Drawable> listener = new RequestListener<Drawable>() {
+            @Override
+            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                view.clearAnimation();
+                return false;
             }
-        }
-    };
+
+            @Override
+            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                view.clearAnimation();
+                return false;
+            }
+        };
+        return listener;
+    }
 }
