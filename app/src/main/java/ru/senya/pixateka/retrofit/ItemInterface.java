@@ -19,6 +19,9 @@ public interface ItemInterface {
     @GET("i/getAll")
     Call<Page<ImageEntity>> getAll(@Header("Authorization") String token, @Query("page") int page);
 
+    @GET("i/getByUserId")
+    Call<Page<ImageEntity>> getAllByUserId(@Header("Authorization") String token, @Query("page") int page, @Query("id") String id);
+
     @Multipart
     @POST("i/upload")
     Call<ImageEntity> upload(@Header("Authorization") String token,

@@ -3,6 +3,7 @@ package ru.senya.pixateka.activities;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,8 +22,6 @@ import ru.senya.pixateka.fragments.FragmentSearch;
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
-    ArrayList<ItemEntity> mainData = new ArrayList<>();
-    ArrayList<ItemEntity> profileData = new ArrayList<>();
     FragmentProfile fragmentProfile;
     FragmentMain fragmentMain;
     FragmentSearch fragmentSearch;
@@ -41,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
         setupFragmentsAndNavigation();
 
         setContentView(binding.getRoot());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fragmentMain.onResume();
     }
 
     @SuppressLint("NonConstantResourceId")

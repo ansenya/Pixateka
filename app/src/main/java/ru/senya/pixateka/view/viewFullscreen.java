@@ -90,12 +90,12 @@ public class viewFullscreen extends NestedScrollView {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tab.getText().toString().equals("Фотографии пользователя")) {
-                    binding.list.setVisibility(VISIBLE);
+                    binding.recycler.setVisibility(VISIBLE);
                     binding.list2.setVisibility(INVISIBLE);
                     binding.nothingWasFound.setVisibility(INVISIBLE);
                 } else if (tab.getText().toString().equals("Похожие фотографии")) {
                     binding.list2.setVisibility(VISIBLE);
-                    binding.list.setVisibility(INVISIBLE);
+                    binding.recycler.setVisibility(INVISIBLE);
                     if (likeData.size() == 0) {
                         binding.nothingWasFound.setVisibility(VISIBLE);
                     }
@@ -113,7 +113,7 @@ public class viewFullscreen extends NestedScrollView {
 
             }
         });
-        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.recycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.list2.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         binding.pfp.setOnClickListener(v -> {
             Intent intent = new Intent(activity, ProfileActivity.class);
