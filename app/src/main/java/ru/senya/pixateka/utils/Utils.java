@@ -28,7 +28,7 @@ import ru.senya.pixateka.R;
 import ru.senya.pixateka.models.ImageEntity;
 
 public class Utils {
-    public final static String BASE_URL = "http://192.168.50.20:9090/api/";
+    public final static String BASE_URL = "http://192.168.1.93:9090/api/";
 
     public static String getRealPath(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};

@@ -59,7 +59,6 @@ public class FragmentMain extends BaseFragment<FragmentMainBinding> {
                         data.addAll(Arrays.asList(page.getContent()));
                         Objects.requireNonNull(binding.recycler.getAdapter()).notifyItemRangeChanged(data.size() - page.getContent().length, page.getContent().length);
                         totalPages = page.getTotalPages();
-                        Log.e("MyTag", numPage + " " + totalPages);
                         binding.swipeContainer.setRefreshing(false);
                     } else if (response.code() == 401) {
                         binding.swipeContainer.setRefreshing(false);

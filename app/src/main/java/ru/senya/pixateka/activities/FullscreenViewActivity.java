@@ -70,6 +70,12 @@ public class FullscreenViewActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
     }
 
+
+    private void setTags(String ruTags, String enTags){
+        binding.ruTags.setText(ruTags);
+        binding.enTags.setText(enTags);
+    }
+
     private void sendClickedRequest() {
         String token = "Bearer " + App.getSharedPreferences().getString("jwt_key", "");
         id = Objects.requireNonNull(getIntent().getExtras().getString("id"));
@@ -113,6 +119,7 @@ public class FullscreenViewActivity extends AppCompatActivity {
                 .load(pfp)
                 .into(binding.pfp);
 
+        setTags("автомобиль\nавтомобиль", "motor vehicle\nmotor vehicle");
     }
 
 
