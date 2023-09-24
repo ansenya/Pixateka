@@ -53,7 +53,7 @@ public class FragmentSearch extends BaseFragment<FragmentSearchBinding> {
                             data.clear();
                         }
                         data.addAll(Arrays.asList(response.body().getContent()));
-                        binding.list.getAdapter().notifyDataSetChanged();
+                        binding.recycler.getAdapter().notifyDataSetChanged();
                         totalPages = response.body().getTotalPages();
                         if (totalPages < 2) {
                             totalPages = 1;
@@ -72,9 +72,9 @@ public class FragmentSearch extends BaseFragment<FragmentSearchBinding> {
 
     @Override
     public void initRecyclerView() {
-        binding.list.setAdapter(new RecyclerAdapter(data, getActivity()));
-        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recycler.setAdapter(new RecyclerAdapter(data, getActivity()));
+        binding.recycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);

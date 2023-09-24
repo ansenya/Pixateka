@@ -28,7 +28,7 @@ import ru.senya.pixateka.R;
 import ru.senya.pixateka.models.ImageEntity;
 
 public class Utils {
-    public final static String BASE_URL = "http://192.168.1.93:9090/api/";
+    public final static String BASE_URL = "http://192.168.1.110:9090/api/";
 
     public static String getRealPath(Context context, Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
@@ -44,14 +44,5 @@ public class Utils {
             result = cursor.getString(column_index);
         }
         return result;
-    }
-
-    public static void getPopupMenu(Context context, View view, boolean check, ImageEntity image, List<ImageEntity> data, int position){
-        PopupMenu popupMenu = new PopupMenu(context, view);
-        if (check) {
-            popupMenu.inflate(R.menu.p_menu);
-        } else {
-            popupMenu.inflate(R.menu.menu);
-        }
     }
 }

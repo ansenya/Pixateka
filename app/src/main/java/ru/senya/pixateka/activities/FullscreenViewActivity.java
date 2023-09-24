@@ -136,9 +136,9 @@ public class FullscreenViewActivity extends AppCompatActivity {
                         }
                         firstData.addAll(Arrays.asList(response.body().getContent()));
                         if (firstPage == 1) {
-                            Objects.requireNonNull(binding.list.getAdapter()).notifyItemRangeInserted(0, 10);
+                            Objects.requireNonNull(binding.recycler.getAdapter()).notifyItemRangeInserted(0, 10);
                         } else {
-                            Objects.requireNonNull(binding.list.getAdapter()).notifyItemRangeInserted(firstData.size() - 1, 10);
+                            Objects.requireNonNull(binding.recycler.getAdapter()).notifyItemRangeInserted(firstData.size() - 1, 10);
                         }
 
                     }
@@ -166,9 +166,9 @@ public class FullscreenViewActivity extends AppCompatActivity {
                         }
                         secondData.addAll(Arrays.asList(response.body().getContent()));
                         if (secondPage == 1) {
-                            Objects.requireNonNull(binding.list.getAdapter()).notifyItemRangeInserted(0, 10);
+                            Objects.requireNonNull(binding.recycler.getAdapter()).notifyItemRangeInserted(0, 10);
                         } else {
-                            Objects.requireNonNull(binding.list.getAdapter()).notifyItemRangeInserted(secondData.size() - 1, 10);
+                            Objects.requireNonNull(binding.recycler.getAdapter()).notifyItemRangeInserted(secondData.size() - 1, 10);
                         }
 
                     }
@@ -259,9 +259,9 @@ public class FullscreenViewActivity extends AppCompatActivity {
     }
 
     private void setupRecycler() {
-        binding.list.setAdapter(firstAdapter);
-        binding.list.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
-        binding.list.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recycler.setAdapter(firstAdapter);
+        binding.recycler.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        binding.recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -294,9 +294,9 @@ public class FullscreenViewActivity extends AppCompatActivity {
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
                 if (position == 0) {
-                    binding.list.setAdapter(firstAdapter);
+                    binding.recycler.setAdapter(firstAdapter);
                 } else {
-                    binding.list.setAdapter(secondAdapter);
+                    binding.recycler.setAdapter(secondAdapter);
                 }
             }
 
@@ -307,7 +307,7 @@ public class FullscreenViewActivity extends AppCompatActivity {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                binding.list.scrollToPosition(View.FOCUS_UP);
+                binding.recycler.scrollToPosition(View.FOCUS_UP);
             }
         });
     }

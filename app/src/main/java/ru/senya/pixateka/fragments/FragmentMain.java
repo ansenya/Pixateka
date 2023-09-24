@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -43,6 +44,13 @@ public class FragmentMain extends BaseFragment<FragmentMainBinding> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        page = 0;
+        getData(page, true);
+    }
+
+    @Override
     public void getData(int numPage, boolean clear) {
         if (numPage < totalPages) {
             page++;
@@ -73,6 +81,7 @@ public class FragmentMain extends BaseFragment<FragmentMainBinding> {
                 @Override
                 public void onFailure(@NonNull Call<Page<ImageEntity>> call, @NonNull Throwable t) {
                     Log.e("MyTag", "err", t);
+                    Snackbar.make(binding.getRoot(), getString(R.string.error_server_unavailable), Snackbar.LENGTH_LONG).show();
                     binding.swipeContainer.setRefreshing(false);
                 }
             });
